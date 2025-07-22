@@ -1,0 +1,23 @@
+# === 忽略所有文件 白名单写法 ===
+*
+!.gitignore
+# /ca 目录
+!ca/
+!ca/intl
+!ca/intl/**
+!ca/pages
+!ca/pages/**
+!ca/modules
+!ca/modules/**
+!ca/config
+!ca/config/build.txt
+# /cadroid 目录
+# 其他的手动更新
+!cadroid/
+!cadroid/src/**
+!cadroid/build.gradle
+!cadroid/gradlew*
+!cadroid/gradle/
+!cadroid/app/src/**
+!cadroid/app/build.gradle
+cadroid/app/src/main/assets/script.js
