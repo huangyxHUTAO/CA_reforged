@@ -1,0 +1,245 @@
+{
+	"name": "基本命令教程",
+	"author": "ProjectXero",
+	"description": "该教程为命令初学者提供了入门级别的教程。",
+	"uuid": "8a4cc227-66f4-455c-9be4-7f988f408696",
+	"version": [0, 0, 1],
+	"require": [],
+	"tutorials": [{
+		"name": "初识命令",
+		"description": "在此，你将了解到什么是命令",
+		"id": "xero.firstlesson",
+		"type": "tutorial",
+		"intro": [
+			{
+				"text": "请使用基岩版 1.0.5及以上版本或国服最新版",
+				"bold": true,
+				"color": "criticalcolor"
+			},
+			"，因为本教程需要以下功能：\n",
+			{
+				"list": [
+					"命令方块",
+					"say命令",
+					"多人游戏玩家权限设置"
+				]
+			},
+			"\n\n作为一款风靡一时的像素游戏，",
+			{
+				"text": "Minecraft",
+				"bold": true
+			},
+			"能够长期占据排行榜前列绝非偶然。Minecraft衍生的各种玩法堪称无穷无尽，命令则是大多数玩法中的主要组成部分。",
+			"\n\n接下来您将了解本教程的第一条命令：\n",
+			{
+				"formattedCommand": "/say §eHello World!",
+				"bold": true
+			}
+		],
+		"segments": [{
+			"text": [
+				"首先，要使用命令，请先切换为创造模式并启用作弊。\n\n",
+				{
+					"text": "单人模式",
+					"bold": true
+				},
+				"：打开世界设置，启用作弊。\n",
+				{
+					"text": "多人模式/网易租赁服",
+					"bold": true
+				},
+				"：请让游戏的操作员（OP）给予您操作员权限。\n",
+				{
+					"text": "服务器",
+					"bold": true
+				},
+				"：",
+				{
+					"text": "服务器还用啥命令方块？用插件啊",
+					"bgcolor": "textcolor"
+				}
+			],
+			"stepMode": "manual"
+		}, {
+			"text": "首先在聊天框里输入以下命令："
+		}, {
+			"command": "/give @p command_block"
+		}, {
+			"text": "如果成功的话，玩家应该可以在物品栏中获得命令方块。",
+			"stepMode": "manual"
+		}, {
+			"text": "将命令方块放置在地面上。点击命令方块进入命令方块设置界面。",
+			"stepMode": "manual"
+		}, {
+			"text": "在命令输入框内输入以下命令并关闭："
+		}, {
+			"command": "/say §eHello World!",
+			"stepMode": "manual"
+		}, {
+			"text": [
+				"现在你可以试试用红石信号激活它了。\n\n",
+				"如果成功的话，应当会在聊天栏内显示以下内容："
+			]
+		}, {
+			"text": {
+				"formattedText": "§eHello World!",
+				"typeface": "monospace",
+				"bgcolor": "black"
+			},
+			"stepMode": "manual"
+		}, {
+			"text": [
+				"恭喜你，成功地完成了你的第一个命令！\n\n",
+				"本教程只是一个开始，之后会有更多的教程加入。"
+			]
+		}]
+	}, {
+		"name": "记分板基础 - (1) 初识记分板",
+		"description": "本教程将告诉你1.7版本新增的记分板的功能与用途。",
+		"id": "xero.scoreboard.intro",
+		"type": "tutorial",
+		"intro": [
+			{
+				"text": "请使用基岩版1.7.0.7及以上版本",
+				"bold": true,
+				"color": "criticalcolor"
+			},
+			"，因为本教程需要以下功能：",
+			"\n- 命令方块",
+			"\n- scoreboard命令",
+			"\n\n在2018年8月23日，Mojang发布了1.7.0.2测试版，首次加入了",
+			{
+				"text": "记分板",
+				"bold": true,
+				"color": "highlightcolor"
+			},
+			"，这一Java版极其重要的特性。",
+			"\n接下来您将了解记分板的结构与如何控制记分板的命令。",
+			"\n\n另外在本教程中你还能了解到1.7.0.2更新了记分板的哪些内容。"
+		],
+		"segments": [{
+			"text": [
+				{
+					"text": "记分板",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"是Minecraft内部的一个复杂游戏机制。它可以储存分数，侦测事件，计算数字。简而言之，它就是Minecraft里的变量。"
+			],
+			"stepMode": "manual"
+		}, {
+			"text": [
+				"记分板里存储了记分项和每个对象(之后会讲述)的记分项的分数。每个记分项由",
+				{
+					"text": "名称",
+					"bold": true
+				},
+				"、",
+				{
+					"text": "显示名称",
+					"bold": true
+				},
+				"、",
+				{
+					"text": "准则",
+					"bold": true
+				},
+				"组成。"
+			],
+			"stepMode": "manual"
+		}, {
+			"text": [
+				{
+					"text": "名称",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"就是用于区分记分项的唯一ID，区分大小写并且不允许包含空格。",
+				"\n\n",
+				{
+					"text": "显示名称",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"显示名称则用于向用户表示这个记分项的用途，或者实现其他特殊功能。",
+				"\n\n",
+				{
+					"text": "准则",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"描述了这个记分项的行为，例如何时增加分数，能否修改分数等。"
+			],
+			"stepMode": "manual"
+		}, {
+			"text": [
+				{
+					"text": "对象",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"是记分板命令作用的目标，包括任何玩家，任何实体，甚至是不在线或不存在的玩家。",
+				"\n\n",
+				"记分板的",
+				{
+					"text": "分数",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"范围可正可负，范围很大，且全都是整数。"
+			],
+			"stepMode": "manual"
+		}, {
+			"text": [
+				"在Java版中，记分板支持统计玩家死亡次数、玩家血量、击杀数量、移动距离等。但是目前在基岩版1.7.0.3中只支持",
+				{
+					"text": "虚拟型准则",
+					"bold": true,
+					"color": "highlightcolor"
+				},
+				"，只允许通过命令来修改分数。",
+				"\n\n通过记分板，我们可以：",
+				"\n- 动态对实体进行标记",
+				"\n- 统计某种事件发生的次数",
+				"\n- 计时",
+				"\n- 计数（例如实体数量或者方块数量）",
+				"\n- 实现某些需要复杂数学运算机制",
+				"\n……（这些是我随便想出的几种用法）"
+			],
+			"stepMode": "manual"
+		}, {
+			"text": [
+				"恭喜你，成功地完成了这一课！\n\n",
+				"教程的剩余内容将在近期在“在线拓展包”内与作者的B站专栏放出。敬请期待！"
+			]
+		}, {
+			"prompt": [
+				"也欢迎各位关注教程作者的B站号：",
+				{
+					"text": "@XeroAlpha",
+					"link": "http://space.bilibili.com/76999418"
+				}
+			],
+			"link": "http://space.bilibili.com/76999418",
+			"stepMode": "manual"
+		}, {
+			"text": [
+				"附：基岩版1.7.0.2更新中加入的记分板功能：",
+				"\n1. 记分项的创建/移除/设置显示位置/列表（目前仅支持虚拟型dummy）",
+				"\n2. 对象的列出/增加/扣除/删除/测试/操作",
+				"\n3. 选择器scores={objective=score}",
+				"\n4. 与java版不同，基岩版有一条命令/scoreboard players random",
+				"\n其中的scores选择器格式为：",
+				"\nscores={判据1,判据2,...,判据n}（所有判据都成立才算满足条件）",
+				"\n判据格式:",
+				"\n- 相等: 记分项=分数",
+				"\n- 不等: 记分项=!分数",
+				"\n- 大于等于: 记分项=最小分数..",
+				"\n- 小于等于: 记分项=..最大分数",
+				"\n- 区间: 记分项=最小分数..最大分数",
+				"\n所以说，队伍没有出，标签也没有出，得等下次更新。"
+			],
+			"stepMode": "manual"
+		}]
+	}]
+}

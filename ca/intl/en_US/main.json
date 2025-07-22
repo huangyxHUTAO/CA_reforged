@@ -1,0 +1,4 @@
+{
+	"common": Loader.fromFile("./common.json"),
+	"jsonEdit": Loader.fromFile("./jsonEdit.json"),
+}

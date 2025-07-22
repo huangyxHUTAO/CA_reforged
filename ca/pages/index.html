@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<title>命令助手</title>
+	<style>
+.danmaku {
+	color: gray;
+	font-family: monospaces
+}
+#header {
+	width: 100%;
+}
+#danmaku_area {
+	overflow: hidden;
+	z-index: 1;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+}
+#header_main {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	z-index: 2;
+}
+#logo {
+	width: 25%;
+}
+body {
+	background: black;
+	color: white;
+	overflow-x: hidden;
+	width: 100%
+}
+button {
+	background-color: black;
+	color: white;
+	border: 1px white solid;
+	border-radius: 5px;
+	padding: 10px 20px;
+	margin: 10px;
+}
+button:hover {
+	background-color: white;
+	color: black;
+}
+	</style>
+	<script src="./js/danmaku.js"></script>
+	<script src="./js/jquery-3.3.1.min.js"></script>
+	<script>
+function resize() {
+	var logo_node = document.getElementById("logo");
+	logo_node.style.width = Math.min(window.innerHeight, window.innerWidth) * 0.25 + "px";
+	$("header").css("height", window.innerHeight - 50 + "px");
+}
+window.addEventListener("resize", function() {
+	resize();
+});
+window.addEventListener("load", function() {
+	resize();
+});
+	</script>
+</head>
+<body>
+	<div id="header">
+		<div id="danmaku_area"></div>
+		<div id="header_main">
+		    <img id="logo" src="./img/logo.png" />
+			<h1>命令助手</h1>
+			<button onclick="window.location='https://projectxero.top/ca/features.html'">官网</button>
+			<button onclick="window.location='https://www.coolapk.com/game/com.huangyx.ca'">下载</button>
+			<button onclick="window.location='https://git.oschina.net/projectxero/ca'">源码</button>
+		</div>
+	</div>
+</body>
+</html>

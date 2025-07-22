@@ -1,0 +1,39 @@
+{
+	"ok": "确定",
+	"cancel": "取消",
+	"apply": "应用",
+	"open": "打开",
+	"close": "关闭",
+	"back": "返回",
+	"dontAskAgain": "不再询问",
+	"empty": "空空如也",
+	"noneOption": "没有可选的选项",
+	"settings": "设置",
+	"webviewUnavailable": "您的设备无法加载Android System WebView%n%n%s",
+	"theme": {
+		"light": "明亮",
+		"dark": "暗色",
+		"pink_theme": "晨星粉"
+	},
+	"ChangeTheme": {
+		"title": "主题选择",
+		"currentTheme": "> %s <",
+		"alphaField": "不透明度：%.0f%%",
+		"textsizeField": "字体大小：%.0f%%"
+	},
+	"FileChooser": {
+		"defaultTitle": "浏览",
+		"parentDir": ".. (上一级目录)",
+		"path": "路径",
+		"fileName": "文件名",
+		"fileNotExist": "文件或目录不存在",
+		"createDir": "新建文件夹",
+		"emptyDirName": "文件夹名称不能为空",
+		"errCreateDir": "创建目录失败%n%s",
+		"failedCreateDir": "创建目录失败",
+		"emptyFileName": "文件名不能为空",
+		"dirAlreadyExist": "同名目录已存在",
+		"invaildFileName": "无效的文件名",
+		"errAccessDir": "拒绝访问%n%s"
+	}
+}

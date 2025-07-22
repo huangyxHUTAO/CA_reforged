@@ -1,0 +1,41 @@
+{
+	"ok": "OK",
+	"cancel": "Cancel",
+	"apply": "Apply",
+	"open": "Open",
+	"close": "Close",
+	"back": "Back",
+	"dontAskAgain": "Don't ask again",
+	"empty": "Empty",
+	"noneOption": "No option available",
+	"settings": "Settings",
+	
+	"webviewUnavailable": "Your device cannot load Android System WebView%n%n%s",
+	
+	"theme": {
+		"light": "Light",
+		"dark": "Night",
+		"pink_theme": "Pink"
+	},
+	"ChangeTheme": {
+		"title": "Choose Theme",
+		"currentTheme": "> %s <",
+		"alphaField": "Opacity: %.0f%%",
+		"textsizeField": "Text size: %.0f%%"
+	},
+	"FileChooser": {
+		"defaultTitle": "Browse...",
+		"parentDir": ".. (Parent Directory)",
+		"path": "Path",
+		"fileName": "File name",
+		"fileNotExist": "File not found",
+		"createDir": "Create folder",
+		"emptyDirName": "Name cannot be empty",
+		"errCreateDir": "Failed to create folder.%n%s",
+		"failedCreateDir": "Failed to create folder",
+		"emptyFileName": "Name cannot be empty",
+		"dirAlreadyExist": "Directory with the same name is existed.",
+		"invaildFileName": "Invaild file name",
+		"errAccessDir": "Permission Denied%n%s"
+	}
+}
