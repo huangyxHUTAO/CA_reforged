@@ -1,6 +1,5 @@
 # === 忽略所有文件 白名单写法 ===
 *
-!.gitignore
 # /ca 目录
 !ca/
 !ca/intl
