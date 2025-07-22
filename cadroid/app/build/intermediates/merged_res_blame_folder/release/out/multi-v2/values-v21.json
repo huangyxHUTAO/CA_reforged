@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.huangyx.ca.app-mergeReleaseResources-3:/values-v21/values-v21.xml",
+            "map": [
+                {
+                    "source": "F:\\CA-Project\\cadroid\\app\\src\\main\\res\\values-v21\\styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "59",
+                        "endColumns": "97",
+                        "endOffsets": "152"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "96",
+                        "endOffsets": "147"
+                    }
+                }
+            ]
+        }
+    ]
+}

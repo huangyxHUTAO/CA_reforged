@@ -1,0 +1,29 @@
+@shellPath ..\cadroid
+cadroid项目的路径
+
+@jarsignerPath "D:\Program Files\Java\jdk-11\bin\jarsigner.exe"
+JDK中jarsigner.exe的路径，没有安装JDK则可使用(Android Studio安装目录)\jre\bin\jarsigner.exe
+
+@zipalignPath C:\Users\33532\AppData\Local\Android\Sdk\build-tools\30.0.3\zipalign.exe
+Build Tools中zipalign.exe的路径
+
+@dexPath .\app\build\intermediates\dex\release\mergeDexRelease\out\classes.dex
+Gradle Build时生成的classes.dex文件路径，可以为相对于shellPath的相对路径
+
+@releaseSignPath .\app\signatures\release.signature
+正式版安装包签名公钥文件路径，可以为相对于shellPath的相对路径
+
+@debugSignPath .\app\signatures\debug.signature
+调试用安装包签名公钥文件路径，可以为相对于shellPath的相对路径
+
+@hotfixPrivateKey .\app\signatures\privateKey.pem
+热更新签名用私钥文件路径，可以为相对于shellPath的相对路径
+
+@keystorePath .\app\signatures\release.keystore
+签名文件路径，可以为相对于shellPath的相对路径
+
+@keyName 
+密钥别名
+
+@keyPasswordPath .\app\signatures\release.password
+密钥密码文件路径，可以为相对于shellPath的相对路径

@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.huangyx.ca'
+    compileSdkVersion 32
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    defaultConfig {
+        applicationId "com.huangyx.ca"
+        minSdkVersion 19
+        targetSdkVersion 32
+        versionCode 20291
+        versionName "0.0.4"
+        buildConfigField "int", "SHELL_VERSION", "26"
+        multiDexEnabled true
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+    // implementation files('libs/SaaS_TalkingDataSDK_Android_V5.0.9.jar')
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'org.mozilla:rhino-runtime:1.7.14'
+    implementation 'net.lingala.zip4j:zip4j:2.11.2'
+    implementation 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+
+    //GDT SDK require
+    //noinspection GradleCompatible
+    //implementation 'com.android.support:support-v4:28.0.0'
+}

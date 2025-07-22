@@ -1,0 +1,342 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.huangyx.ca"
+4    android:versionCode="20291"
+5    android:versionName="0.0.4" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="19"
+8-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="32" />
+9-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:5:5-67
+11-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:5:22-64
+12    <uses-permission android:name="android.permission.WAKE_LOCK" />
+12-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:6:5-68
+12-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:6:22-65
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:7:5-79
+13-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:7:22-76
+14    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+14-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:8:5-78
+14-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:8:22-75
+15    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+15-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:9:5-77
+15-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:9:22-74
+16    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+16-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:10:5-81
+16-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:10:22-78
+17    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+17-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:11:5-88
+17-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:11:22-85
+18    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+18-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:12:5-80
+18-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:12:22-77
+19    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+19-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:13:2-78
+19-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:13:19-75
+20    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+20-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:14:5-15:40
+20-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:14:22-79
+21    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+21-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:16:5-17:53
+21-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:16:22-74
+22
+23    <!-- TalkingData SDK, GDT union SDK -->
+24    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+24-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:20:5-75
+24-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:20:22-72
+25    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+25-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:21:5-76
+25-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:21:22-73
+26    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+26-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:22:5-83
+26-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:22:22-80
+27
+28    <application
+28-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:24:5-151:19
+29        android:name="com.huangyx.ca.XApplication"
+29-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:25:9-37
+30        android:icon="@mipmap/icon_small"
+30-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:26:9-42
+31        android:label="@string/app_name"
+31-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:27:9-41
+32        android:requestLegacyExternalStorage="true"
+32-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:29:9-52
+33        android:theme="@style/AppTheme" >
+33-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:28:9-40
+34        <uses-library
+34-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:31:9-33:40
+35            android:name="org.apache.http.legacy"
+35-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:32:13-50
+36            android:required="false" />
+36-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:33:13-37
+37
+38        <activity
+38-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:34:9-43:20
+39            android:name="com.huangyx.ca.MainActivity"
+39-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:35:13-41
+40            android:exported="true"
+40-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:38:13-36
+41            android:screenOrientation="user"
+41-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:36:13-45
+42            android:theme="@style/AppTheme.Translucent" >
+42-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:37:13-56
+43            <intent-filter>
+43-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:39:13-42:29
+44                <action android:name="android.intent.action.MAIN" />
+44-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:40:17-69
+44-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:40:25-66
+45
+46                <category android:name="android.intent.category.LAUNCHER" />
+46-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:41:17-77
+46-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:41:27-74
+47            </intent-filter>
+48        </activity>
+49        <activity
+49-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:44:9-48:49
+50            android:name="com.huangyx.ca.BugReportActivity"
+50-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:45:13-46
+51            android:excludeFromRecents="true"
+51-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:48:13-46
+52            android:launchMode="singleInstance"
+52-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:47:13-48
+53            android:process="com.xero.bugreport" />
+53-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:46:13-49
+54        <activity
+54-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:49:9-66:20
+55            android:name="com.huangyx.ca.AddLibraryActivity"
+55-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:50:13-47
+56            android:exported="true"
+56-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:53:13-36
+57            android:label="@string/addlib_name"
+57-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:51:13-48
+58            android:theme="@style/AppTheme.Translucent" >
+58-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:52:13-56
+59            <intent-filter>
+59-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:54:13-65:29
+60                <action android:name="android.intent.action.VIEW" />
+60-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:55:17-69
+60-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:55:25-66
+61                <action android:name="android.intent.action.EDIT" />
+61-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:56:17-69
+61-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:56:25-66
+62
+63                <category android:name="android.intent.category.DEFAULT" />
+63-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:17-76
+63-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:27-73
+64                <category android:name="android.intent.category.BROWSABLE" />
+64-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:58:17-78
+64-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:58:27-75
+65
+66                <data android:scheme="content" />
+66-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+66-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:23-47
+67                <data android:scheme="file" />
+67-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+67-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:23-47
+68                <data android:mimeType="application/json" />
+68-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+68-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:61:23-58
+69                <data android:mimeType="text/*" />
+69-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+69-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:61:23-58
+70                <data android:mimeType="application/octet-stream" />
+70-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+70-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:61:23-58
+71                <data android:host="*" />
+71-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+71-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:64:23-39
+72            </intent-filter>
+73        </activity>
+74        <activity
+74-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:67:9-77:20
+75            android:name="com.huangyx.ca.EditCommandActivity"
+75-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:68:13-48
+76            android:exported="true"
+76-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:71:13-36
+77            android:label="@string/editcmd_name"
+77-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:69:13-49
+78            android:theme="@style/AppTheme.Translucent" >
+78-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:70:13-56
+79            <intent-filter>
+79-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:72:13-76:29
+80                <action android:name="android.intent.action.SEND" />
+80-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:73:17-69
+80-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:73:25-66
+81
+82                <category android:name="android.intent.category.DEFAULT" />
+82-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:17-76
+82-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:27-73
+83
+84                <data android:mimeType="text/*" />
+84-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+84-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:61:23-58
+85            </intent-filter>
+86        </activity>
+87        <activity
+87-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:78:9-88:20
+88            android:name="com.huangyx.ca.UriActionActivity"
+88-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:79:13-46
+89            android:exported="true"
+89-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:81:13-36
+90            android:theme="@style/AppTheme.Translucent" >
+90-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:80:13-56
+91            <intent-filter>
+91-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:82:13-87:29
+92                <action android:name="android.intent.action.VIEW" />
+92-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:55:17-69
+92-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:55:25-66
+93
+94                <category android:name="android.intent.category.DEFAULT" />
+94-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:17-76
+94-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:27-73
+95                <category android:name="android.intent.category.BROWSABLE" />
+95-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:58:17-78
+95-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:58:27-75
+96
+97                <data android:scheme="cbassistant" />
+97-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:17-50
+97-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:59:23-47
+98            </intent-filter>
+99        </activity>
+100        <activity
+100-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:89:9-91:118
+101            android:name="com.huangyx.ca.PermissionRequestActivity"
+101-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:89:19-60
+102            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
+102-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:91:13-115
+103            android:excludeFromRecents="true" />
+103-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:90:13-46
+104        <activity
+104-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:92:9-96:59
+105            android:name="com.huangyx.ca.ReturnDataActivity"
+105-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:92:19-53
+106            android:autoRemoveFromRecents="true"
+106-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:94:13-49
+107            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
+107-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:95:13-115
+108            android:taskAffinity="com.huangyx.ca.ReturnDataTask"
+108-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:93:13-65
+109            android:theme="@style/AppTheme.Translucent" />
+109-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:96:13-56
+110        <activity
+110-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:97:9-101:59
+111            android:name="com.huangyx.ca.ForegroundTaskActivity"
+111-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:97:19-57
+112            android:autoRemoveFromRecents="true"
+112-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:99:13-49
+113            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
+113-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:100:13-115
+114            android:taskAffinity="com.huangyx.ca.ForegroundTask"
+114-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:98:13-65
+115            android:theme="@style/AppTheme.Translucent" />
+115-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:101:13-56
+116        <activity
+116-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:102:9-104:118
+117            android:name="com.huangyx.ca.SplashActivity"
+117-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:102:19-49
+118            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
+118-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:104:13-115
+119            android:launchMode="singleTask" />
+119-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:103:13-44
+120
+121        <service android:name="com.huangyx.ca.ScriptService" />
+121-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:106:9-50
+121-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:106:18-47
+122        <service
+122-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:107:9-117:19
+123            android:name="com.huangyx.ca.AccessibilitySvc"
+123-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:108:13-45
+124            android:exported="false"
+124-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:110:13-37
+125            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+125-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:109:13-79
+126            <intent-filter>
+126-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:111:13-113:29
+127                <action android:name="android.accessibilityservice.AccessibilityService" />
+127-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:112:17-92
+127-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:112:25-89
+128            </intent-filter>
+129
+130            <meta-data
+130-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:114:13-116:69
+131                android:name="android.accessibilityservice"
+131-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:115:17-60
+132                android:resource="@xml/accessible_service_config" />
+132-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:116:17-66
+133        </service>
+134        <service
+134-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:118:9-124:19
+135            android:name="com.huangyx.ca.GameBridgeService"
+135-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:118:18-51
+136            android:exported="true" >
+136-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:119:13-36
+137            <intent-filter>
+137-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:120:13-123:29
+138                <action android:name="com.huangyx.ca.GameBridge" />
+138-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:121:17-68
+138-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:121:25-65
+139
+140                <category android:name="android.intent.category.DEFAULT" />
+140-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:17-76
+140-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:57:27-73
+141            </intent-filter>
+142        </service>
+143        <service android:name="com.huangyx.ca.ScriptActionService" />
+143-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:125:9-56
+143-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:125:18-53
+144        <service
+144-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:126:9-135:19
+145            android:name="com.huangyx.ca.ScriptTileService"
+145-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:127:13-46
+146            android:exported="false"
+146-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:131:13-37
+147            android:icon="@drawable/tile_icon"
+147-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:129:13-47
+148            android:label="@string/app_name"
+148-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:128:13-45
+149            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE" >
+149-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:130:13-77
+150            <intent-filter>
+150-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:132:13-134:29
+151                <action android:name="android.service.quicksettings.action.QS_TILE" />
+151-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:133:17-87
+151-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:133:25-84
+152            </intent-filter>
+153        </service>
+154
+155        <receiver
+155-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:137:9-143:20
+156            android:name="com.huangyx.ca.BootReceiver"
+156-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:137:19-47
+157            android:exported="false" >
+157-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:138:13-37
+158            <intent-filter>
+158-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:139:13-142:29
+159                <action android:name="android.intent.action.BOOT_COMPLETED" />
+159-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:140:17-79
+159-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:140:25-76
+160
+161                <category android:name="android.intent.category.LAUNCHER" />
+161-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:41:17-77
+161-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:41:27-74
+162            </intent-filter>
+163        </receiver>
+164
+165        <provider
+165-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:145:3-150:20
+166            android:name="com.huangyx.ca.UnsafeFileProvider"
+166-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:146:13-61
+167            android:authorities="com.huangyx.ca.UnsafeFileProvider"
+167-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:147:13-68
+168            android:exported="false"
+168-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:148:13-37
+169            android:grantUriPermissions="true" >
+169-->F:\CA-Project\cadroid\app\src\main\AndroidManifest.xml:149:13-47
+170        </provider>
+171    </application>
+172
+173</manifest>

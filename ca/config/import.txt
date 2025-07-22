@@ -1,0 +1,2 @@
+@androidJarPath C:\Users\Administrator\AppData\Local\Android\Sdk\platforms\android-29\android.jar
+android.jar的路径，越新的sdk版本越好

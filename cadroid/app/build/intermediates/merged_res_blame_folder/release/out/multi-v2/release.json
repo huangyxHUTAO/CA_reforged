@@ -1,0 +1,65 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.huangyx.ca.app-merged_res-5:/values-v21_values-v21.arsc.flat",
+            "map": [
+                {
+                    "source": "F:\\CA-Project\\cadroid\\app\\src\\main\\res\\values-v21\\styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "59",
+                        "endColumns": "97",
+                        "endOffsets": "152"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "96",
+                        "endOffsets": "147"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.huangyx.ca.app-merged_res-5:/values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "F:\\CA-Project\\cadroid\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "9,5,3,4,7,6,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "363,162,59,102,258,211,316",
+                        "endColumns": "57,47,41,58,56,45,45",
+                        "endOffsets": "416,205,96,156,310,252,357"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,113,161,203,262,319,365",
+                        "endColumns": "57,47,41,58,56,45,45",
+                        "endOffsets": "108,156,198,257,314,360,406"
+                    }
+                },
+                {
+                    "source": "F:\\CA-Project\\cadroid\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "3,5",
+                        "startColumns": "4,4",
+                        "startOffsets": "59,156",
+                        "endColumns": "93,105",
+                        "endOffsets": "148,257"
+                    },
+                    "to": {
+                        "startLines": "9,10",
+                        "startColumns": "4,4",
+                        "startOffsets": "411,504",
+                        "endColumns": "92,104",
+                        "endOffsets": "499,604"
+                    }
+                }
+            ]
+        }
+    ]
+}

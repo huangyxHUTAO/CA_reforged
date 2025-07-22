@@ -1,0 +1,7 @@
+@downloadSource
+
+@end downloadSource
+可用的下载地址
+
+@remoteRoot 
+更新源站点目录，以/结尾

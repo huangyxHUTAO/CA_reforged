@@ -1,0 +1,7 @@
+#Tue Jul 22 19:45:43 CST 2025
+base.1=F\:\\CA-Project\\cadroid\\app\\build\\intermediates\\desugar_lib_dex\\release\\classes1000.dex
+path.1=classes1000.dex
+base.0=F\:\\CA-Project\\cadroid\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+path.0=classes.dex

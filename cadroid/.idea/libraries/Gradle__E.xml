@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: E">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/SaaS_TalkingDataSDK_Android_V5.0.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,9 @@
+@method local
+发布的方式，支持本地文件发布("local")与通过SFTP发布("sftp")。
+
+如果使用本地发布，则需要以下字段
+destPath 发布目录
+
+如果使用SFTP发布，则需要以下字段
+remoteRoot 远程主机的发布目录
+sshConfig JSON形式的SSH连接选项，参见ssh2.Client.connect。

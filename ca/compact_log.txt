@@ -1,0 +1,2 @@
+2025-07-06T21:06:39.031159400Z : ready compact 'F:\Program Files\Netease\MuMuPlayer-12.0\vms\MuMuPlayer-12.0-0\data.vdi'
+this time is dry-run, total blocks: 34596, used blocks: 9483, fragment ratio: 0.0345882

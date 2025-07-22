@@ -1,0 +1,115 @@
+# List of SDK dependencies of this app, this information is also included in an encrypted form in the APK.
+# For more information visit: https://d.android.com/r/tools/dependency-metadata
+
+library {
+  maven_library {
+    groupId: "com.android.support"
+    artifactId: "support-annotations"
+    version: "28.0.0"
+  }
+  digests {
+    sha256: "][\224\024\360-?\240\356u&\270\325\335\256\r\246|\216\314\214Mc\377\246\317\221H\212\223\271\'"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "org.mozilla"
+    artifactId: "rhino-runtime"
+    version: "1.7.14"
+  }
+  digests {
+    sha256: "\207\b\327P\'49\031W\3317s\377\367y\0249{i\3640.n\365\246A\026Ln\234\227\035"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "net.lingala.zip4j"
+    artifactId: "zip4j"
+    version: "2.11.2"
+  }
+  digests {
+    sha256: "\2008\254E\302DH\323\261b2R\034K\327\357\307\207\310\232AYgNM\326$\263z\025\371k"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "com.jakewharton.android.repackaged"
+    artifactId: "dalvik-dx"
+    version: "11.0.0_r3"
+  }
+  digests {
+    sha256: "7X\032V\375\355\025\354o\210\264m<w\004\314p\n3q\371\347_A\262\022\0362\207v\233\251"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "org.java-websocket"
+    artifactId: "Java-WebSocket"
+    version: "1.5.3"
+  }
+  digests {
+    sha256: "Mo\302\035\311\266W\347m\315t\226\220y\321\2170\347yjV?4\311\246\036e\232H^z?"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "org.slf4j"
+    artifactId: "slf4j-api"
+    version: "1.7.25"
+  }
+  digests {
+    sha256: "\030\304\240\t]\\\035\246\270\027Y.v{\262=)\335/V\n\327M\367_\363\226\035\275\342[y"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "com.android.support"
+    artifactId: "multidex"
+    version: "1.0.2"
+  }
+  digests {
+    sha256: "|\324\207U\307\317\333m\322\322\034\273\002#n\303\220\366\254\221\315\350~\266/G[%\232\2650\035"
+  }
+  repo_index {
+  }
+}
+library_dependencies {
+  library_index: 4
+  library_dep_index: 5
+}
+module_dependencies {
+  module_name: "base"
+  dependency_index: 0
+  dependency_index: 1
+  dependency_index: 2
+  dependency_index: 3
+  dependency_index: 4
+  dependency_index: 6
+}
+repositories {
+  maven_repo {
+    url: "https://dl.google.com/dl/android/maven2/"
+  }
+}
+repositories {
+  maven_repo {
+    url: "https://repo.maven.apache.org/maven2/"
+  }
+}
