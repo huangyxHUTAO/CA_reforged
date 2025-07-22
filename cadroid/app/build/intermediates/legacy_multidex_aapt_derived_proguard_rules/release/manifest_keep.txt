@@ -1,2 +1,0 @@
--keep class com.huangyx.ca.BugReportActivity { <init>(); }
--keep class com.huangyx.ca.XApplication { <init>(); }

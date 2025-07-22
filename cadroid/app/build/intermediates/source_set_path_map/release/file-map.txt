@@ -1,8 +1,0 @@
-com.huangyx.ca.app-pngs-0 F:\CA-Project\cadroid\app\build\generated\res\pngs\release
-com.huangyx.ca.app-resValues-1 F:\CA-Project\cadroid\app\build\generated\res\resValues\release
-com.huangyx.ca.app-rs-2 F:\CA-Project\cadroid\app\build\generated\res\rs\release
-com.huangyx.ca.app-mergeReleaseResources-3 F:\CA-Project\cadroid\app\build\intermediates\incremental\release\mergeReleaseResources\merged.dir
-com.huangyx.ca.app-mergeReleaseResources-4 F:\CA-Project\cadroid\app\build\intermediates\incremental\release\mergeReleaseResources\stripped.dir
-com.huangyx.ca.app-merged_res-5 F:\CA-Project\cadroid\app\build\intermediates\merged_res\release
-com.huangyx.ca.app-main-6 F:\CA-Project\cadroid\app\src\main\res
-com.huangyx.ca.app-release-7 F:\CA-Project\cadroid\app\src\release\res
