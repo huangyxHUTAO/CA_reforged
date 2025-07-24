@@ -831,6 +831,7 @@
 						}
 					}
 				} else if (pathArr[pathArr.length - 1] === "...") {
+
 					if (input.length > 0) {
 						recommend[", - 下一个参数"] = ps + ","
 						// if (pathArr.length == 2) recommend["] - 结束选择器"] = ps + "]"
@@ -838,7 +839,6 @@
 						// if (input.slice(-1) != "]" && input.slice(-1) != "}" && pathArr.length > 1) recommend["} - 结束键值"] = ps + "}"
 						// if (input.slice(-1) == "}" && pathArr.includes("[...]")) recommend["] - 结束数组"] = ps + "]"
 						// var selectorParam = ps.replace(/^@[pareas]/, "");
-
 						let openBrackets = debug.remainingStack
 						// Common.toast(JSON.stringify(openBrackets))
 						if (openBrackets.slice(-1) == "{") {
@@ -859,6 +859,12 @@
 					let suggestion = undefined
 					let selectors = getFieldByPath(this.library.selectors, pathArr.slice(0, -1))
 					if (selectors) {
+						// 控制反选
+						if (input.length == 0) {
+							if (selectors["hasInverted"] && selectors["hasInverted"] === true) {
+								recommend["! - 反向选择"] = ps + "!"
+							}
+						}
 						if (selectors["type"]) {
 							let type = selectors["type"]
 							if (type.indexOf("object") !== -1) {
@@ -875,9 +881,16 @@
 						}
 
 						if (this.library.enums[suggestion]) {
-							let selectors = this.library.enums[suggestion]
-							recommend_enums = this.getSelectorParamCompletions(input, ps, selectors, "");
+							var selectors = this.library.enums[suggestion];
+							var processedInput = input;
 
+							// 检查输入是否以 "!" 开头
+							if (/^\!/.test(input)) {
+								processedInput = input.replace(/^\!/, "");
+							}
+
+							// 调用 getSelectorParamCompletions 方法
+							recommend_enums = this.getSelectorParamCompletions(processedInput, ps, selectors, "");
 						}
 					}
 				} else if (pathArr[pathArr.length - 1] === "[...]") {
