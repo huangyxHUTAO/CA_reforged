@@ -14,6 +14,8 @@ android {
         applicationId "com.huangyx.ca"
         minSdkVersion 19
         targetSdkVersion 32
+        versionCode 20293
+        versionName "0.0.5"
         versionCode 20294
         versionName "0.0.6"
         buildConfigField "int", "SHELL_VERSION", "26"
