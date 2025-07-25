@@ -294,8 +294,8 @@ MapScript.loadModule("Updater", {
 			text : "加入内测群获得",
 			id : "manaul",
 			onclick : function(callback) {
-				Common.setClipboardText("671317302");
-				Common.toast("群号已复制到剪贴板");
+				// Common.setClipboardText("671317302");
+				// Common.toast("群号已复制到剪贴板");
 				callback();
 			},
 			visible : function() {
@@ -345,10 +345,11 @@ MapScript.loadModule("Updater", {
 		AndroidBridge.notifySettings();
 	},
 	downloadBeta : function(info) {
-		if (!NetworkUtils.downloadGz(info.snapshot.url, MapScript.baseDir + "snapshot.js", info.snapshot.sha1)) {
-			Updater.cleanBetaFiles();
-			throw "文件校验失败";
-		}
+		// 不进行校验
+		// if (!NetworkUtils.downloadGz(info.snapshot.url, MapScript.baseDir + "snapshot.js", info.snapshot.sha1)) {
+		// 	Updater.cleanBetaFiles();
+		// 	throw "文件校验失败";
+		// }
 		ctx.getSharedPreferences("user_settings", ctx.MODE_PRIVATE).edit().putString("debugSource", MapScript.baseDir + "snapshot.js").apply();
 		Common.saveFile(MapScript.baseDir + "snapshot.json", JSON.stringify(info), true);
 	},
@@ -454,19 +455,13 @@ MapScript.loadModule("Updater", {
 	sources : {
 		id : "9f15605c-b7fa-49c7-8ee8-55b525570d96",
 		content : [
-			"https://ca.projectxero.top/hotfix.json",
-			"https://projectxero.top/ca/hotfix.json",
-			"http://47.102.100.56/ca/hotfix.json",
-			"https://projectxero.gitee.io/ca/hotfix.json",
-			"https://xeroalpha.github.io/CA/pages/hotfix.json"
+			"https://ca.huangyx.eu.cc/updater/hotfix.json",
 		]
 	},
 	betaSources : {
 		id : "7a0df683-bae8-477d-9d84-b2a0c72eadcc",
 		content : [
-			"https://ca.projectxero.top/snapshot.json",
-			"https://projectxero.top/ca/snapshot.json",
-			"http://47.102.100.56/ca/snapshot.json"
+			"https://ca.huangyx.eu.cc/updater/snapshot.json",
 		]
 	}
 });

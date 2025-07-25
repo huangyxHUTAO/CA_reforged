@@ -1,9 +1,15 @@
-@version 0.0.4
-@versionCode [0, 0, 4]
-@date 2025-07-22
-@licenceUpdate 2025/07/22
+@version 0.0.6
+@versionCode [0, 0, 6]
+@date 2025-07-25
+@licenceUpdate 2025/07/25
 @description
 命令助手 - （南鸢晨星）社区版！
+[0.0.6]
+- 修改了 使用条款
+- 增加了 官网页面
+- 修改了 更新提醒
+[0.0.5]
+- 给选择器增加了反选功能
 [0.0.4]
 - string类型增加双引号解析
 [0.0.3]
