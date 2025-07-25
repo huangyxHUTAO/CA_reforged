@@ -7436,7 +7436,7 @@ MapScript.loadModule("CA", {
 										onClick: function () {
 											try {
 												Common.showWebViewDialog({
-													url: "https://ca.projectxero.top/blog/about/license/"
+													url: "https://ca.huangyx.eu.cc/doc/legal/eula.html"
 												});
 											} catch (e) { erp(e) }
 										}
@@ -7455,7 +7455,7 @@ MapScript.loadModule("CA", {
 										onClick: function () {
 											try {
 												Common.showWebViewDialog({
-													url: "https://ca.projectxero.top/blog/about/privacy/"
+													url: "https://ca.huangyx.eu.cc/doc/legal/privacy.html"
 												});
 											} catch (e) { erp(e) }
 										}
