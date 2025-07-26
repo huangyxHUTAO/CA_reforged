@@ -1,11 +1,10 @@
-@version 0.0.6
-@versionCode [0, 0, 6]
-@date 2025-07-25
-@licenceUpdate 2025/07/25
+@version 0.0.7
+@versionCode [0, 0, 7]
+@date 2025-07-26
+@licenceUpdate 2025/07/26
 @description
 命令助手 - （南鸢晨星）社区版！
-[0.0.6]
-- 修改了 使用条款
-- 增加了 官网页面
-- 修改了 更新提醒
+[0.0.7]
+- 修复了 TextView setTypeface 空指针异常
+    - 去除部分地方的图案字体显示
 @end description
