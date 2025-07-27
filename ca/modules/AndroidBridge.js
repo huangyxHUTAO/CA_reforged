@@ -387,6 +387,17 @@ MapScript.loadModule("AndroidBridge", {
 					});
 				}
 			}, {
+				name: "test",
+				description: "这是功能说明",
+				type: "boolean",
+				get: function () {
+					return Boolean(CA.settings.developerMode);
+				},
+				set: function (v) {
+					CA.settings.developerMode = Boolean(v);
+					Common.toast("开发者模式 " + (v ? "已启用" : "已禁用"));
+				}
+			}, {
 				name: "WebSocket服务器",
 				description: "实验性功能",
 				type: "custom",
