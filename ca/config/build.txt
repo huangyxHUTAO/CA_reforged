@@ -1,7 +1,7 @@
-@version 0.0.7
-@versionCode [0, 0, 7]
-@date 2025-07-26
-@licenceUpdate 2025/07/26
+@version 0.0.8
+@versionCode [0, 0, 8]
+@date 2025-07-27
+@licenceUpdate 2025/07/27
 @description
 命令助手 - （南鸢晨星）社区版！
 [0.0.7]

@@ -1,10 +1,5 @@
-var iconFont = null;
-try {
-	var assetManager = ctx.getAssets();
-	iconFont = G.Typeface.createFromAsset(assetManager, "fonts/Icon-font.ttf");
-} catch (e) {
-	iconFont = G.Typeface.MONOSPACE || G.Typeface.DEFAULT;
-}
+var iconFont = G.Typeface.MONOSPACE; // 默认的默认使用等宽字体，但通常不会加载到
+// 不能写太早，这里甚至没有初始化CA
 MapScript.loadModule("CA", {
 	icon: null,
 	qbar: null,
@@ -49,6 +44,23 @@ MapScript.loadModule("CA", {
 			Common.toast("命令助手 " + this.version.join(".") + " by ProjectXero&南鸢晨星\n\n" + this.getTip(), 1);
 			this.fine = true;
 			this.screenChangeHook();
+			// 加载图案字体
+			try {
+				if (CA.settings.iconFont == undefined) {
+					CA.settings.iconFont = true; // 默认就是启用图案字体
+					CA.trySave();
+				}
+				if (CA.settings.iconFont == true) {
+					var assetManager = ctx.getAssets();
+					iconFont = G.Typeface.createFromAsset(assetManager, "fonts/Icon-font.ttf");
+				} else {
+					iconFont = G.Typeface.DEFAULT;
+				}
+			} catch (e) {
+				Common.toast("图案字体加载失败");
+				iconFont = G.Typeface.MONOSPACE || G.Typeface.DEFAULT;
+			}
+
 		} catch (e) { erp(e) }
 	},
 	unload: function () {
