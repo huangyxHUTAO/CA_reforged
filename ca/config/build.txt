@@ -4,7 +4,8 @@
 @licenceUpdate 2025/07/27
 @description
 命令助手 - （南鸢晨星）社区版！
-[0.0.7]
-- 修复了 TextView setTypeface 空指针异常
+[0.0.8]
+- 再次修复了 TextView setTypeface 空指针异常
     - 去除部分地方的图案字体显示
+- 增加了 图案字体 设置
 @end description
