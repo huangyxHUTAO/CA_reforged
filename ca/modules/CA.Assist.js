@@ -65,7 +65,7 @@
 			// self.head.setTypeface(self.iconFont); // 字体
 			self.head.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
 			self.head.setPadding(20 * G.dp, 10 * G.dp, 20 * G.dp, 10 * G.dp);
-			self.head.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
+			// self.head.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
 			self.head.setLineSpacing(10, 1);
 			Common.applyStyle(self.head, "textview_default", 2);
 			// self.head.setTypeface(self.iconFont);
@@ -667,7 +667,7 @@
 				text.setEllipsize(G.TextUtils.TruncateAt.END);
 				text.setPadding(10 * G.dp, 10 * G.dp, 0, 10 * G.dp);
 				Common.applyStyle(text, "textview_default", 2);
-				text.setTypeface(self.iconFont);
+				// text.setTypeface(self.iconFont);
 				view.addView(text);
 				del.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 				del.setText("×");
@@ -974,7 +974,7 @@
 				text.setEllipsize(G.TextUtils.TruncateAt.END);
 				text.setPadding(10 * G.dp, 10 * G.dp, 0, 10 * G.dp);
 				Common.applyStyle(text, "textview_default", 2);
-				text.setTypeface(self.iconFont);
+				// text.setTypeface(self.iconFont);
 				view.addView(text);
 				del.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 				del.setText("×");
