@@ -1,11 +1,9 @@
-@version 0.0.8
-@versionCode [0, 0, 8]
+@version 0.0.9
+@versionCode [0, 0, 9]
 @date 2025-07-27
 @licenceUpdate 2025/07/27
 @description
 命令助手 - （南鸢晨星）社区版！
-[0.0.8]
-- 再次修复了 TextView setTypeface 空指针异常
-    - 去除部分地方的图案字体显示
-- 增加了 图案字体 设置
+[0.0.9]
+- LOGO换新！
 @end description
