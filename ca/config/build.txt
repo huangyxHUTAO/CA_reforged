@@ -8,4 +8,5 @@
 - 增加了QQ群
 - 修改了网页，使用CDN加速访问
 - 修复了relative不显示数字的问题
+- 修改了历史容量，最高10000
 @end description
