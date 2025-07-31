@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 页面不见了</title>
+    <style>
+        :root {
+            --pink-primary: #FFB6C1;
+            --pink-light: #FFF5F7;
+            --pink-medium: #FFECF0;
+            --pink-darker: #FF6B9C;
+            --text-primary: #8A4B7C;
+            --text-secondary: #E89CB8;
+            --text-light: #ffffff;
+            --border-color: #f8d7e6;
+            --shadow-color: rgba(255, 182, 193, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--pink-light);
+            color: var(--text-primary);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 182, 193, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 156, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .pixel-decoration {
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: -1;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decoration-1 {
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="0" y="0" width="16" height="16" fill="%23FFB6C1"/></svg>');
+            top: 20%;
+            left: 10%;
+        }
+
+        .decoration-2 {
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="0" y="0" width="16" height="16" fill="%23FF6B9C"/></svg>');
+            top: 60%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .error-code {
+            font-size: 8rem;
+            font-weight: 800;
+            color: var(--pink-darker);
+            text-shadow: 0 0 20px rgba(255, 107, 156, 0.3);
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .error-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .error-message {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .btn {
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(232, 156, 184, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--pink-darker);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--pink-deep);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--pink-darker);
+            margin-left: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 107, 156, 0.1);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .lost-face {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+            animation: wobble 3s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0%, 100% {
+                transform: rotate(-10deg);
+            }
+            50% {
+                transform: rotate(10deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            .error-title {
+                font-size: 2rem;
+            }
+            .error-message {
+                font-size: 1.1rem;
+            }
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .btn-secondary {
+                margin-left: 0;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="pixel-decoration decoration-1"></div>
+    <div class="pixel-decoration decoration-2"></div>
+
+    <div class="container">
+        <div class="lost-face">(╯°□°)╯︵ ┻━┻</div>
+        <div class="error-code">404</div>
+        <h1 class="error-title">页面被末影人传送走了！</h1>
+        <p class="error-message">
+            看起来你正在寻找的页面已经消失在方块世界了。<br>
+            也许是被苦力怕炸掉了？还是被史蒂夫挖走了？<br>
+            别担心，我们可以帮你回到安全的地方！
+        </p>
+        <div>
+            <a href="/" class="btn btn-primary">
+                <i>🏠</i> 返回首页
+            </a>
+            <a href="javascript:history.back()" class="btn btn-secondary">
+                <i>↩️</i> 返回上一页
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
