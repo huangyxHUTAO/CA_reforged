@@ -2887,14 +2887,15 @@ MapScript.loadModule("CA", {
 						name: "加入交流群",
 						type: "custom",
 						onclick: function () {
-							Common.toast("当前版本还没有QQ群呢");
-							// Common.setClipboardText("303697689");
-							// try {
-							// 	AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://jq.qq.com/?_wv=1027&k=57Ac2tp"))
-							// 		.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
-							// } catch(e) {
-							// 	Log.e(e);
-							// }
+							// Common.toast("当前版本还没有QQ群呢");
+							Common.toast("QQ群号已复制到剪切板");
+							Common.setClipboardText("1044451866");
+							try {
+								AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://qm.qq.com/q/dTqhmNpcoo"))
+									.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+							} catch(e) {
+								Log.e(e);
+							}
 						}
 					}, {
 						name: "支持开发",

@@ -1,82 +1,1198 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<title>命令助手</title>
-	<style>
-.danmaku {
-	color: gray;
-	font-family: monospaces
-}
-#header {
-	width: 100%;
-}
-#danmaku_area {
-	overflow: hidden;
-	z-index: 1;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	width: 100%;
-	height: 100%;
-}
-#header_main {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	text-align: center;
-	z-index: 2;
-}
-#logo {
-	width: 25%;
-}
-body {
-	background: black;
-	color: white;
-	overflow-x: hidden;
-	width: 100%
-}
-button {
-	background-color: black;
-	color: white;
-	border: 1px white solid;
-	border-radius: 5px;
-	padding: 10px 20px;
-	margin: 10px;
-}
-button:hover {
-	background-color: white;
-	color: black;
-}
-	</style>
-	<script src="./js/danmaku.js"></script>
-	<script src="./js/jquery-3.3.1.min.js"></script>
-	<script>
-function resize() {
-	var logo_node = document.getElementById("logo");
-	logo_node.style.width = Math.min(window.innerHeight, window.innerWidth) * 0.25 + "px";
-	$("header").css("height", window.innerHeight - 50 + "px");
-}
-window.addEventListener("resize", function() {
-	resize();
-});
-window.addEventListener("load", function() {
-	resize();
-});
-	</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.7, user-scalable=no">
+    <title>命令助手 - Reforged - Minecraft命令补全工具</title>
+    <style>
+        /* 粉色主题变量 */
+        :root {
+            --pink-primary: #FFB6C1;
+            /* 经典粉 */
+            --pink-light: #FFF5F7;
+            /* 淡樱花粉 */
+            --pink-medium: #FFECF0;
+            /* 浅玫瑰粉 */
+            --pink-lighter: #FFF9FA;
+            /* 极浅粉白 */
+            --pink-dark: #FF85A2;
+            /* 水蜜桃粉 */
+            --pink-darker: #FF6B9C;
+            /* 草莓粉 */
+            --pink-deep: #FF3366;
+            /* 莓果红 */
+            --text-primary: #8A4B7C;
+            /* 紫藤粉 */
+            --text-secondary: #E89CB8;
+            /* 樱花粉 */
+            --text-light: #ffffff;
+            /* 白色文本 */
+            --border-color: #f8d7e6;
+            /* 粉色边框 */
+            --shadow-color: rgba(255, 182, 193, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--pink-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 182, 193, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 156, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Minecraft像素风格装饰 */
+        .pixel-decoration {
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: -1;
+            opacity: 0.15;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .decoration-1 {
+            width: 80px;
+            height: 80px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="0" y="0" width="16" height="16" fill="%23FFB6C1"/></svg>');
+            top: 10%;
+            left: 5%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decoration-2 {
+            width: 60px;
+            height: 60px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="0" y="0" width="16" height="16" fill="%23FF6B9C"/></svg>');
+            top: 30%;
+            right: 7%;
+            animation: float 5s ease-in-out infinite 1s;
+        }
+
+        .decoration-3 {
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="0" y="0" width="16" height="16" fill="%23FF85A2"/></svg>');
+            bottom: 15%;
+            left: 15%;
+            animation: float 7s ease-in-out infinite 0.5s;
+        }
+
+        /* 导航栏 */
+        header {
+            background-color: rgba(255, 245, 247, 0.95);
+            backdrop-filter: blur(5px);
+            border-bottom: 2px solid var(--pink-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 5%;
+            box-shadow: 0 2px 15px rgba(232, 156, 184, 0.1);
+            transform: translateY(0);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        header.scrolled {
+            background-color: rgba(255, 245, 247, 0.98);
+            box-shadow: 0 5px 20px rgba(232, 156, 184, 0.2);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+            filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.5));
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05) rotate(-5deg);
+        }
+
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-shadow: 0 0 5px rgba(232, 156, 184, 0.3);
+        }
+
+        .brand-name span {
+            color: var(--pink-darker);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--pink-darker);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--pink-darker);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 英雄区域 */
+        .hero {
+            padding: 6rem 5% 4rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+            font-weight: 800;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+        }
+
+        .hero h1 span {
+            color: var(--pink-darker);
+            text-shadow: 0 0 15px rgba(255, 107, 156, 0.3);
+            position: relative;
+        }
+
+        .hero h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--pink-darker);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .hero h1 span:hover::after {
+            transform: scaleX(1);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.5s forwards;
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 156, 0.15), transparent);
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: 600;
+            color: var(--pink-deep);
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 15px rgba(232, 156, 184, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.7s forwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease 0.9s forwards;
+        }
+
+        .btn {
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(232, 156, 184, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--pink-darker);
+            color: var(--text-light);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--pink-deep);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 51, 102, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--pink-darker);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 107, 156, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* 波纹效果 */
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 特性部分 */
+        .features {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3.5rem;
+            color: var(--text-primary);
+            position: relative;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .section-title.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pink-primary), var(--pink-darker));
+            margin: 1.2rem auto;
+            border-radius: 10px;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.8s ease;
+        }
+
+        .section-title.appear::after {
+            transform: scaleX(1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .feature-card.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(232, 156, 184, 0.2);
+            border-color: var(--pink-darker);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--pink-primary), var(--pink-darker));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--pink-darker);
+            background: rgba(255, 182, 193, 0.15);
+            width: 80px;
+            height: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255, 182, 193, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* 关于项目部分 */
+        .about {
+            padding: 6rem 5%;
+            background: linear-gradient(135deg, var(--pink-lighter), var(--pink-medium));
+            margin-top: 4rem;
+            border-radius: 20px;
+            max-width: 1200px;
+            margin: 4rem auto;
+            box-shadow: 0 10px 30px rgba(232, 156, 184, 0.15);
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .about.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.8rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .about-text p.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-image {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            min-height: 350px;
+            box-shadow: 0 8px 25px rgba(232, 156, 184, 0.1);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.6s ease 0.2s;
+        }
+
+        .about-image.appear {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .anvil-icon {
+            font-size: 8rem;
+            color: var(--pink-darker);
+            text-shadow: 0 0 20px rgba(255, 107, 156, 0.3);
+            animation: hammer 3s infinite;
+        }
+
+        @keyframes hammer {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: rotate(-5deg);
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: rotate(5deg);
+            }
+        }
+
+        /* 下载部分 */
+        .download {
+            padding: 5rem 5%;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .download.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .download-content {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 3rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(232, 156, 184, 0.1);
+        }
+
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 250px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 20px rgba(232, 156, 184, 0.1);
+        }
+
+        .platform-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--pink-darker);
+            box-shadow: 0 15px 30px rgba(232, 156, 184, 0.2);
+        }
+
+        .platform-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--pink-darker);
+        }
+
+        .platform-name {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        /* 新版横版下载区域 */
+        .download-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 3rem auto 2rem;
+            max-width: 680px;
+        }
+
+        .download-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.8rem 2.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(232, 156, 184, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .download-card.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .download-card:hover {
+            border-color: var(--pink-darker);
+            box-shadow: 0 12px 30px rgba(232, 156, 184, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .icon-wrap {
+            font-size: 2.8rem;
+            color: var(--pink-darker);
+            background: rgba(255, 182, 193, 0.15);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .download-card:hover .icon-wrap {
+            transform: scale(1.1);
+            background: rgba(255, 182, 193, 0.3);
+        }
+
+        .text-wrap {
+            flex: 1 1 auto;
+            margin-left: 1.8rem;
+            text-align: left;
+        }
+
+        .text-wrap h3 {
+            margin: 0 0 0.4rem;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .text-wrap span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            flex-shrink: 0;
+        }
+
+        /* 提示条 */
+        .info-bar {
+            margin: 2rem auto 0;
+            max-width: 680px;
+            padding: 1rem 1.8rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease 0.3s;
+        }
+
+        .info-bar.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 页脚 */
+        footer {
+            background-color: var(--pink-medium);
+            padding: 4rem 5% 2rem;
+            border-top: 2px solid var(--pink-darker);
+            margin-top: 5rem;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        footer.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .footer-logo img {
+            width: 180px;
+            filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.3));
+            transition: transform 0.4s ease;
+        }
+
+        .footer-logo img:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .footer-logo p {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .footer-version {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            color: var(--text-secondary);
+        }
+
+        .footer-links h3,
+        .footer-contact h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.8rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+            transform: translateX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .footer-links li:hover {
+            transform: translateX(10px);
+        }
+
+        .footer-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--pink-darker);
+        }
+
+        .footer-contact p {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-contact a {
+            color: var(--pink-darker);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-contact a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2.5rem;
+            margin-top: 2.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .about-image {
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+            }
+
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .download-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .download-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.8rem 1.5rem;
+            }
+
+            .text-wrap {
+                margin-left: 0;
+                margin: 1.5rem 0;
+                text-align: center;
+            }
+
+            .hero {
+                padding: 4rem 5% 3rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-links a {
+                display: block;
+            }
+
+            .footer-contact p {
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-	<div id="header">
-		<div id="danmaku_area"></div>
-		<div id="header_main">
-		    <img id="logo" src="./img/logo.png" />
-			<h1>命令助手</h1>
-			<button onclick="window.location='https://projectxero.top/ca/features.html'">官网</button>
-			<button onclick="window.location='https://www.coolapk.com/game/com.huangyx.ca'">下载</button>
-			<button onclick="window.location='https://git.oschina.net/projectxero/ca'">源码</button>
-		</div>
-	</div>
+    <!-- 装饰元素 -->
+    <div class="pixel-decoration decoration-1"></div>
+    <div class="pixel-decoration decoration-2"></div>
+    <div class="pixel-decoration decoration-3"></div>
+
+    <!-- 导航栏 -->
+    <header id="header">
+        <div class="navbar">
+            <div class="logo-container">
+                <img src="logo.png" alt="命令助手 - Reforged Logo" class="logo">
+                <div class="brand-name">命令助手<span> Reforged</span></div>
+            </div>
+            <div class="nav-links">
+                <a href="#features">功能特性</a>
+                <a href="#about">项目介绍</a>
+                <a href="#download">下载</a>
+                <a href="/doc/">文档</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <h1>让你<span>更好的</span>编辑<span>命令</span></h1>
+        <p class="subtitle">
+            命令助手 - Reforged 是原CA项目的社区维护版，专为现代Minecraft版本优化，提供强大的命令补全、语法检查和智能提示功能。
+        </p>
+        <div class="highlight">
+            <i class="fas fa-hammer"></i> 基于原CA项目重铸 • 持续更新维护 • 完美适配1.20+
+        </div>
+        <div class="cta-buttons">
+            <a href="#download" class="btn btn-primary">
+                <i class="fas fa-download"></i> 立即下载
+            </a>
+            <a href="#features" class="btn btn-secondary">
+                <i class="fas fa-star"></i> 探索功能
+            </a>
+        </div>
+    </section>
+
+    <!-- 特性部分 -->
+    <section class="features" id="features">
+        <h2 class="section-title">强大特性</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="feature-title">智能命令补全</h3>
+                <p>实时命令补全功能，支持 MC基岩版 命令、物品、方块、选择器，大幅提升命令编写效率。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="feature-title">语法实时检查</h3>
+                <p>在输入时即时检测语法错误，避免因小错误导致的命令失效问题。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-plug"></i>
+                </div>
+                <h3 class="feature-title">扩展包支持</h3>
+                <p>支持扩展包系统，可以扩展自定义命令语法、ID，满足用户需求。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于项目部分 -->
+    <section class="about" id="about">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>项目起源</h2>
+                <p>命令助手 - Reforged 诞生于原CA项目停止更新之后。作为我最喜爱的工具之一，一直不更新让我感到遗憾。</p>
+                <p>我决定延续这个项目，以“重铸”为理念，在原作基础上进行优化和更新。</p>
+                <p>就像Minecraft中的铁砧修复装备一样，我们修复了原CA的bug，添加了对新版本的支持，并优化了用户体验。</p>
+                <p>这不是一个全新的项目，而是原CA项目的延续和进化，旨在为Minecraft命令开发者提供持续稳定的开发工具。</p>
+                <div class="cta-buttons" style="justify-content: flex-start; margin-top: 2.5rem;">
+                    <a href="https://github.com/huangyxHUTAO/CA_reforged" class="btn btn-secondary">
+                        <i class="fab fa-github"></i> GitHub仓库
+                    </a>
+                    <a href="https://gitee.com/projectxero/ca" class="btn btn-secondary">
+                        CA原项目
+                    </a>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="anvil-icon">
+                    <i class="fas fa-hammer"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 新版横版下载区域 -->
+    <section class="download" id="download">
+        <div class="download-content">
+            <h2 class="section-title">下载安装</h2>
+            <p>立即获取最新 APK，在 Android 设备上体验重铸后的命令助手</p>
+
+            <!-- 横版卡片容器 -->
+            <div class="download-row">
+                <div class="download-card">
+                    <div class="icon-wrap">
+                        <i class="fab fa-android"></i>
+                    </div>
+                    <div class="text-wrap">
+                        <h3>Android APK</h3>
+                        <span>适用于 Android 7.0+</span>
+                    </div>
+                    <a class="btn btn-primary" href="/apk/ca-0.0.9.apk">
+                        <i class="fas fa-download"></i> 下载
+                    </a>
+                </div>
+            </div>
+
+            <!-- 提示条 -->
+            <div class="info-bar">
+                <i class="fas fa-info-circle"></i>
+                <span>在部分系统中使用可能存在无法显示系统字体的问题，不影响使用</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logo.png" alt="命令助手•Reforged Logo" style="width: 150px;">
+                <p>命令助手•Reforged</p>
+                <p class="footer-version">社区维护版本 v0.0.9</p>
+            </div>
+            <div class="footer-links">
+                <h3>快速链接</h3>
+                <ul>
+                    <li><a href="#features">功能特性</a></li>
+                    <li><a href="#download">下载</a></li>
+                    <li><a href="/doc/legal/README.html">使用条款</a></li>
+                    <li><a href="/doc/updater/index.html">更新日志</a></li>
+                    <!-- 先用github的release替代一下，后期换成单独的页面写 -->
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h3>联系我们</h3>
+                <p><i class="fab fa-qq"></i> QQ群: <a href="https://qm.qq.com/q/VAMOTWUQee">命令助手 Reforged</a></p>
+                <p><i class="fab fa-github"></i> GitHub: <a
+                        href="https://github.com/huangyxHUTAO/CA_reforged">CA_reforged</a></p>
+                <p><i class="fas fa-envelope"></i> 报告问题: huangyxnycx@gmail.com</p>
+                <p><i class="fas fa-heart"></i> 支持我们</p>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 命令助手•Reforged 项目组 | 基于原CA项目重铸 | 保留所有权利
+        </div>
+    </footer>
+
+    <script>
+        // 滚动监听 - 添加元素出现动画
+        document.addEventListener('DOMContentLoaded', function () {
+            // 滚动时更新导航栏样式
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', function () {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // 元素滚动进入视口时添加动画
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('appear');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // 观察需要动画的元素
+            document.querySelectorAll('.section-title').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.feature-card').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.about').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.about-text p').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.about-image').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.download').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.download-card').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('.info-bar').forEach(el => {
+                observer.observe(el);
+            });
+
+            document.querySelectorAll('footer').forEach(el => {
+                observer.observe(el);
+            });
+
+            // 为所有内部链接添加平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 为像素装饰添加悬停效果
+            const decorations = document.querySelectorAll('.pixel-decoration');
+            decorations.forEach(decoration => {
+                decoration.addEventListener('mouseenter', function () {
+                    this.style.opacity = '0.25';
+                    this.style.transform = 'scale(1.1)';
+                });
+
+                decoration.addEventListener('mouseleave', function () {
+                    this.style.opacity = '0.15';
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
