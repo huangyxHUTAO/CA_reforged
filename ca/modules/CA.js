@@ -2916,7 +2916,7 @@ MapScript.loadModule("CA", {
 						type: "custom",
 						onclick: function () {
 							Common.showWebViewDialog({
-								url: "https://ca.huangyx.eu.cc/doc/legal/eula.html"
+								url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/eula.html"
 							});
 						}
 					}, {
@@ -2924,7 +2924,7 @@ MapScript.loadModule("CA", {
 						type: "custom",
 						onclick: function () {
 							Common.showWebViewDialog({
-								url: "https://ca.huangyx.eu.cc/doc/legal/privacy.html"
+								url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/privacy.html"
 							});
 						}
 					}, {
@@ -7449,7 +7449,7 @@ MapScript.loadModule("CA", {
 										onClick: function () {
 											try {
 												Common.showWebViewDialog({
-													url: "https://ca.huangyx.eu.cc/doc/legal/eula.html"
+													url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/eula.html"
 												});
 											} catch (e) { erp(e) }
 										}
@@ -7468,7 +7468,7 @@ MapScript.loadModule("CA", {
 										onClick: function () {
 											try {
 												Common.showWebViewDialog({
-													url: "https://ca.huangyx.eu.cc/doc/legal/privacy.html"
+													url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/privacy.html"
 												});
 											} catch (e) { erp(e) }
 										}
