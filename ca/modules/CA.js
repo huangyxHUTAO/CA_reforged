@@ -3397,7 +3397,7 @@ MapScript.loadModule("CA", {
 							return p == 0 ? "不保存历史" : this.list[p] + "条";
 						},
 						list: [0, 1, 3, 5, 8, 10, 20, 30, 50, 100, 200, 1000, 10000],
-						max: 10,
+						max: 12,
 						get: function () {
 							var k = this.list.indexOf(CA.settings.histroyCount);
 							return k < 0 ? 1000 : this.list[k];
