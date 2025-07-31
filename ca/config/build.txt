@@ -1,9 +1,11 @@
-@version 0.0.9
-@versionCode [0, 0, 9]
-@date 2025-07-27
-@licenceUpdate 2025/07/27
+@version 0.1.0
+@versionCode [0, 1, 0]
+@date 2025-07-31
+@licenceUpdate 2025/07/31
 @description
 命令助手 - （南鸢晨星）社区版！
-[0.0.9]
-- LOGO换新！
+[0.1.0]
+- 增加了QQ群
+- 修改了网页，使用CDN加速访问
+- 修复了relative不显示数字的问题
 @end description
