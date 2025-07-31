@@ -1,0 +1,22 @@
+{
+    "time": 1753867550596,
+    "version": "2025-07-27",
+    "belongs": "0.0.9",
+    "info": "命令助手 - （南鸢晨星）社区版！\n[0.0.9]\n- LOGO换新！",
+        "downloads": {
+        "官网（推荐）": "https://ca.huangyx.eu.cc/apk/ca-0.0.9.apk",
+        "github": "https://github.com/huangyxHUTAO/CA_reforged/releases/download/v0.0.9/CA.0.0.9.apk"
+    },
+    "hotfix": {
+        "url": "hotfix/release.js",
+        "sign": "hotfix/release.sign",
+        "shell": 26,
+        "sha1": "c0FsUJeocL0lPFmReq6Xc4Zd+6g="
+    },
+    "requirements": [
+        {
+            "type": "minsdk",
+            "value": 19
+        }
+    ]
+}
