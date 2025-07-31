@@ -405,21 +405,22 @@
 					// 匹配相对坐标格式：~ 或 ~数字 或 数字
 					t2 = (/^(~)?((\+|-)?(\d*\.)?\d*)$/).exec(t);
 					if (!t2) {
-						return { description: t + "不是数值" };
+						return { description: t + "不是数值" }; // 如果不符合格式，返回错误描述
 					}
-					// 判断是否可以结束：有数字部分或仅有~且后面没有数字
-					const canFinish = (t2[5] && t2[5].length > 0) || (t2[1] && !t2[2].length);
+
+					Common.toast(JSON.stringify(t2));
 					r = {
-						length: t.length,
-						input: [],
-						assist: {},
-						canFinish: canFinish
+						length: t.length, // 输入的长度
+						input: [], // 输入的补全建议
+						assist: {}, // 补全建议的详细信息
+						canFinish: true // 是否可以结束输入
 					};
 					// 如果没有输入~，提供补全建议
-					if (ps.indexOf('~') === -1) {
+					if (ps.indexOf('~') === -1 && ps.length == 0) {
 						r.input = ["~ - 相对标识符"];
 						r.assist = { "~ - 相对标识符": "~" };
 					}
+					
 					break;
 
 				case "position":
