@@ -2797,7 +2797,7 @@ MapScript.loadModule("CA", {
 							title = new G.TextView(ctx);
 							title.setPadding(0, 15 * G.dp, 0, 0);
 							title.setGravity(G.Gravity.CENTER);
-							title.setText("命令助手  " + BuildConfig.version);
+							title.setText("命令助手 Reforged  " + BuildConfig.version);
 							title.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 							Common.applyStyle(title, "textview_default", 4);
 							linear.addView(title);
