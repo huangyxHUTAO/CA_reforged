@@ -2893,7 +2893,7 @@ MapScript.loadModule("CA", {
 							try {
 								AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://qm.qq.com/q/dTqhmNpcoo"))
 									.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
-							} catch(e) {
+							} catch (e) {
 								Log.e(e);
 							}
 						}
@@ -3396,11 +3396,11 @@ MapScript.loadModule("CA", {
 						current: function (p) {
 							return p == 0 ? "不保存历史" : this.list[p] + "条";
 						},
-						list: [0, 1, 3, 5, 8, 10, 20, 30, 50, 100, 200, 1000, 10000],
-						max: 12,
+						list: [0, 1, 3, 5, 8, 10, 20, 30, 50, 100, 200, 1000, 10000, 1000000],// 我就不信10000000条历史还不够你们用
+						max: 13,
 						get: function () {
 							var k = this.list.indexOf(CA.settings.histroyCount);
-							return k < 0 ? 1000 : this.list[k];
+							return k < 0 ? 1000000 : this.list[k];
 						},
 						set: function (v) {
 							CA.settings.histroyCount = parseInt(this.list[v]);
