@@ -891,7 +891,7 @@
 							}
 
 							// 调用 getSelectorParamCompletions 方法
-							recommend_enums = this.getSelectorParamCompletions(processedInput, ps, selectors, "");
+							recommend_enums = this.getSelectorParamCompletions(processedInput, ps, selectors, "", true);// 有人想要按照字母排序
 						}
 					}
 				} else if (pathArr[pathArr.length - 1] === "[...]") {
