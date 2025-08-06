@@ -1,8 +1,12 @@
 "ui";
 /*
     Command Assistant (命令助手)
+	
     Copyright (C) 2017-2019  ProjectXero
     E-mail: projectxero@163.com
+
+	Copyright (C) 2019-2025  huangyx(南鸢晨星)
+    E-mail: huangyxnycx@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
