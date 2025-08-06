@@ -95,7 +95,7 @@ MapScript.loadModule("CA", {
 		var pf = new java.io.File(this.profilePath);
 		var f = SafeFileUtils.readJSON(pf, null), t;
 		if (!f) {
-			t = new java.io.File(android.os.Environment.getExternalStorageDirectory(), "games/com.mojang/minecraftWorlds/" + (BuildConfig.variants == "release" ? "xero_commandassist.dat" : "xero_commandassist_snapshot.dat"));
+			t = new java.io.File(ExternalStorage && ExternalStorage.getExternalStorageRoot ? ExternalStorage.getExternalStorageRoot() : android.os.Environment.getExternalStorageDirectory().getAbsolutePath(), "games/com.mojang/minecraftWorlds/" + (BuildConfig.variants == "release" ? "xero_commandassist.dat" : "xero_commandassist_snapshot.dat"));
 			if (t.isFile()) f = SafeFileUtils.readJSON(t, null);
 			t.delete();
 		}
@@ -205,9 +205,10 @@ MapScript.loadModule("CA", {
 				tipsRead: 0,
 				iiMode: -1,
 				libraryAutoUpdate: 1,
-				enabledLibrarys: Object.keys(this.Library.inner),
+				securityLevel: 1,
+				enabledLibrarys: this.Library.recommended,
 				coreLibrarys: [],
-				disabledLibrarys: [],
+				disabledLibrarys: this.Library.defaultDisabled,
 				deprecatedLibrarys: [],
 				customExpression: [],
 				quickBarActions: Object.copy(CA.quickBarDefaultActions)
@@ -1950,10 +1951,9 @@ MapScript.loadModule("CA", {
 					self.linear.setOrientation(G.LinearLayout.HORIZONTAL);
 					self.con = new G.FrameLayout(ctx);
 					self.linear.addView(self.con);
-					self.help = Common.newWebView(function (wv) {
-						self.initBrowser(wv);
+					self.help = Common.createWebView(function (wv) {
 						self.wvAvailable = true;
-					});
+					}, self.help);
 					self.linear.addView(self.help);
 					CA.con.addOnLayoutChangeListener(self.layoutListener = new G.View.OnLayoutChangeListener({
 						onLayoutChange: function (v, l, t, r, b, ol, ot, or, ob) {
@@ -2041,6 +2041,10 @@ MapScript.loadModule("CA", {
 					}
 					PWM.registerResetFlag(CA, "assist");
 					PWM.registerResetFlag(self, "con");
+					PWM.on("reset", function () {
+						Common.destroyWebView(self.help);
+						self.help = null;
+					});
 				}
 				self.linear.setTranslationX(self.tx = self.lx = 0);
 				CA.assist = self.linear;
@@ -2176,13 +2180,14 @@ MapScript.loadModule("CA", {
 						type: 0,
 						text: "导入",
 						action: function () {
-							Common.showFileDialog({
-								type: 0,
-								callback: function (f) {
+							ExternalStorage.showImportActions({
+								mimeType: "application/json",
+								uri(uri) {
 									try {
-										var r = JSON.parse(Common.readFile(f.result, "[]"));
+										const content = ExternalStorage.readFileContent(uri, "UTF-8", "[]");
+										const r = JSON.parse(content);
 										if (!Array.isArray(r)) throw "不正确的收藏夹格式";
-										r.forEach(function (e) {
+										r.forEach((e) => {
 											e = String(e);
 											if (e.length) CA.addHistory(e);
 										});
@@ -2204,16 +2209,11 @@ MapScript.loadModule("CA", {
 								if (!self.selection[i]) continue;
 								z.push(CA.his[i]);
 							}
-							Common.showFileDialog({
-								type: 1,
-								callback: function (f) {
-									try {
-										Common.saveFile(f.result, JSON.stringify(z, null, 4));
-										Common.toast("历史已保存至" + f.result);
-									} catch (e) {
-										erp(e, true);
-										Common.toast("文件保存失败，无法导出\n" + e);
-									}
+							ExternalStorage.showExportActions({
+								mimeType: "application/json",
+								hint: "历史.json",
+								export(uri) {
+									ExternalStorage.writeFileContent(uri, JSON.stringify(z, null, 4));
 								}
 							});
 						}
@@ -2484,13 +2484,14 @@ MapScript.loadModule("CA", {
 						text: "导入",
 						action: function () {
 							var fd = self.path[self.path.length - 1];
-							Common.showFileDialog({
-								type: 0,
-								callback: function (f) {
+							ExternalStorage.showImportActions({
+								mimeType: "application/json",
+								uri(uri) {
 									try {
-										var r = JSON.parse(Common.readFile(f.result, "[]"));
+										const content = ExternalStorage.readFileContent(uri, "UTF-8", "[]");
+										const r = JSON.parse(content);
 										if (!Array.isArray(r)) throw "不正确的收藏夹格式";
-										r.forEach(function (e) {
+										r.forEach((e) => {
 											CA.addFavorite(e, fd.children);
 										});
 										self.refresh();
@@ -2512,16 +2513,11 @@ MapScript.loadModule("CA", {
 								if (!self.selection[i]) continue;
 								a.push(self.array[i]);
 							}
-							Common.showFileDialog({
-								type: 1,
-								callback: function (f) {
-									try {
-										Common.saveFile(f.result, JSON.stringify(a, null, 4));
-										Common.toast("收藏已保存至" + f.result);
-									} catch (e) {
-										erp(e, true);
-										Common.toast("文件保存失败，无法导出\n" + e);
-									}
+							ExternalStorage.showExportActions({
+								mimeType: "application/json",
+								hint: "收藏.json",
+								export(uri) {
+									ExternalStorage.writeFileContent(uri, JSON.stringify(a, null, 4));
 								}
 							});
 						}
@@ -2731,7 +2727,7 @@ MapScript.loadModule("CA", {
 						if (f) CA.showSettings();
 						CA.showIcon();
 					}
-					self.root = [/*UserManager.getSettingItem(), */{
+					self.root = [UserManager.getSettingItem(), {
 						type: "space",
 						height: 12 * G.dp
 					}, {
@@ -3441,14 +3437,15 @@ MapScript.loadModule("CA", {
 						name: "导入用户数据",
 						type: "custom",
 						onclick: function () {
-							Common.showFileDialog({
-								type: 0,
-								callback: function (f) {
+							ExternalStorage.showImportActions({
+								mimeType: "*/*",
+								file(f) {
 									try {
-										CA.importSettings(f.result);
+										CA.importSettings(f);
 									} catch (e) {
-										Common.toast("从" + f.result + "导入用户数据失败\n" + e);
+										Common.toast("导入用户数据失败\n" + e);
 									}
+									ExternalStorage.tryReleaseImportFile(f);
 								}
 							});
 						}
@@ -3526,13 +3523,13 @@ MapScript.loadModule("CA", {
 		Common.showOperateDialog([{
 			text: "导出",
 			onclick: function () {
-				Common.showFileDialog({
-					type: 1,
-					defaultFileName: "ca_settings.dat",
-					callback: function (f) {
+				ExternalStorage.showExportActions({
+					mimeType: "application/octet-stream",
+					hint: "ca_settings.dat",
+					export(uri) {
 						try {
-							Common.fileCopy(new java.io.File(CA.profilePath), f.result);
-							Common.toast("配置已导出至" + f.result);
+							ExternalStorage.copy(ExternalStorage.toUri(CA.profilePath), uri);
+							Common.toast("配置已导出");
 						} catch (e) {
 							erp(e, true);
 							Common.toast("文件保存失败，无法导出\n" + e);
@@ -3546,26 +3543,17 @@ MapScript.loadModule("CA", {
 			onclick: function () {
 				try {
 					Common.fileCopy(new java.io.File(CA.profilePath), this.path);
-					AndroidBridge.startActivity(this.intent);
+					AndroidBridge.sendFile(this.path);
 				} catch (e) {
 					Log.e(e);
 					Common.toast("发送配置文件失败\n" + e);
 				}
-			},
-			hidden: function () {
-				try {
-					this.intent = new android.content.Intent(android.content.Intent.ACTION_SEND)
-						.setType("text/plain")
-						.putExtra(android.content.Intent.EXTRA_STREAM, AndroidBridge.fileToUri(this.path))
-						.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION | android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-				} catch (e) { Log.e(e) }
-				return !this.intent;
 			}
 		}]);
 	},
 
 	manageErrors: function () {
-		var f = new java.io.File(android.os.Environment.getExternalStorageDirectory(), "com.huangyx.ca.error.log");
+		var f = new java.io.File(ExternalStorage && ExternalStorage.getExternalStorageRoot ? ExternalStorage.getExternalStorageRoot() : android.os.Environment.getExternalStorageDirectory().getAbsolutePath(), "com.huangyx.ca.error.log");
 		if (!f.isFile()) return Common.toast("无错误记录");
 		Common.showOperateDialog([{
 			text: "打开",
@@ -3589,19 +3577,8 @@ MapScript.loadModule("CA", {
 			}
 		}, {
 			text: "发送",
-			intent: (function () {
-				try {
-					return new android.content.Intent(android.content.Intent.ACTION_SEND)
-						.setType("text/plain")
-						.putExtra(android.content.Intent.EXTRA_STREAM, AndroidBridge.fileToUri(f))
-						.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION | android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION | android.content.Intent.FLAG_ACTIVITY_NEW_TASK);
-				} catch (e) { Log.e(e) }
-			})(),
 			onclick: function () {
-				AndroidBridge.startActivity(this.intent);
-			},
-			hidden: function () {
-				return !this.intent;
+				AndroidBridge.sendFile(f);
 			}
 		}, {
 			text: "清空",
@@ -3612,7 +3589,7 @@ MapScript.loadModule("CA", {
 		}]);
 	},
 	listErrors: function () {
-		var f = Common.readFile(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.huangyx.ca.error.log", "");
+		var f = Common.readFile((ExternalStorage && ExternalStorage.getExternalStorageRoot ? ExternalStorage.getExternalStorageRoot() : android.os.Environment.getExternalStorageDirectory().getAbsolutePath()) + "/com.huangyx.ca.error.log", "");
 		if (!f.length) return;
 		var a = f.slice(9).split("\n* ");
 		a.reverse();
@@ -4257,17 +4234,16 @@ MapScript.loadModule("CA", {
 						text: "从文件中导入",
 						description: "导入外置拓展包",
 						onclick: function (v, tag) {
-							Common.showFileDialog({
-								type: 0,
-								callback: function (f) {
-									self.postTask(function (cb) {
-										var path = String(f.result.getAbsolutePath());
-										if (!CA.Library.isLibrary(path)) {
-											Common.toast("无法导入该拓展包，可能文件不存在");
-											cb(false);
-											return;
-										}
-										CA.Library.enableLibrary(path);
+							ExternalStorage.showImportActions({
+								mimeType: "*/*",
+								hint: "caclib/*/**",
+								allowMultiple: true,
+								file(files) {
+									self.postTask((cb) => {
+										files.forEach((f) => {
+											const uriStr = String(ExternalStorage.toUri(f));
+											CA.Library.enableLibrary(uriStr);
+										});
 										cb(true, function () {
 											Common.toast("导入成功！");
 										});
@@ -4279,26 +4255,51 @@ MapScript.loadModule("CA", {
 							return CA.settings.securityLevel < 0;
 						}
 					}, {
+						text: "从外部存储加载",
+						description: "从外部存储中加载外置拓展包",
+						onclick: function (v, tag) {
+							ExternalStorage.showOpenActions({
+								mimeType: "*/*",
+								allowMultiple: true,
+								callback(uriList) {
+									uriList.forEach((uri) => ExternalStorage.tryTakeUriPermission(uri));
+									self.postTask((cb) => {
+										uriList.forEach((uri) => {
+											const uriStr = String(uri);
+											CA.Library.enableLibrary(uriStr);
+										});
+										cb(true, function () {
+											Common.toast("加载成功！");
+										});
+									});
+								}
+							});
+						},
+						hidden: function () {
+							return CA.settings.securityLevel != 0;
+						}
+					}, {
 						text: "新建拓展包",
 						description: "新建一个不包含内容的包",
 						onclick: function (v, tag) {
-							Common.showFileDialog({
-								type: 1,
-								callback: function (f) {
-									self.postTask(function (cb) {
-										var fp = String(f.result.getAbsolutePath());
+							ExternalStorage.showSaveActions({
+								mimeType: "application/json",
+								hint: "新建拓展包.json",
+								callback(uri) {
+									ExternalStorage.tryTakeUriPermission(uri);
+									self.postTask((cb) => {
 										try {
-											MapScript.saveJSON(fp, {
+											ExternalStorage.writeFileContent(uri, JSON.stringify({
 												"name": "新建拓展包",
 												"author": "作者名",
-												"description": "此处填写介绍，可留空，新建于" + new Date().toLocaleDateString(),
+												"description": "此处填写介绍，可留空，新建于" + new Date().toLocaleString(),
 												"uuid": String(java.util.UUID.randomUUID().toString()),
 												"version": [0, 0, 1],
 												"require": []
-											});
-											CA.Library.enableLibrary(fp);
+											}));
+											CA.Library.enableLibrary(String(uri));
 											cb(true, function () {
-												Common.toast("拓展包已新建：" + fp);
+												Common.toast("拓展包已新建");
 											});
 										} catch (e) {
 											Common.toast("文件保存失败，无法新建\n" + e);
@@ -4309,7 +4310,7 @@ MapScript.loadModule("CA", {
 							});
 						},
 						hidden: function () {
-							return CA.settings.securityLevel >= 1 || CA.settings.securityLevel < 0;
+							return CA.settings.securityLevel != 0;
 						}
 					}, {
 						text: "刷新",
@@ -4446,7 +4447,7 @@ MapScript.loadModule("CA", {
 						text: "忽略版本",
 						description: "暂时忽略版本限制",
 						hidden: function () {
-							return CA.Library.ignoreVersion;
+							return CA.settings.securityLevel != 0 || CA.Library.ignoreVersion;
 						},
 						onclick: function (v, tag) {
 							self.postTask(function (cb) {
@@ -4461,7 +4462,7 @@ MapScript.loadModule("CA", {
 						text: "取消忽略版本",
 						description: "取消忽略版本限制",
 						hidden: function () {
-							return !CA.Library.ignoreVersion;
+							return CA.settings.securityLevel != 0 || !CA.Library.ignoreVersion;
 						},
 						onclick: function (v, tag) {
 							self.postTask(function (cb) {
@@ -4477,10 +4478,12 @@ MapScript.loadModule("CA", {
 						description: "将拓展包列表恢复为默认",
 						onclick: function (v, tag) {
 							self.postTask(function (cb) {
-								CA.settings.enabledLibrarys = Object.keys(CA.Library.inner);
-								CA.settings.disabledLibrarys = [];
-								CA.settings.coreLibrarys = [];
-								CA.settings.deprecatedLibrarys = [];
+								CA.settings.enabledLibrarys.concat(
+									CA.settings.disabledLibrarys,
+									CA.settings.coreLibrarys
+								).forEach((e) => CA.Library.removeLibrary(e));
+								CA.Library.recommended.forEach((e) => CA.Library.enableLibrary(e));
+								CA.Library.defaultDisabled.forEach((e) => CA.Library.disableLibrary(e));
 								CA.Library.clearCache();
 								cb(true, function () {
 									Common.toast("已恢复为默认拓展包列表");
@@ -4496,9 +4499,7 @@ MapScript.loadModule("CA", {
 						},
 						onclick: function (v, tag) {
 							self.postTask(function (cb) {
-								var f = new java.io.File(tag.data.src);
 								CA.Library.removeLibrary(tag.data.src);
-								CA.Library.cleanLibrary();
 								cb(true, function () {
 									Common.toast("该拓展包已从列表中移除");
 								});
@@ -4508,39 +4509,46 @@ MapScript.loadModule("CA", {
 						text: "查看信息",
 						description: "查看该拓展包的相关信息",
 						onclick: function (v, tag) {
-							var f = new java.io.File(tag.data.src), s;
-							s = "名称 : " + tag.data.name;
-							if (f.isFile()) s += "\n位置 : " + tag.data.src + "\n大小 : " + Common.getFileSize(f, true) + "\n时间 : " + new Date(f.lastModified()).toLocaleString();
+							var uri = ExternalStorage.toUri(tag.data.src);
+							var s = ["名称 : " + tag.data.name];
+							if (ExternalStorage.isFile(uri)) {
+								s.push("位置 : " + ExternalStorage.uriToReadablePath(uri));
+								s.push("大小 : " + ExternalStorage.getLengthString(uri));
+								s.push("时间 : " + ExternalStorage.getLastModifiedString(uri));
+							}
 							if (tag.data.updateState) {
-								s += "\n更新状态 : ";
+								let updateStateStr;
 								switch (tag.data.updateState) {
 									case "checking":
-										s += "正在检测";
+										updateStateStr = "正在检测";
 										break;
 									case "latest":
-										s += "已是最新版";
+										updateStateStr = "已是最新版";
 										break;
 									case "unavailable":
-										s += "更新源不可用";
+										updateStateStr = "更新源不可用";
 										break;
 									case "ready":
-										s += "已准备更新";
+										updateStateStr = "已准备更新";
 										break;
 									case "waitForUser":
-										s += "等待用户手动更新";
+										updateStateStr = "等待用户手动更新";
 										break;
 									case "error":
-										s += "下载更新出错";
+										updateStateStr = "下载更新出错";
 										break;
 									case "finished":
-										s += "已下载更新";
+										updateStateStr = "已下载更新";
 										break;
 									default:
-										s += "未知";
+										updateStateStr = "未知";
 								}
+								s.push("更新状态 : " + updateStateStr);
 							}
-							if (!tag.data.disabled && !tag.data.hasError && tag.data.stat) s += "\n\n" + tag.data.stat.toString();
-							Common.showTextDialog(s);
+							if (!tag.data.disabled && !tag.data.hasError && tag.data.stat) {
+								s.push("", tag.data.stat.toString());
+							}
+							Common.showTextDialog(s.join("\n"));
 						}
 					}];
 					self.enabledMenu = [{
@@ -4601,90 +4609,99 @@ MapScript.loadModule("CA", {
 						text: "编辑",
 						description: "用JSON编辑器编辑该拓展包",
 						hidden: function (tag) {
-							return tag.data.mode != 1;
+							return CA.settings.securityLevel != 0 || tag.data.mode != 1;
 						},
 						onclick: function (v, tag) {
-							self.postTask(function (cb) {
-								var a = MapScript.readJSON(tag.data.src, {});
+							var uri = ExternalStorage.toUri(tag.data.src);
+							var content;
+							try {
+								content = ExternalStorage.readFileContent(uri, "UTF-8");
+								a = JSON.parse(content);
+							} catch (e) {
+								Common.toast("此拓展包无法使用JSON编辑器进行编辑\n" + e);
+								return;
+							}
 								if (!(a instanceof Object)) a = {};
 								JSONEdit.show({
 									source: a,
 									rootname: "拓展包",
 									update: function () {
+									self.postTask(function (cb) {
 										try {
-											self.processing = true;
-											MapScript.saveJSON(tag.data.src, a);
+											ExternalStorage.writeFileContent(uri, JSON.stringify(a));
 											CA.Library.clearCache(tag.data.src);
 											cb(true, function () {
 												Common.toast("加载成功！");
 											});
 										} catch (e) {
-											Common.toast("格式不合法，无法保存\n" + e);
+											Common.toast("文件保存失败\n" + e);
 											cb(false);
 											return;
 										}
+									});
 									}
-								});
 							});
 						}
 					}, {
-						text: "另存为",
+						text: "导出",
 						description: "将该拓展包保存到一个新文件里",
 						onclick: function (v, tag) {
 							if (tag.data.hasError) {
-								Common.toast("拓展包“" + tag.data.name + "”有错误，请先解决错误再另存为");
+								Common.toast("拓展包“" + tag.data.name + "”有错误，请先解决错误再导出");
 								return true;
 							}
-							Common.showFileDialog({
-								type: 1,
-								callback: function (f) {
-									self.postTask(function (cb) {
-										var fp = String(f.result.getAbsolutePath());
-										try {
 											if (tag.data.mode == 0) {
-												MapScript.saveJSON(fp, CA.Library.inner[tag.data.src]);
+								ExternalStorage.showExportActions({
+									mimeType: "application/json",
+									hint: tag.data.name + ".json",
+									export(uri) {
+										ExternalStorage.writeFileContent(uri, JSON.stringify(CA.Library.inner[tag.data.src]));
+									}
+								});
 											} else {
-												Common.fileCopy(new java.io.File(tag.data.src), f.result);
-											}
-											CA.Library.clearCache(fp);
-											CA.Library.disableLibrary(fp);
-											cb(true, function () {
-												Common.toast("拓展包“" + tag.data.name + "”已另存为" + fp);
-											});
-										} catch (e) {
-											Common.toast("文件保存失败，无法另存为\n" + e);
-											cb(false);
-										}
+								ExternalStorage.showExportActions({
+									mimeType: "application/json",
+									hint: tag.data.name + ".json",
+									export: tag.data.src
 									});
 								}
-							});
 						}
 					}, {
 						text: "创建副本",
 						description: "创建该拓展包的副本（副本不会被认为与原拓展包相同）",
 						hidden: function (tag) {
-							return tag.data.hasError || tag.data.mode >= 2;
+							return CA.settings.securityLevel != 0 || tag.data.hasError || tag.data.mode >= 2;
 						},
 						onclick: function (v, tag) {
-							Common.showFileDialog({
-								type: 1,
-								callback: function (f) {
+							ExternalStorage.showSaveActions({
+								mimeType: "application/json",
+								hint: tag.data.name + ".json",
+								callback(uri) {
 									self.postTask(function (cb) {
-										var fp = String(f.result.getAbsolutePath()), l;
-										try {
+										let l;
+										const uriStr = String(uri);
 											if (tag.data.mode == 0) {
 												l = Object.copy(CA.Library.inner[tag.data.src]);
 											} else {
-												l = MapScript.readJSON(tag.data.src, null);
-												if (!(l instanceof Object)) throw "无法读取文件";
+											try {
+												const origUri = ExternalStorage.toUri(tag.data.src);
+												const content = ExternalStorage.readFileContent(origUri, "UTF-8");
+												l = JSON.parse(content);
+												if (!(l instanceof Object)) throw "格式错误";
+											} catch (e) {
+												Common.toast("此拓展包无法创建副本\n" + e);
+												cb(false);
+												return;
+											}
 											}
 											l.name = String(l.name) + " 的副本";
 											l.uuid = String(java.util.UUID.randomUUID().toString());
-											MapScript.saveJSON(fp, l);
-											CA.Library.clearCache(fp);
-											CA.Library.enableLibrary(fp);
+										try {
+											ExternalStorage.writeFileContent(uri, JSON.stringify(l));
+											CA.Library.clearCache(uriStr);
+											CA.Library.enableLibrary(uriStr);
 											cb(true, function () {
-												Common.toast("拓展包“" + tag.data.name + "”的副本已创建" + fp);
+												Common.toast("拓展包“" + tag.data.name + "”的副本已创建");
 											});
 										} catch (e) {
 											Common.toast("文件保存失败，无法创建副本\n" + e);
@@ -4698,7 +4715,7 @@ MapScript.loadModule("CA", {
 						text: "锁定",
 						description: "锁定拓展包，使其不能被编辑",
 						hidden: function (tag) {
-							return tag.data.hasError || tag.data.mode != 1;
+							return CA.settings.securityLevel != 0 || tag.data.hasError || tag.data.mode != 1;
 						},
 						onclick: function (v, tag) {
 							Common.showConfirmDialog({
@@ -4708,7 +4725,10 @@ MapScript.loadModule("CA", {
 									if (id != 0) return;
 									self.postTask(function (cb) {
 										try {
-											CA.Library.savePrefixed(tag.data.src, MapScript.readJSON(tag.data.src));
+											const uri = ExternalStorage.toUri(tag.data.src);
+											const content = ExternalStorage.readFileContent(uri, "UTF-8");
+											const obj = JSON.parse(content);
+											CA.Library.savePrefixed(uri, obj);
 											CA.Library.clearCache(tag.data.src);
 											cb(true, function () {
 												Common.toast("拓展包“" + tag.data.name + "”已被锁定");
@@ -4857,12 +4877,18 @@ MapScript.loadModule("CA", {
 							return;
 						}
 						var arr = CA.IntelliSense.library.info.concat(CA.settings.disabledLibrarys.map(function (e, i, a) {
-							var k = e in CA.Library.inner;
+							var isInternal = e in CA.Library.inner;
+							var name;
+							if (isInternal) {
+								name = CA.Library.inner[e].name;
+							} else {
+								name = ExternalStorage.uriToName(ExternalStorage.toUri(e));
+							}
 							return {
 								src: e,
 								index: i,
-								mode: k ? 0 : -1,
-								name: k ? CA.Library.inner[e].name : (new java.io.File(e)).getName(),
+								mode: isInternal ? 0 : -1,
+								name: name,
 								disabled: true
 							};
 						}));
@@ -5122,12 +5148,12 @@ MapScript.loadModule("CA", {
 					}
 					self.downloadLib = function (data) {
 						Common.showProgressDialog(function (dia) {
-							var path;
+							var uriStr;
 							dia.setText("正在下载拓展包: " + data.name);
 							try {
-								path = CA.Library.downloadLib(data, self.libsrc);
-								CA.Library.clearCache(path);
-								CA.Library.enableLibrary(path);
+								uriStr = String(CA.Library.downloadLib(data, self.libsrc));
+								CA.Library.clearCache(uriStr);
+								CA.Library.enableLibrary(uriStr);
 							} catch (e) {
 								Common.toast("下载拓展包“" + data.name + "”失败\n" + e);
 								return;
@@ -5270,6 +5296,10 @@ MapScript.loadModule("CA", {
 		Common.showOperateDialog([{
 			text: "不使用",
 			onclick: function () {
+				if (CA.settings.bgImage) {
+					const file = new java.io.File(CA.settings.bgImage);
+					ExternalStorage.tryReleaseImportFile(file);
+				}
 				CA.settings.bgImage = null;
 				callback();
 				Common.toast("背景图片已设置为 无");
@@ -5277,11 +5307,14 @@ MapScript.loadModule("CA", {
 		}, {
 			text: "从文件中选择",
 			onclick: function (v, tag) {
-				AndroidBridge.selectImage(function (path) {
-					if (!path) return Common.toast("背景图片无效");
-					CA.settings.bgImage = path;
+				ExternalStorage.showImportActions({
+					mimeType: "image/*",
+					hint: "ca_background_image",
+					file(f) {
+						CA.settings.bgImage = String(f.getAbsolutePath());
 					callback();
-					Common.toast("背景图片已设置为 " + path);
+						Common.toast("背景图片已设置");
+					}
 				});
 			}
 		}, {
@@ -5319,11 +5352,15 @@ MapScript.loadModule("CA", {
 						return view;
 					}
 					self.selectIcon = function (callback) {
-						AndroidBridge.selectImage(function (path) {
-							if (!path) return Common.toast("图片无效");
+						ExternalStorage.showImportActions({
+							mimeType: "image/*",
+							hint: "ca_icon_image",
+							file(f) {
+								const path = String(f.getAbsolutePath());
 							CA.settings.icon = path;
 							if (self.recent.indexOf(path) < 0) self.recent.push(path);
 							if (callback) callback();
+							}
 						});
 					}
 					self.recent = [];
@@ -5649,9 +5686,17 @@ MapScript.loadModule("CA", {
 
 					PWM.registerResetFlag(self, "linear");
 				}
+				Common.showProgressDialog(function (o) {
+					o.setText("正在加载列表……");
 				self.init(list);
+					if (o.cancelled) return;
+					G.ui(function () {
+						try {
 				self.callback = callback;
 				self.popup.enter();
+						} catch (e) { erp(e) }
+					});
+				}, true);
 			} catch (e) { erp(e) }
 		})
 	},
@@ -6285,13 +6330,13 @@ MapScript.loadModule("CA", {
 									return;
 								}
 								self.addExp();
-								Common.showFileDialog({
-									type: 1,
-									callback: function (f) {
-										var fp = String(f.result.getAbsolutePath());
+								ExternalStorage.showExportActions({
+									mimeType: "text/plain",
+									hint: "generated.mcfunction",
+									export(uri) {
 										try {
-											Common.saveFile(fp, "# This file is spawned by CA\n# Template: " + self.flatten() + "\n\n" + self.export().join("\n"));
-											Common.toast("已保存至" + fp);
+											ExternalStorage.writeFileContent(uri, "# This file is spawned by CA\n# Template: " + self.flatten() + "\n\n" + self.export().join("\n"));
+											Common.toast("函数文件已保存");
 										} catch (e) {
 											Common.toast("保存函数文件失败\n" + e);
 										}

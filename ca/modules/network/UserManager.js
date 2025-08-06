@@ -859,7 +859,7 @@ MapScript.loadModule("UserManager", {
 					this.description = userInfo.email;
 				} else {
 					this.name = "未登录";
-					this.description = "点击登录命令助手账号";
+					this.description = "点击登录 命令助手 账号（由ProjectXero提供）";
 				}
 				return "";
 			},

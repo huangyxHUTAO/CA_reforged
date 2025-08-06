@@ -676,38 +676,49 @@ MapScript.loadModule("Common", {
 				})
 			},
 				self.controller = {
-					setText: function (s) {
+					setText: function (s, uptimeMillis) {
 						var o = this;
-						G.ui(function () {
+						gHandler.postAtTime(() => {
 							try {
+								if (o.closed) return;
+								o.currentText = s;
+								if (!o.popup) {
+									self.init(o);
+								}
 								o.text.setText(Common.toString(s));
 							} catch (e) { erp(e) }
-						});
+						}, uptimeMillis || android.os.SystemClock.uptimeMillis());
 					},
-					close: function () {
+					setTextDelayed: function (s, millis) {
+						this.setText(s, android.os.SystemClock.uptimeMillis() + millis);
+					},
+					close: function (callback) {
 						var o = this;
 						G.ui(function () {
 							try {
 								if (o.closed) return;
 								o.closed = true;
+								if (o.popup) {
 								o.popup.exit();
+								}
+								if (callback) callback();
 							} catch (e) { erp(e) }
 						});
 					},
-					async: function (f) {
+					async: function (f, onFinally) {
 						var o = this;
 						Threads.run(function () {
 							try {
 								f(o);
 							} catch (e) { erp(e) }
-							o.close();
+							o.close(onFinally);
 						});
 					}
 				};
 		}
 		var o = Object.create(self.controller);
+		o.startTime = android.os.SystemClock.uptimeMillis();
 		o.onCancel = onCancel;
-		self.init(o);
 		if (f) o.async(f);
 		return o;
 	},
@@ -1161,7 +1172,10 @@ MapScript.loadModule("Common", {
 							fi.sort(self.compare);
 						}
 						var a = o.fileFirst ? fi.concat(dir) : dir.concat(fi);
-						if (o.curdir.getParent()) a.unshift(null);
+						var parent = o.curdir.getParent();
+						if (parent && ExternalStorage.isInStorage(parent)) {
+							a.unshift(null);
+						}
 						self.list.setAdapter(self.curadp = new SimpleListAdapter(a, self.vmaker, self.vbinder));
 					}
 					self.linear = new G.LinearLayout(ctx);
@@ -1269,10 +1283,21 @@ MapScript.loadModule("Common", {
 							try {
 								var o = self.sets;
 								var e = self.curadp.getItem(pos);
-								if (!e) {
-									o.curdir = o.curdir.getParentFile();
-								} else if (e.isDirectory()) {
-									o.curdir = e;
+								var newdir;
+								if (!e || e.isDirectory()) {
+									if (e) {
+										newdir = e;
+									} else {
+										newdir = o.curdir.getParentFile();
+									}
+									if (ExternalStorage.isAccessible(newdir.getAbsolutePath())) {
+										o.curdir = newdir;
+									} else {
+										ExternalStorage.ensureExternalStorage(function () {
+											o.curdir = newdir;
+											self.refresh();
+										});
+									}
 								} else if (o.type == 0) {
 									self.choose(e);
 									return true;
@@ -1350,7 +1375,9 @@ MapScript.loadModule("Common", {
 				self.sets = o;
 				try {
 					o.curdir = new java.io.File(String(o.initDir ? o.initDir : self.lastDir));
-					if (!o.curdir.isDirectory()) o.curdir = android.os.Environment.getExternalStorageDirectory();
+					if (!o.curdir.isDirectory() || !ExternalStorage.isAccessible(o.curdir.getAbsolutePath())) {
+						o.curdir = ExternalStorage.getAccessibleRoot();
+					}
 					self.refresh();
 				} catch (e) {
 					Common.toast(self.intl.resolve("errAccessDir", e));
@@ -1386,13 +1413,7 @@ MapScript.loadModule("Common", {
 				layout.setOrientation(G.LinearLayout.VERTICAL);
 				layout.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 0);
 				Common.applyStyle(layout, "message_bg");
-				try {
-					wv = new G.WebView(ctx);
-				} catch (e) {
-					Common.toast(Common.intl.resolve("webviewUnavailable", e));
-					return;
-				}
-				wv.setLayoutParams(new G.LinearLayout.LayoutParams(-1, 0, 1.0));
+				wv = Common.createWebView(function (wv) {
 				if (s.url && s.code) {
 					wv.loadDataWithBaseURL(String(s.url), String(s.code), s.mimeType ? String(s.mimeType) : null, null, null);
 				} else if (s.code) {
@@ -1402,19 +1423,8 @@ MapScript.loadModule("Common", {
 				} else {
 					wv.loadUrl("about:blank");
 				}
-				ws = wv.getSettings();
-				ws.setSupportZoom(true);
-				ws.setJavaScriptEnabled(true);
-				ws.setAllowFileAccess(true);
-				ws.setAllowFileAccessFromFileURLs(true);
-				ws.setAllowUniversalAccessFromFileURLs(true);
-				ws.setSaveFormData(true);
-				ws.setLoadWithOverviewMode(true);
-				ws.setJavaScriptCanOpenWindowsAutomatically(true);
-				ws.setLoadsImagesAutomatically(!CA.settings.noWebImage);
-				ws.setAllowContentAccess(true);
-				//ws.setBuiltInZoomControls(true);
-				//ws.setUseWideViewPort(true);
+				});
+				wv.setLayoutParams(new G.LinearLayout.LayoutParams(-1, 0, 1.0));
 				layout.addView(wv);
 				exit = new G.TextView(ctx);
 				exit.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
@@ -1433,7 +1443,7 @@ MapScript.loadModule("Common", {
 				layout.addView(exit);
 				popup = PopupPage.showDialog("common.WebDialog", layout, -1, -1);
 				popup.on("exit", function () {
-					wv.destroy();
+					Common.destroyWebView(wv);
 				});
 			} catch (e) { erp(e) }
 		})
@@ -1736,11 +1746,105 @@ MapScript.loadModule("Common", {
 		})
 	},
 
-	newWebView: function (callback) {
-		var result, error;
+	createWebView: function (callback, oldWebView) {
+		var result, ws, error;
 		try {
+			if (oldWebView instanceof G.WebView) {
+				Common.destroyWebView(oldWebView);
+			}
+			if (typeof ScriptInterface != "undefined") {
+				result = ScriptInterface.createWebView({
+					onConsoleMessage(wv, message) {
+						try {
+							Log.d("[WebView]" + JSON.stringify({
+								message: message.message(),
+								lineNumber: message.lineNumber(),
+								sourceId: message.sourceId(),
+								messageLevel: String(message.messageLevel())
+							}, null, "\t"));
+							return true;
+						} catch (e) { return erp(e), false }
+					},
+					onCreateWindow(wv, isDialog, isUserGesture, resultMsg) {
+						try {
+							return false;
+						} catch (e) { return erp(e), false }
+					},
+					onJsAlert(wv, url, message, result) {
+						try {
+							Common.showTextDialog(message, () => {
+								result.confirm();
+							});
+							return true;
+						} catch (e) { return erp(e), false }
+					},
+					onJsBeforeUnload(wv, url, message, result) {
+						try {
+							return false;
+						} catch (e) { return erp(e), false }
+					},
+					onJsConfirm(wv, url, message, result) {
+						try {
+							let resumed = false;
+							Common.showConfirmDialog({
+								title: url,
+								description: message,
+								callback(id) {
+									if (id == 0) {
+										result.confirm();
+									} else {
+										result.cancel();
+									}
+									resumed = true;
+								},
+								onDismiss() {
+									if (!resumed) {
+										result.cancel();
+										resumed = true;
+									}
+								}
+							});
+							return true;
+						} catch (e) { return erp(e), false }
+					},
+					onJsPrompt(wv, url, message, defaultValue, result) {
+						try {
+							let resumed = false;
+							Common.showInputDialog({
+								title: url,
+								description: message,
+								defaultValue: defaultValue,
+								callback(s) {
+									result.confirm(s);
+									resumed = true;
+								},
+								onDismiss() {
+									if (!resumed) {
+										result.confirm("");
+										resumed = true;
+									}
+								}
+							});
+							return true;
+						} catch (e) { return erp(e), false }
+					},
+					onShowFileChooser(wv, filePathCallback, fileChooserParams) {
+						try {
+							return false;
+						} catch (e) { return erp(e), false }
+					}
+				});
+			} else {
 			result = new G.WebView(ctx);
-			callback(result);
+			}
+			ws = result.getSettings();
+			ws.setLoadWithOverviewMode(true);
+			ws.setBlockNetworkImage(CA.settings.noWebImage);
+			ws.setDatabaseEnabled(true);
+			ws.setDomStorageEnabled(true);
+			ws.setJavaScriptEnabled(true);
+			ws.setJavaScriptCanOpenWindowsAutomatically(true);
+			callback(result, ws);
 			return result;
 		} catch (e) {
 			erp(e, true);
@@ -1753,6 +1857,15 @@ MapScript.loadModule("Common", {
 		result.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 		result.setText(Common.intl.resolve("webviewUnavailable", error));
 		return result;
+	},
+	destroyWebView: function (wv) {
+		if (wv instanceof G.WebView) {
+			wv.clearHistory();
+			wv.loadUrl("about:blank");
+			let parentView = wv.getParent()
+			if (parentView) parentView.removeView(wv);
+			wv.destroy();
+		}
 	},
 
 	fileCopy: function (src, dest) {
@@ -1939,5 +2052,15 @@ MapScript.loadModule("Common", {
 			while (o.hasNext()) r.push(o.next());
 		}
 		return r;
+	},
+	stringComparator: function (a, b) {
+		a = String(a);
+		b = String(b);
+		return a > b ? 1 : a < b ? -1 : 0;
+	},
+	stringComparatorIgnoreCase: function (a, b) {
+		a = String(a).toLowerCase();
+		b = String(b).toLowerCase();
+		return a > b ? 1 : a < b ? -1 : 0;
 	}
 });

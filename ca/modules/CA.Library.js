@@ -143,11 +143,22 @@
 			};
 		}
 		if (securityLevel >= 0) {
-			f = new java.io.File(path);
-			if (!f.isFile()) {
-				return {
-					error : "拓展包文件不存在"
-				};
+			// 使用ExternalStorage处理文件路径
+			var uri = ExternalStorage && ExternalStorage.toUri ? ExternalStorage.toUri(path) : null;
+			if (uri) {
+				if (!ExternalStorage.isFile(uri)) {
+					return {
+						error : "拓展包文件不存在"
+					};
+				}
+				f = new java.io.File(ExternalStorage.uriToFile(uri));
+			} else {
+				f = new java.io.File(path);
+				if (!f.isFile()) {
+					return {
+						error : "拓展包文件不存在"
+					};
+				}
 			}
 			requiredSecLevel = this.testSecurityLevel(f);
 			if (requiredSecLevel < securityLevel) {

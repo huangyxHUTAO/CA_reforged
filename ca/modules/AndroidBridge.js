@@ -1,3 +1,4 @@
+
 MapScript.loadModule("AndroidBridge", {
 	intentCallback: {},
 	permissionRequestData: { start: 0, end: 0 },
@@ -163,23 +164,30 @@ MapScript.loadModule("AndroidBridge", {
 		if (!intent) return;
 		switch (intent.getAction()) {
 			case ScriptInterface.ACTION_ADD_LIBRARY:
-				t = AndroidBridge.uriToFile(intent.getData());
+				t = intent.getData();
 				if (!t) {
-					Common.toast("无法从" + intent.getData() + "读取拓展包");
+					Common.toast("无法读取拓展包");
 					break;
 				}
 				Common.showConfirmDialog({
-					title: "确定加载拓展包“" + t + "”？",
+					title: "确定加载拓展包“" + ExternalStorage.uriToName(t) + "”？",
 					callback: function (id) {
 						if (id != 0) return onReturn();
-						if (!CA.Library.enableLibrary(String(t))) {
-							Common.toast("无法导入该拓展包，可能文件不存在");
-							return CA.showLibraryMan(onReturn);
-						}
+						const importFile = ExternalStorage.importFile(t, "caclib/*/**");
+						try {
+							CA.Library.enableLibrary(String(ExternalStorage.toUri(importFile)));
 						CA.Library.initLibrary(function () {
 							Common.toast("导入成功！");
 							CA.showLibraryMan(onReturn);
 						});
+						} catch (e) {
+							Log.e(e);
+							Common.toast("无法导入该拓展包\n" + e);
+							return CA.showLibraryMan(onReturn);
+						}
+					},
+					onDismiss: function () {
+						ctx.revokeUriPermission(ctx.getPackageName(), t);
 					}
 				});
 				break;
@@ -285,12 +293,12 @@ MapScript.loadModule("AndroidBridge", {
 	},
 	openUriAction: function (uri, extras) {
 		if (!uri) return;
-		switch (String(uri.getHost()).toLowerCase()) {
-			case "base":
 				var path, obj, query, fragment;
 				path = uri.getPath();
 				query = uri.getEncodedQuery();
 				fragment = uri.getFragment();
+		switch (String(uri.getHost()).toLowerCase()) {
+			case "base":
 				if (path) {
 					obj = this.getBaseUriAction(String(path));
 					if (obj) {
@@ -335,7 +343,6 @@ MapScript.loadModule("AndroidBridge", {
 		});
 	},
 	showSettings: function self(title) {
-
 		if (!self.root) {
 			var preference = ScriptInterface.getPreference();
 			self.root = [{
@@ -377,26 +384,14 @@ MapScript.loadModule("AndroidBridge", {
 				},
 				onclick: function (fset) {
 					var self = this;
-					AndroidBridge.listApp(function (pkg) {
+					AndroidBridge.listLaunchableApp(function (pkg) {
 						if (pkg == ctx.getPackageName()) {
 							Common.toast("不能连锁启动自身！");
 							return;
 						}
 						CA.settings.chainLaunch = pkg;
 						fset(self.get());
-					});
-				}
-			}, {
-				name: "图案字体",
-				description: "如果字体显示不正常，请关闭次选项，但是不再显示图案",
-				type: "boolean",
-				get: function () {
-					return Boolean(CA.settings.iconFont);
-				},
-				set: function (v) {
-					CA.settings.iconFont = Boolean(v);
-					CA.trySave();
-					Common.toast("图案字体 " + (v ? "已启用" : "已禁用")+" 重启应用后生效");
+					}, true);
 				}
 			}, {
 				name: "WebSocket服务器",
@@ -442,14 +437,6 @@ MapScript.loadModule("AndroidBridge", {
 					CA.settings.hideRecent = Boolean(v);
 					Common.toast("本项设置将在重启命令助手后应用");
 				}
-			}, {
-				name: "隐藏通知",
-				description: "可能导致应用被自动关闭",
-				type: "boolean",
-				get: preference.getHideNotification.bind(preference),
-				set: ScriptInterface.setHideNotification
-					? ScriptInterface.setHideNotification.bind(ScriptInterface)
-					: function () { Common.toast("当前环境不支持设置隐藏通知"); }
 			}, {
 				name: "自动启动无障碍服务",
 				description: "需要Root",
@@ -576,15 +563,18 @@ MapScript.loadModule("AndroidBridge", {
 			};
 		}
 	},
-	listApp: function (callback) {
+	listLaunchableApp: function (callback, includeCancel) {
 		Common.showProgressDialog(function (o) {
 			var pm = ctx.getPackageManager();
-			o.setText("正在加载列表……");
+			o.setTextDelayed("正在加载列表……", 200);
 			var lp = pm.getInstalledPackages(0).toArray();
-			var i, r = [{
-				text: "不使用",
+			var i, r = [];
+			if (includeCancel) {
+				r.push({
+					text: "取消选择",
 				result: null
-			}];
+				});
+			}
 			for (i in lp) {
 				if (!lp[i].applicationInfo) continue;
 				if (!pm.getLaunchIntentForPackage(lp[i].packageName)) continue;
@@ -600,6 +590,9 @@ MapScript.loadModule("AndroidBridge", {
 				callback(r[id].result);
 			});
 		}, true);
+	},
+	listApp: function (callback) { // Deprecated
+		this.listLaunchableApp(callback, true);
 	},
 	startActivity: function (intent) {
 		try {
@@ -764,8 +757,45 @@ MapScript.loadModule("AndroidBridge", {
 			activity.requestPermissionsCompat(code, data.permissions);
 		}
 	},
+	createPendingIntent: function (type, intent, flagList, requestCode) {
+		let flags = 0;
+		if (!Array.isArray(flagList)) flagList = [];
+		if (isNaN(requestCode)) requestCode = 0;
+		if (android.os.Build.VERSION.SDK_INT >= 23) {
+			if (flagList.includes("mutable")) {
+				if (android.os.Build.VERSION.SDK_INT >= 31) {
+					flags |= android.app.PendingIntent.FLAG_MUTABLE;
+				}
+			} else {
+				flags |= android.app.PendingIntent.FLAG_IMMUTABLE;
+			}
+		}
+		if (flagList.includes("updateCurrent")) {
+			flags |= android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+		} else if (flagList.includes("cancelCurrent")) {
+			flags |= android.app.PendingIntent.FLAG_CANCEL_CURRENT;
+		} else if (flagList.includes("noCreate")) {
+			flags |= android.app.PendingIntent.FLAG_NO_CREATE;
+		}
+		if (flagList.includes("oneShot")) {
+			flags |= android.app.PendingIntent.FLAG_ONE_SHOT;
+		}
+		if (type == "service" || type == "foregroundService") {
+			if (android.os.Build.VERSION.SDK_INT > 26 && type == "foregroundService") {
+				return android.app.PendingIntent.getForegroundService(ctx, requestCode, intent, flags);
+			}
+			return android.app.PendingIntent.getService(ctx, requestCode, intent, flags);
+		}
+		if (type == "broadcast") {
+			return android.app.PendingIntent.getBroadcast(ctx, requestCode, intent, flags);
+		}
+		if (Array.isArray(intent)) {
+			return android.app.PendingIntent.getActivities(ctx, requestCode, intent, flags);
+		}
+		return android.app.PendingIntent.getActivity(ctx, requestCode, intent, flags);
+	},
 	getABIs: function () {
-		if (android.os.Build.VERSION.SDK_INT > 21) {
+		if (android.os.Build.VERSION.SDK_INT >= 21) {
 			return android.os.Build.SUPPORTED_ABIS.map(function (e) {
 				return String(e);
 			});
@@ -826,45 +856,49 @@ MapScript.loadModule("AndroidBridge", {
 		var i = new android.content.Intent(android.content.Intent.ACTION_GET_CONTENT);
 		i.setType(mimeType);
 		this.startActivityForResult(i, function (resultCode, data) {
-			if (resultCode != -1) return; // RESULT_OK = -1
+			if (resultCode != -1) return; // RESULT_OK
 			callback(AndroidBridge.uriToFile(data.getData()));
 		});
 	},
 	selectImage: function (callback) {
-		if (MapScript.host == "Android") {
 			try {
 				this.selectFile("image/*", function (path) {
 					callback(path);
 				});
 				return;
 			} catch (e) { erp(e, true) }
+	},
+	sendText: function (text, withSharesheet) {
+		let intent = new android.content.Intent(android.content.Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(android.content.Intent.EXTRA_TEXT, new java.lang.String(String(text)));
+		if (withSharesheet) {
+			intent = android.content.Intent.createChooser(intent, null);
 		}
-		Common.showFileDialog({
-			type: 0,
-			check: function (path) {
-				var bmp = G.BitmapFactory.decodeFile(path.getAbsolutePath());
-				if (!bmp) {
-					Common.toast("不支持的图片格式");
-					return false;
-				}
-				bmp.recycle();
-				return true;
+		return this.startActivity(intent);
+	},
+	sendUri: function (uri, mimeType, withSharesheet) {
+		let intent = new android.content.Intent(android.content.Intent.ACTION_SEND);
+		intent.setType(mimeType);
+		intent.putExtra(android.content.Intent.EXTRA_STREAM, uri);
+		intent.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION | android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+		if (withSharesheet) {
+			intent = android.content.Intent.createChooser(intent, null);
+		}
+		return this.startActivity(intent);
+	},
+	sendFile: function (file, mimeType, withSharesheet) {
+		return this.sendUri(this.fileToUri(file), mimeType, withSharesheet);
 			},
-			callback: function (f) {
-				var path = String(f.result.getAbsolutePath());
-				callback(path);
-			}
-		});
+	shareText: function (text) {
+		return this.sendText(text, true);
+	},
+	viewUri: function (uri) {
+		return AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(uri)));
 	},
 	createShortcut: function (intent, name, icon) {
 		if (android.os.Build.VERSION.SDK_INT >= 26) {
-			if (ScriptInterface.isForeground()) {
 				AndroidBridge.doCreateShortcut(ctx, intent, name, icon);
-			} else {
-				this.beginForegroundTask("createShortcut@" + intent.hashCode().toString(16), function (activity) {
-					AndroidBridge.doCreateShortcut(activity, intent, name, icon);
-				});
-			}
 		} else {
 			var i = new android.content.Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 			i.putExtra(android.content.Intent.EXTRA_SHORTCUT_NAME, name);
@@ -886,8 +920,7 @@ MapScript.loadModule("AndroidBridge", {
 			.setIcon(isNaN(icon) ? icon : android.graphics.drawable.Icon.createWithResource(context, icon))
 			.setIntent(intent)
 			.build();
-		var callback = android.app.PendingIntent.getBroadcast(context, 0,
-			manager.createShortcutResultIntent(shortcut), android.app.PendingIntent.FLAG_ONE_SHOT);
+		var callback = this.createPendingIntent("broadcast", manager.createShortcutResultIntent(shortcut), ["oneShot"]);
 		manager.requestPinShortcut(shortcut, callback.getIntentSender());
 	},
 	scanMedia: function (files, statusListener) {
@@ -964,6 +997,7 @@ MapScript.loadModule("AndroidBridge", {
 	},
 	shouldForceRemoveTask: function () {
 		return SettingsCompat.rom == "FLYME" || SettingsCompat.rom == "MEIZU";
+		// projectXero：
 		//JavaException: android.view.WindowManager$BadTokenException: Unable to add window -- token null is not valid; is your activity running?
 		//魅族Flyme com.meizu.widget.OptionPopupWindow 不支持在有后台任务但context是服务的情况下显示
 		//且客服说是本App的问题，因此我只能勉为其难地剥夺了魅族用户取消选择隐藏后台任务的能力
@@ -1048,23 +1082,6 @@ MapScript.loadModule("AndroidBridge", {
 	},
 	checkNecessaryPermissions: function (callback) {
 		AndroidBridge.requestPermissionsByGroup([{
-			permissions: [
-				"android.permission.READ_EXTERNAL_STORAGE",
-				"android.permission.WRITE_EXTERNAL_STORAGE"
-			],
-			explanation: "读取内部存储\n写入内部存储\n\n这些权限将用于读写命令库、编辑JSON、记录错误日志等",
-			callback: function (flag, success, denied, sync) {
-				if (!sync) {
-					if (flag) {
-						CA.load();
-						Common.toast("权限请求成功，已重新加载配置");
-					} else {
-						Common.toast("权限请求失败\n将造成部分命令库无法读取等问题");
-					}
-				}
-			},
-			mode: 2
-		}, {
 			permissions: [
 				"android.permission.READ_PHONE_STATE"
 			],
