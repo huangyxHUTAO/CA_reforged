@@ -1,12 +1,11 @@
-@version 0.1.0
-@versionCode [0, 1, 0]
-@date 2025-07-31
-@licenceUpdate 2025/07/31
+@version 0.1.1
+@versionCode [0, 1, 1]
+@date 2025-08-07
+@licenceUpdate 2025/08/37
 @description
 命令助手 - （南鸢晨星）社区版！
-[0.1.0]
-- 增加了QQ群
-- 修改了网页，使用CDN加速访问
-- 修复了relative不显示数字的问题
-- 修改了历史容量，最高10000
+[0.1.1]
+- 迁移并适配 AndroidBridge.js、ExternalStorage.js、Common.js
+    - 新增 3 种文件导入/导出路径
+    - 新增 ExternalStorageManager 权限管理
 @end description
