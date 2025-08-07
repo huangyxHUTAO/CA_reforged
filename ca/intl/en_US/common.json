@@ -15,7 +15,8 @@
 	"theme": {
 		"light": "Light",
 		"dark": "Night",
-		"pink_theme": "Pink"
+		"pink_theme": "Pink",
+		"blue_theme": "Blue"
 	},
 	"ChangeTheme": {
 		"title": "Choose Theme",

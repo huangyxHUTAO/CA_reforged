@@ -15,6 +15,20 @@ Common.themelist = {
 		// 剩余请见 \ca\modules\Common.js : 39
 		// 这里就不重复写了
 	},
+	"blue_theme": {                     // 主题ID
+		"name": "晨雾蓝",             // 主题名称
+		"bgcolor": "#F0F9FF",           // 主背景：淡天蓝（比#CDE9FB更浅）
+		"float_bgcolor": "#b3c6ddff",     // 浮动栏：雾霾蓝（参考色）
+		"message_bgcolor": "#E6F4FF",   // 消息区：柔云白蓝
+		"textcolor": "#3A5A78",         // 主文本：深海蓝灰
+		"promptcolor": "#8BA7C1",       // 提示文：晨雾灰蓝
+		"highlightcolor": "#4A7CB5",    // 高亮色：晴空蓝
+		"criticalcolor": "#D95353",     // 警示色：珊瑚红（保持对比）
+		"go_bgcolor": "#B4CFEA",        // GO按钮：浅水蓝（参考色）
+		"go_textcolor": "#FFFFFF",      // 按钮文字：纯白
+		"go_touchbgcolor": "#8FB0D5",   // 按下按钮：深海蓝
+		"go_touchtextcolor": "#FFFFFF"  // 按下文字：纯白
+	},
 	"light": {
 		"name": Intl.get("common.theme.light"),
 		"bgcolor": "#FAFAFA",

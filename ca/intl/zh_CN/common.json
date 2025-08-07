@@ -13,7 +13,8 @@
 	"theme": {
 		"light": "明亮",
 		"dark": "暗色",
-		"pink_theme": "晨星粉"
+		"pink_theme": "晨星粉",
+		"blue_theme": "晨雾蓝"
 	},
 	"ChangeTheme": {
 		"title": "主题选择",

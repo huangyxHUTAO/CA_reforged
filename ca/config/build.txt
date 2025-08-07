@@ -5,6 +5,7 @@
 @description
 命令助手 - （南鸢晨星）社区版！
 [0.1.1]
+- 新的蓝色主题 晨雾蓝
 - 迁移并适配 AndroidBridge.js、ExternalStorage.js、Common.js
     - 新增 3 种文件导入/导出路径
     - 新增 ExternalStorageManager 权限管理
