@@ -30,7 +30,10 @@ MapScript.loadModule("CA", {
 		try {
 			this.plugin = Plugins.inject(this);
 			this.load();
-			if (!(this.settings.readAgreement > Date.parse(BuildConfig.licenceUpdate))) {
+			// 判断此时是否应该显示 许可协议
+			// 如果没同意过，或者同意时间早于协议更新时间
+			if (!CA.settings.readAgreement ||
+				CA.settings.readAgreement < Date.parse(BuildConfig.licenceUpdate)) {
 				this.showAgreementSync();
 			}
 			this.checkFeatures();
@@ -4621,11 +4624,11 @@ MapScript.loadModule("CA", {
 								Common.toast("此拓展包无法使用JSON编辑器进行编辑\n" + e);
 								return;
 							}
-								if (!(a instanceof Object)) a = {};
-								JSONEdit.show({
-									source: a,
-									rootname: "拓展包",
-									update: function () {
+							if (!(a instanceof Object)) a = {};
+							JSONEdit.show({
+								source: a,
+								rootname: "拓展包",
+								update: function () {
 									self.postTask(function (cb) {
 										try {
 											ExternalStorage.writeFileContent(uri, JSON.stringify(a));
@@ -4639,7 +4642,7 @@ MapScript.loadModule("CA", {
 											return;
 										}
 									});
-									}
+								}
 							});
 						}
 					}, {
@@ -4650,7 +4653,7 @@ MapScript.loadModule("CA", {
 								Common.toast("拓展包“" + tag.data.name + "”有错误，请先解决错误再导出");
 								return true;
 							}
-											if (tag.data.mode == 0) {
+							if (tag.data.mode == 0) {
 								ExternalStorage.showExportActions({
 									mimeType: "application/json",
 									hint: tag.data.name + ".json",
@@ -4658,13 +4661,13 @@ MapScript.loadModule("CA", {
 										ExternalStorage.writeFileContent(uri, JSON.stringify(CA.Library.inner[tag.data.src]));
 									}
 								});
-											} else {
+							} else {
 								ExternalStorage.showExportActions({
 									mimeType: "application/json",
 									hint: tag.data.name + ".json",
 									export: tag.data.src
-									});
-								}
+								});
+							}
 						}
 					}, {
 						text: "创建副本",
@@ -4680,9 +4683,9 @@ MapScript.loadModule("CA", {
 									self.postTask(function (cb) {
 										let l;
 										const uriStr = String(uri);
-											if (tag.data.mode == 0) {
-												l = Object.copy(CA.Library.inner[tag.data.src]);
-											} else {
+										if (tag.data.mode == 0) {
+											l = Object.copy(CA.Library.inner[tag.data.src]);
+										} else {
 											try {
 												const origUri = ExternalStorage.toUri(tag.data.src);
 												const content = ExternalStorage.readFileContent(origUri, "UTF-8");
@@ -4693,9 +4696,9 @@ MapScript.loadModule("CA", {
 												cb(false);
 												return;
 											}
-											}
-											l.name = String(l.name) + " 的副本";
-											l.uuid = String(java.util.UUID.randomUUID().toString());
+										}
+										l.name = String(l.name) + " 的副本";
+										l.uuid = String(java.util.UUID.randomUUID().toString());
 										try {
 											ExternalStorage.writeFileContent(uri, JSON.stringify(l));
 											CA.Library.clearCache(uriStr);
@@ -5312,7 +5315,7 @@ MapScript.loadModule("CA", {
 					hint: "ca_background_image",
 					file(f) {
 						CA.settings.bgImage = String(f.getAbsolutePath());
-					callback();
+						callback();
 						Common.toast("背景图片已设置");
 					}
 				});
@@ -5357,9 +5360,9 @@ MapScript.loadModule("CA", {
 							hint: "ca_icon_image",
 							file(f) {
 								const path = String(f.getAbsolutePath());
-							CA.settings.icon = path;
-							if (self.recent.indexOf(path) < 0) self.recent.push(path);
-							if (callback) callback();
+								CA.settings.icon = path;
+								if (self.recent.indexOf(path) < 0) self.recent.push(path);
+								if (callback) callback();
 							}
 						});
 					}
@@ -5688,12 +5691,12 @@ MapScript.loadModule("CA", {
 				}
 				Common.showProgressDialog(function (o) {
 					o.setText("正在加载列表……");
-				self.init(list);
+					self.init(list);
 					if (o.cancelled) return;
 					G.ui(function () {
 						try {
-				self.callback = callback;
-				self.popup.enter();
+							self.callback = callback;
+							self.popup.enter();
 						} catch (e) { erp(e) }
 					});
 				}, true);
@@ -7535,6 +7538,7 @@ MapScript.loadModule("CA", {
 											try {
 												if (agree.checked) {
 													CA.settings.readAgreement = Date.now();
+													CA.trySave();
 													popup.exit();
 												} else {
 													Common.toast("请先同意使用许可协议与隐私政策");
