@@ -16,7 +16,7 @@ Common.themelist = {
 		// 这里就不重复写了
 	},
 	"blue_theme": {                     // 主题ID
-		"name": "晨雾蓝",             // 主题名称
+		"name": Intl.get("common.theme.blue_theme"),             // 主题名称
 		"bgcolor": "#F0F9FF",           // 主背景：淡天蓝（比#CDE9FB更浅）
 		"float_bgcolor": "#b3c6ddff",     // 浮动栏：雾霾蓝（参考色）
 		"message_bgcolor": "#E6F4FF",   // 消息区：柔云白蓝
