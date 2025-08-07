@@ -176,18 +176,31 @@ MapScript.loadModule("AndroidBridge", {
 						const importFile = ExternalStorage.importFile(t, "caclib/*/**");
 						try {
 							CA.Library.enableLibrary(String(ExternalStorage.toUri(importFile)));
-						CA.Library.initLibrary(function () {
-							Common.toast("导入成功！");
-							CA.showLibraryMan(onReturn);
-						});
+							CA.Library.initLibrary(function () {
+								Common.toast("导入成功！");
+								CA.showLibraryMan(onReturn);
+							});
 						} catch (e) {
 							Log.e(e);
 							Common.toast("无法导入该拓展包\n" + e);
 							return CA.showLibraryMan(onReturn);
 						}
 					},
+					// onDismiss: function () {
+					// 	ctx.revokeUriPermission(ctx.getPackageName(), t);
+					// }
+
+					// 在低版本 Android 上调用双参数
+					// 修复方法签名不匹配导致的崩溃
 					onDismiss: function () {
-						ctx.revokeUriPermission(ctx.getPackageName(), t);
+						var flag = android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+						var sdk = android.os.Build.VERSION.SDK_INT;
+
+						if (sdk >= 24) {
+							ctx.revokeUriPermission(ctx.getPackageName(), t, flag);
+						} else {
+							ctx.revokeUriPermission(t, flag);
+						}
 					}
 				});
 				break;
@@ -293,10 +306,10 @@ MapScript.loadModule("AndroidBridge", {
 	},
 	openUriAction: function (uri, extras) {
 		if (!uri) return;
-				var path, obj, query, fragment;
-				path = uri.getPath();
-				query = uri.getEncodedQuery();
-				fragment = uri.getFragment();
+		var path, obj, query, fragment;
+		path = uri.getPath();
+		query = uri.getEncodedQuery();
+		fragment = uri.getFragment();
 		switch (String(uri.getHost()).toLowerCase()) {
 			case "base":
 				if (path) {
@@ -572,7 +585,7 @@ MapScript.loadModule("AndroidBridge", {
 			if (includeCancel) {
 				r.push({
 					text: "取消选择",
-				result: null
+					result: null
 				});
 			}
 			for (i in lp) {
@@ -861,12 +874,12 @@ MapScript.loadModule("AndroidBridge", {
 		});
 	},
 	selectImage: function (callback) {
-			try {
-				this.selectFile("image/*", function (path) {
-					callback(path);
-				});
-				return;
-			} catch (e) { erp(e, true) }
+		try {
+			this.selectFile("image/*", function (path) {
+				callback(path);
+			});
+			return;
+		} catch (e) { erp(e, true) }
 	},
 	sendText: function (text, withSharesheet) {
 		let intent = new android.content.Intent(android.content.Intent.ACTION_SEND);
@@ -889,7 +902,7 @@ MapScript.loadModule("AndroidBridge", {
 	},
 	sendFile: function (file, mimeType, withSharesheet) {
 		return this.sendUri(this.fileToUri(file), mimeType, withSharesheet);
-			},
+	},
 	shareText: function (text) {
 		return this.sendText(text, true);
 	},
@@ -898,7 +911,7 @@ MapScript.loadModule("AndroidBridge", {
 	},
 	createShortcut: function (intent, name, icon) {
 		if (android.os.Build.VERSION.SDK_INT >= 26) {
-				AndroidBridge.doCreateShortcut(ctx, intent, name, icon);
+			AndroidBridge.doCreateShortcut(ctx, intent, name, icon);
 		} else {
 			var i = new android.content.Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 			i.putExtra(android.content.Intent.EXTRA_SHORTCUT_NAME, name);
