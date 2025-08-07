@@ -8,5 +8,6 @@
 - 新的蓝色主题 晨雾蓝
 - 迁移并适配 AndroidBridge.js、ExternalStorage.js、Common.js
     - 新增 3 种文件导入/导出路径
-    - 新增 ExternalStorageManager 权限管理
+    - 新增 ESM 权限管理
+- 增加和修改了 格式化代码 的颜色
 @end description
