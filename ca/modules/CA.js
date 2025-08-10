@@ -5564,6 +5564,10 @@ MapScript.loadModule("CA", {
 		});
 	},
 	showIDList: function self(list, callback) {
+		if (CA.Library.loadingStatus) {
+			Common.toast("命令库加载中，请稍候");
+			return;
+		}
 		G.ui(function () {
 			try {
 				if (!self.linear) {
@@ -5583,9 +5587,10 @@ MapScript.loadModule("CA", {
 						var i, j, cur = list, e, ks, off, total = 0;
 						for (i = 0; i < cur.length; i++) {
 							if (!(cur[i] instanceof Object)) {
-								cur[i] = CA.IntelliSense.library.enums[cur[i]];
+								cur[i] = CA.IntelliSense.library.enums[cur[i]] || {}; // 兜底
 							}
 						}
+						cur = cur.filter(Boolean); // 把 null/undefined 过滤掉
 						for (i = 0; i < cur.length; i++) {
 							e = cur[i];
 							if (e == null) continue;
