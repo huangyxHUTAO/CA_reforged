@@ -455,15 +455,13 @@ MapScript.loadModule("Updater", {
 	sources : {
 		id : "9f15605c-b7fa-49c7-8ee8-55b525570d96",
 		content : [
-			"https://ca.edgeone.huangyx.eu.cc/updater/hotfix.json",// edgeone的CDN优先
-			"https://ca.huangyx.eu.cc/updater/hotfix.json",
+			"https://ca.nycx.top/updater/hotfix.json",
 		]
 	},
 	betaSources : {
 		id : "7a0df683-bae8-477d-9d84-b2a0c72eadcc",
 		content : [
-			"https://ca.edgeone.huangyx.eu.cc/updater/snapshot.json",// edgeone的CDN优先
-			"https://ca.huangyx.eu.cc/updater/snapshot.json",
+			"https://ca.nycx.top/updater/snapshot.json",
 		]
 	}
 });

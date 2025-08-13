@@ -2875,7 +2875,7 @@ MapScript.loadModule("CA", {
 						type: "custom",
 						onclick: function () {
 							try {
-								AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://ca.huangyx.eu.cc/"))
+								AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://ca.nycx.top/"))
 									.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
 							} catch (e) {
 								Common.toast("项目官网打开失败");
@@ -2915,7 +2915,7 @@ MapScript.loadModule("CA", {
 						type: "custom",
 						onclick: function () {
 							Common.showWebViewDialog({
-								url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/eula.html"
+								url: "https://ca.nycx.top/doc/legal/eula.html"
 							});
 						}
 					}, {
@@ -2923,7 +2923,7 @@ MapScript.loadModule("CA", {
 						type: "custom",
 						onclick: function () {
 							Common.showWebViewDialog({
-								url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/privacy.html"
+								url: "https://ca.nycx.top/doc/legal/privacy.html"
 							});
 						}
 					}, {
@@ -2931,7 +2931,7 @@ MapScript.loadModule("CA", {
 						type: "custom",
 						onclick: function () {
 							try {
-								AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://ca.huangyx.eu.cc/"))
+								AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://ca.nycx.top/"))
 									.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
 							} catch (e) {
 								Common.toast("关于页面打开失败");
@@ -7510,7 +7510,7 @@ MapScript.loadModule("CA", {
 										onClick: function () {
 											try {
 												Common.showWebViewDialog({
-													url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/eula.html"
+													url: "https://ca.nycx.top/doc/legal/eula.html"
 												});
 											} catch (e) { erp(e) }
 										}
@@ -7529,7 +7529,7 @@ MapScript.loadModule("CA", {
 										onClick: function () {
 											try {
 												Common.showWebViewDialog({
-													url: "https://ca.edgeone.huangyx.eu.cc/doc/legal/privacy.html"
+													url: "https://ca.nycx.top/doc/legal/privacy.html"
 												});
 											} catch (e) { erp(e) }
 										}
