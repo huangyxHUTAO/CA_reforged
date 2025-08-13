@@ -1,13 +1,12 @@
-@version 0.1.1
-@versionCode [0, 1, 1]
-@date 2025-08-07
-@licenceUpdate 2025/7/25
+@version 0.1.2
+@versionCode [0, 1, 2]
+@date 2025-08-14
+@licenceUpdate 2025/8/14
 @description
 命令助手 - （南鸢晨星）社区版！
-[0.1.1]
-- 新的蓝色主题 晨雾蓝
-- 迁移并适配 AndroidBridge.js、ExternalStorage.js、Common.js
-    - 新增 3 种文件导入/导出路径
-    - 新增 ESM 权限管理
-- 增加和修改了 格式化代码 的颜色
+[0.1.2]
+- 官网新域名搬迁 ca.nycx.top
+- 修复导入用户数据时的崩溃
+- 修复revokeUriPermission参数问题
+- 修复showIDList在ID枚举未加载时的异常显示bug
 @end description
