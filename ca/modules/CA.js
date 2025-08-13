@@ -3445,6 +3445,7 @@ MapScript.loadModule("CA", {
 						onclick: function () {
 							ExternalStorage.showImportActions({
 								mimeType: "*/*",
+								hint: "ca_settings.dat",
 								file(f) {
 									try {
 										CA.importSettings(f);
