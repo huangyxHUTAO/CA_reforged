@@ -93,11 +93,11 @@ MapScript.loadModule("ExternalStorage", {
 	},
 	requestStoragePermission(callback) {
 		AndroidBridge.requestPermissionsByGroup([{
-			permissions : [
+			permissions: [
 				"android.permission.READ_EXTERNAL_STORAGE",
 				"android.permission.WRITE_EXTERNAL_STORAGE"
 			],
-			explanation : "读取内部存储\n写入内部存储\n\n这些权限将用于读写命令库、编辑JSON、记录错误日志等",
+			explanation: "读取内部存储\n写入内部存储\n\n这些权限将用于读写命令库、编辑JSON、记录错误日志等",
 			callback: (flag, success, denied, sync) => {
 				if (!sync) {
 					if (success.length > 0) {
@@ -106,7 +106,7 @@ MapScript.loadModule("ExternalStorage", {
 					}
 				}
 			},
-			mode : 2
+			mode: 2
 		}]);
 	},
 	requestManageStoragePermission(callback) {
@@ -125,20 +125,26 @@ MapScript.loadModule("ExternalStorage", {
 			try {
 				activity.startActivity(intent);
 				return {
-					onPause() {try {
-						paused = true;
-					} catch(e) {erp(e)}},
-					onResume() {try {
-						if (!paused) return;
-						checkPermission();
-						activity.finish();
-					} catch(e) {erp(e)}},
-					onDestroy() {try {
-						checkPermission();
-						PopupPage.show();
-					} catch(e) {erp(e)}},
+					onPause() {
+						try {
+							paused = true;
+						} catch (e) { erp(e) }
+					},
+					onResume() {
+						try {
+							if (!paused) return;
+							checkPermission();
+							activity.finish();
+						} catch (e) { erp(e) }
+					},
+					onDestroy() {
+						try {
+							checkPermission();
+							PopupPage.show();
+						} catch (e) { erp(e) }
+					},
 				};
-			} catch(err) {
+			} catch (err) {
 				Log.e(e);
 				Common.toast("调用外部应用失败，请检查您是否授予了命令助手后台弹出界面或类似的权限\n" + e);
 				activity.finish();
@@ -194,7 +200,7 @@ MapScript.loadModule("ExternalStorage", {
 					r = cursor.getBlob(0);
 				}
 			}
-		} catch(e) {Log.e(e)}
+		} catch (e) { Log.e(e) }
 		if (cursor) cursor.close();
 		return r;
 	},
@@ -277,7 +283,7 @@ MapScript.loadModule("ExternalStorage", {
 			try {
 				const resolver = ctx.getContentResolver();
 				return android.provider.DocumentsContract.deleteDocument(resolver, uri);
-			} catch(e) {Log.e(e)}
+			} catch (e) { Log.e(e) }
 		}
 		return false;
 	},
@@ -301,7 +307,7 @@ MapScript.loadModule("ExternalStorage", {
 			try {
 				const resolver = ctx.getContentResolver();
 				return android.provider.DocumentsContract.renameDocument(resolver, uri, newName);
-			} catch(e) {Log.e(e)}
+			} catch (e) { Log.e(e) }
 		}
 		return null;
 	},
@@ -326,7 +332,7 @@ MapScript.loadModule("ExternalStorage", {
 					r.push(childUri);
 				}
 				success = true;
-			} catch(e) {Log.e(e)}
+			} catch (e) { Log.e(e) }
 			if (cursor) cursor.close();
 			if (success) {
 				return r;
@@ -379,7 +385,7 @@ MapScript.loadModule("ExternalStorage", {
 					});
 				}
 				success = true;
-			} catch(e) {Log.e(e)}
+			} catch (e) { Log.e(e) }
 			if (cursor) cursor.close();
 			if (success) {
 				return r;
@@ -404,7 +410,7 @@ MapScript.loadModule("ExternalStorage", {
 							return android.provider.DocumentsContract.buildDocumentUriUsingTree(uri, segments[segments.length - 2]);
 						}
 					}
-				} catch(e) {Log.e(e)}
+				} catch (e) { Log.e(e) }
 			}
 		}
 		return null;
@@ -436,7 +442,7 @@ MapScript.loadModule("ExternalStorage", {
 			try {
 				const resolver = ctx.getContentResolver();
 				return android.provider.DocumentsContract.createDocument(resolver, uri, mimeType, name);
-			} catch(e) {Log.e(e)}
+			} catch (e) { Log.e(e) }
 		}
 		return null;
 	},
@@ -452,7 +458,7 @@ MapScript.loadModule("ExternalStorage", {
 				const resolver = ctx.getContentResolver();
 				const mimeType = android.provider.DocumentsContract.Document.MIME_TYPE_DIR;
 				return android.provider.DocumentsContract.createDocument(resolver, uri, mimeType, name);
-			} catch(e) {Log.e(e)}
+			} catch (e) { Log.e(e) }
 		}
 		return null;
 	},
@@ -529,7 +535,7 @@ MapScript.loadModule("ExternalStorage", {
 			} else {
 				return output.toByteArray();
 			}
-		} catch(e) {
+		} catch (e) {
 			return typeof defaultValue == "function" ? defaultValue(e) : defaultValue;
 		}
 	},
@@ -809,7 +815,7 @@ MapScript.loadModule("ExternalStorage", {
 			const resolver = ctx.getContentResolver();
 			resolver.takePersistableUriPermission(uri, 0x3); // Intent.FLAG_GRANT_READ_URI_PERMISSION | FLAG_GRANT_WRITE_URI_PERMISSION
 			return true;
-		} catch(e) {
+		} catch (e) {
 			Log.e(e);
 			return false;
 		}
@@ -853,7 +859,7 @@ MapScript.loadModule("ExternalStorage", {
 						options.uri(uri);
 					}
 				}
-			} else if (options.file) { 
+			} else if (options.file) {
 				Common.showProgressDialog((dialog) => {
 					dialog.setTextDelayed("正在导入文件……", 200);
 					let files;
@@ -883,7 +889,7 @@ MapScript.loadModule("ExternalStorage", {
 				this.openDocument(options.mimeType, importCallback, null, options.allowMultiple);
 			}
 		}, {
-			gap : 10 * G.dp
+			gap: 10 * G.dp
 		}, {
 			text: "使用内置文件浏览器导入",
 			onclick: () => {
@@ -912,7 +918,7 @@ MapScript.loadModule("ExternalStorage", {
 				this.openDocument(options.mimeType, openCallback, null, options.allowMultiple);
 			}
 		}, {
-			gap : 10 * G.dp
+			gap: 10 * G.dp
 		}, {
 			text: "使用内置文件浏览器打开",
 			onclick: () => {
@@ -930,7 +936,7 @@ MapScript.loadModule("ExternalStorage", {
 				this.openDocumentTree(options.callback);
 			}
 		}, {
-			gap : 10 * G.dp
+			gap: 10 * G.dp
 		}, {
 			text: "使用内置文件浏览器选择目录（兼容模式）",
 			onclick: () => {
@@ -970,7 +976,7 @@ MapScript.loadModule("ExternalStorage", {
 				this.createDocument(options.mimeType, options.hint, exportCallback);
 			}
 		}, {
-			gap : 10 * G.dp
+			gap: 10 * G.dp
 		}, {
 			text: "使用内置文件浏览器导出（兼容模式）",
 			onclick: () => {
@@ -989,7 +995,7 @@ MapScript.loadModule("ExternalStorage", {
 				this.createDocument(options.mimeType, options.hint, options.callback);
 			}
 		}, {
-			gap : 10 * G.dp
+			gap: 10 * G.dp
 		}, {
 			text: "使用内置文件浏览器保存（兼容模式）",
 			onclick: () => {
@@ -1001,317 +1007,347 @@ MapScript.loadModule("ExternalStorage", {
 			}
 		}]);
 	},
-	showFileDialog: function self(o) {G.ui(() => {try {
-		if (!self.popup) {
-			self.intl = Intl.getNamespace("common.FileChooser");
-			self.vmaker = function() {
-				const name = new G.TextView(ctx);
-				name.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 15 * G.dp);
-				name.setSingleLine(true);
-				name.setEllipsize(G.TextUtils.TruncateAt.END);
-				name.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
-				return name;
-			}
-			self.vbinder = function(holder, e) {
-				if (e.parent) {
-					holder.self.setText("\ud83d\udcc2 " + self.intl.parentDir); // Emoji: Expanded Folder
-					Common.applyStyle(holder.self, "item_default", 3);
-				} else {
-					let icon = "\ud83d\udcc4"; // Emoji: Document;
-					if (e.directory) {
-						icon = "\ud83d\udcc1"; // Emoji: Collapsed Folder
+	showFileDialog: function self(o) {
+		G.ui(() => {
+			try {
+				if (!self.popup) {
+					self.intl = Intl.getNamespace("common.FileChooser");
+					self.vmaker = function () {
+						const name = new G.TextView(ctx);
+						name.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 15 * G.dp);
+						name.setSingleLine(true);
+						name.setEllipsize(G.TextUtils.TruncateAt.END);
+						name.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
+						return name;
 					}
-					holder.self.setText(icon + " " + e.name);
-					if (e.selected) {
-						Common.applyStyle(holder.self, "item_highlight", 3);
-						holder.self.setBackgroundColor(Common.theme.go_bgcolor);
-					} else {
-						Common.applyStyle(holder.self, "item_default", 3);
-						holder.self.setBackgroundColor(G.Color.TRANSPARENT);
-					}
-				}
-			}
-			self.compare = (a, b) => {
-				if (a.directory != b.directory) {
-					return a.directory ? -1 : 1;
-				}
-				return a.name.localeCompare(b.name);
-			}
-			self.choose = function(e) {
-				const o = self.sets;
-				if (o.check && !o.check(e)) return false;
-				self.popup.exit();
-				if (!o.result) {
-					o.result = e;
-					if (o.callback) o.callback(e);
-					self.lastDir = o.stack[0];
-				}
-				return true;
-			}
-			self.postRefresh = function() {
-				Common.showProgressDialog((dialog) => {
-					dialog.setTextDelayed(self.intl.loading, 200);
-					self.refresh();
-				});
-			}
-			self.refresh = function() {
-				const o = self.sets;
-				const children = ExternalStorage.listFilesWithDetails(o.stack[0]) || [];
-				if (o.filter) {
-					for (let i = 0; i < children.length; i++){
-						if (!o.filter(children[i])) {
-							children.splice(i, 1);
-							i--;
+					self.vbinder = function (holder, e) {
+						if (e.parent) {
+							holder.self.setText("\ud83d\udcc2 " + self.intl.parentDir); // Emoji: Expanded Folder
+							Common.applyStyle(holder.self, "item_default", 3);
+						} else {
+							let icon = "\ud83d\udcc4"; // Emoji: Document;
+							if (e.directory) {
+								icon = "\ud83d\udcc1"; // Emoji: Collapsed Folder
+							}
+							holder.self.setText(icon + " " + e.name);
+							if (e.selected) {
+								Common.applyStyle(holder.self, "item_highlight", 3);
+								holder.self.setBackgroundColor(Common.theme.go_bgcolor);
+							} else {
+								Common.applyStyle(holder.self, "item_default", 3);
+								holder.self.setBackgroundColor(G.Color.TRANSPARENT);
+							}
 						}
 					}
-				}
-				children.sort(o.compare || self.compare);
-				const parent = ExternalStorage.getParentDirectory(o.stack[0]);
-				if (parent) {
-					if (ExternalStorage.canRead(parent) || ExternalStorage.needAdditionalPermissions(parent)) {
-						children.unshift({
-							parent: true,
-							uri: parent,
-							directory: true
+					self.compare = (a, b) => {
+						if (a.directory != b.directory) {
+							return a.directory ? -1 : 1;
+						}
+						return a.name.localeCompare(b.name);
+					}
+					self.choose = function (e) {
+						const o = self.sets;
+						if (o.check && !o.check(e)) return false;
+						self.popup.exit();
+						if (!o.result) {
+							o.result = e;
+							if (o.callback) o.callback(e);
+							self.lastDir = o.stack[0];
+						}
+						return true;
+					}
+					self.postRefresh = function () {
+						Common.showProgressDialog((dialog) => {
+							dialog.setTextDelayed(self.intl.loading, 200);
+							self.refresh();
 						});
 					}
-				} else if (o.stack.length > 1) {
-					children.unshift({
-						parent: true,
-						uri: o.stack[1],
-						directory: true
-					});
-				}
-				G.ui(() => {try {
-					self.path.setText(o.stack[0].toString());
-					self.adapter.setArray(children);
-				} catch(e) {erp(e)}});
-			}
-			self.authorizeAndOpen = function(uri) {
-				const additionPermission = ExternalStorage.needAdditionalPermissions(uri);
-				if (!additionPermission) {
-					if (additionPermission == "") {
-						Common.toast(self.intl.directoryCannotRead);
+					self.refresh = function () {
+						const o = self.sets;
+						const children = ExternalStorage.listFilesWithDetails(o.stack[0]) || [];
+						if (o.filter) {
+							for (let i = 0; i < children.length; i++) {
+								if (!o.filter(children[i])) {
+									children.splice(i, 1);
+									i--;
+								}
+							}
+						}
+						children.sort(o.compare || self.compare);
+						const parent = ExternalStorage.getParentDirectory(o.stack[0]);
+						if (parent) {
+							if (ExternalStorage.canRead(parent) || ExternalStorage.needAdditionalPermissions(parent)) {
+								children.unshift({
+									parent: true,
+									uri: parent,
+									directory: true
+								});
+							}
+						} else if (o.stack.length > 1) {
+							children.unshift({
+								parent: true,
+								uri: o.stack[1],
+								directory: true
+							});
+						}
+						G.ui(() => {
+							try {
+								self.path.setText(o.stack[0].toString());
+								self.adapter.setArray(children);
+							} catch (e) { erp(e) }
+						});
 					}
+					self.authorizeAndOpen = function (uri) {
+						const additionPermission = ExternalStorage.needAdditionalPermissions(uri);
+						if (!additionPermission) {
+							if (additionPermission == "") {
+								Common.toast(self.intl.directoryCannotRead);
+							}
+							return;
+						}
+						ExternalStorage.requestAdditionalPermissions(additionPermission, (newUri) => {
+							const type = ExternalStorage.getUriType(newUri);
+							if (type == ExternalStorage.getUriType(o.stack[0])) {
+								o.stack = [newUri];
+							} else {
+								o.stack.unshift(newUri);
+							}
+							self.postRefresh();
+						});
+					}
+					self.linear = new G.LinearLayout(ctx);
+					self.linear.setOrientation(G.LinearLayout.VERTICAL);
+
+					self.header = new G.LinearLayout(ctx);
+					self.header.setOrientation(G.LinearLayout.HORIZONTAL);
+					Common.applyStyle(self.header, "bar_float");
+
+					self.back = new G.TextView(ctx);
+					self.back.setText("< " + Common.intl.back);
+					self.back.setGravity(G.Gravity.CENTER);
+					self.back.setPadding(20 * G.dp, 0, 20 * G.dp, 0);
+					Common.applyStyle(self.back, "button_highlight", 2);
+					self.back.setOnClickListener(new G.View.OnClickListener({
+						onClick(v) {
+							try {
+								self.popup.exit();
+								return true;
+							} catch (e) { erp(e) }
+						}
+					}));
+					self.header.addView(self.back, new G.LinearLayout.LayoutParams(-2, -1));
+
+					self.title = new G.TextView(ctx);
+					self.title.setPadding(0, 10 * G.dp, 0, 10 * G.dp);
+					Common.applyStyle(self.title, "textview_default", 4);
+					self.header.addView(self.title, new G.LinearLayout.LayoutParams(-2, -2));
+
+					self.path = new G.TextView(ctx);
+					self.path.setGravity(G.Gravity.CENTER | G.Gravity.LEFT);
+					self.path.setPadding(15 * G.dp, 0, 5 * G.dp, 0);
+					self.path.setSingleLine(true);
+					self.path.setEllipsize(G.TextUtils.TruncateAt.START);
+					Common.applyStyle(self.path, "textview_prompt", 2);
+					self.path.setOnClickListener(new G.View.OnClickListener({
+						onClick: function (v) {
+							try {
+								const o = self.sets;
+								Common.showInputDialog({
+									title: self.intl.path,
+									singleLine: true,
+									defaultValue: o.stack[0].toString(),
+									callback(s) {
+										const uri = ExternalStorage.toUri(s);
+										if (!ExternalStorage.isDirectory(uri)) {
+											return Common.toast(self.intl.directoryCannotRead);
+										}
+										if (ExternalStorage.canRead(uri)) {
+											o.stack = [uri];
+											self.postRefresh();
+										} else {
+											self.authorizeAndOpen(uri);
+										}
+									}
+								});
+								return true;
+							} catch (e) { erp(e) }
+						}
+					}));
+					self.header.addView(self.path, new G.LinearLayout.LayoutParams(0, -1, 1.0));
+
+					self.newDir = new G.TextView(ctx);
+					self.newDir.setText("\ud83d\udcc1+"); // Emoji:Collapsed Folder
+					self.newDir.setGravity(G.Gravity.CENTER);
+					self.newDir.setPadding(20 * G.dp, 0, 20 * G.dp, 0);
+					Common.applyStyle(self.newDir, "button_default", 2);
+					self.newDir.setOnClickListener(new G.View.OnClickListener({
+						onClick(v) {
+							try {
+								Common.showInputDialog({
+									title: self.intl.createDir,
+									callback(s) {
+										if (!s.length) {
+											Common.toast(self.intl.emptyDirName);
+											return;
+										} else {
+											try {
+												const newDirectory = ExternalStorage.createDirectory(self.sets.cursor, s);
+												if (!newDirectory) {
+													Common.toast(self.intl.failedCreateDir);
+													return;
+												}
+												self.postRefresh();
+											} catch (e) {
+												Common.toast(self.intl.resolve("errCreateDir", e));
+											}
+										}
+									}
+								});
+								return true;
+							} catch (e) { erp(e) }
+						}
+					}));
+					self.header.addView(self.newDir, new G.LinearLayout.LayoutParams(-2, -1));
+					self.linear.addView(self.header, new G.LinearLayout.LayoutParams(-1, -2));
+
+					self.adapter = SimpleListAdapter.getController(new SimpleListAdapter([], self.vmaker, self.vbinder, null, true));
+
+					self.list = new G.ListView(ctx);
+					self.list.setAdapter(self.adapter.self);
+					Common.applyStyle(self.list, "message_bg");
+					self.list.setOnItemClickListener(new G.AdapterView.OnItemClickListener({
+						onItemClick(parent, view, pos, id) {
+							try {
+								const o = self.sets;
+								const e = self.adapter.array[pos];
+								if (e.directory) {
+									if (ExternalStorage.canRead(e.uri)) {
+										if (e.parent) {
+											if (o.stack.length > 1 && o.stack[1].equals(e.uri)) {
+												o.stack.shift();
+											}
+											o.stack[0] = e.uri;
+										} else {
+											o.stack.unshift(e.uri);
+										}
+										self.postRefresh();
+									} else {
+										self.authorizeAndOpen(e.uri);
+									}
+								} else if (o.type == 0) {
+									self.choose(e.uri);
+								} else if (o.type == 1) {
+									self.fname.setText(e.name);
+								} else if (o.type == 3) {
+									e.selected = !e.selected;
+									self.adapter.notifyChange();
+								}
+								return true;
+							} catch (e) { erp(e) }
+						}
+					}));
+					self.list.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({
+						onItemLongClick(parent, view, pos, id) {
+							try {
+								const e = self.adapter.array[pos];
+								if (!e.parent) {
+									Common.toast(e.name);
+								}
+								return true;
+							} catch (e) { return erp(e), true }
+						}
+					}));
+					self.list.setFastScrollEnabled(true);
+					self.list.setFastScrollAlwaysVisible(false);
+					self.linear.addView(self.list, new G.LinearLayout.LayoutParams(-1, 0, 1.0));
+
+					self.inputbar = new G.LinearLayout(ctx);
+					self.inputbar.setOrientation(G.LinearLayout.HORIZONTAL);
+					Common.applyStyle(self.inputbar, "bar_float");
+
+					self.fname = new G.EditText(ctx);
+					self.fname.setHint(self.intl.fileName);
+					self.fname.setSingleLine(true);
+					self.fname.setGravity(G.Gravity.LEFT | G.Gravity.CENTER);
+					self.fname.setInputType(G.InputType.TYPE_CLASS_TEXT);
+					self.fname.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
+					Common.applyStyle(self.fname, "edittext_default", 3);
+					self.inputbar.addView(self.fname, new G.LinearLayout.LayoutParams(0, -1, 4.0));
+
+					self.exit = new G.TextView(ctx);
+					self.exit.setText(Common.intl.ok);
+					self.exit.setGravity(G.Gravity.CENTER);
+					self.exit.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
+					Common.applyStyle(self.exit, "button_critical", 3);
+					self.exit.setOnClickListener(new G.View.OnClickListener({
+						onClick(v) {
+							try {
+								const o = self.sets;
+								if (o.type == 1) {
+									const fname = String(self.fname.getText());
+									if (!fname.length) {
+										Common.toast(self.intl.emptyFileName);
+										return true;
+									}
+									const newFile = ExternalStorage.createFile(o.stack[0], fname, o.mimeType);
+									if (!newFile) {
+										Common.toast(self.intl.invaildFileName);
+										return true;
+									}
+									self.choose(newFile);
+								} else if (o.type == 2) {
+									self.choose(o.stack[0]);
+								} else if (o.type == 3) {
+									const selected = self.adapter.array.filter((e) => e.selected);
+									self.choose(selected.map((e) => e.uri));
+								}
+								return true;
+							} catch (e) { erp(e) }
+						}
+					}));
+					self.inputbar.addView(self.exit, new G.LinearLayout.LayoutParams(0, -2, 1.0));
+					self.linear.addView(self.inputbar, new G.LinearLayout.LayoutParams(-1, -2));
+
+					self.popup = new PopupPage(self.linear, "ExternalStorage.FileChooser");
+
+					PWM.registerResetFlag(self, "popup");
+				}
+				if (o.onDismiss) self.popup.on("exit", o.onDismiss);
+				self.sets = o;
+				o.result = null;
+				try {
+					o.stack = [ExternalStorage.toUri(o.initial || self.lastDir || ExternalStorage.getAccessibleRoot())];
+					if (!ExternalStorage.canRead(o.stack[0])) {
+						o.stack = [ExternalStorage.toUri(ExternalStorage.getAccessibleRoot())];
+					}
+				} catch (e) {
+					Common.toast(self.intl.resolve("errAccessDir", e));
 					return;
 				}
-				ExternalStorage.requestAdditionalPermissions(additionPermission, (newUri) => {
-					const type = ExternalStorage.getUriType(newUri);
-					if (type == ExternalStorage.getUriType(o.stack[0])) {
-						o.stack = [newUri];
-					} else {
-						o.stack.unshift(newUri);
-					}
-					self.postRefresh();
-				});
-			}
-			self.linear = new G.LinearLayout(ctx);
-			self.linear.setOrientation(G.LinearLayout.VERTICAL);
-
-			self.header = new G.LinearLayout(ctx);
-			self.header.setOrientation(G.LinearLayout.HORIZONTAL);
-			Common.applyStyle(self.header, "bar_float");
-
-			self.back = new G.TextView(ctx);
-			self.back.setText("< " + Common.intl.back);
-			self.back.setGravity(G.Gravity.CENTER);
-			self.back.setPadding(20 * G.dp, 0, 20 * G.dp, 0);
-			Common.applyStyle(self.back, "button_highlight", 2);
-			self.back.setOnClickListener(new G.View.OnClickListener({onClick(v) {try {
-				self.popup.exit();
-				return true;
-			} catch(e) {erp(e)}}}));
-			self.header.addView(self.back, new G.LinearLayout.LayoutParams(-2, -1));
-
-			self.title = new G.TextView(ctx);
-			self.title.setPadding(0, 10 * G.dp, 0, 10 * G.dp);
-			Common.applyStyle(self.title, "textview_default", 4);
-			self.header.addView(self.title, new G.LinearLayout.LayoutParams(-2, -2));
-
-			self.path = new G.TextView(ctx);
-			self.path.setGravity(G.Gravity.CENTER | G.Gravity.LEFT);
-			self.path.setPadding(15 * G.dp, 0, 5 * G.dp, 0);
-			self.path.setSingleLine(true);
-			self.path.setEllipsize(G.TextUtils.TruncateAt.START);
-			Common.applyStyle(self.path, "textview_prompt", 2);
-			self.path.setOnClickListener(new G.View.OnClickListener({onClick : function(v) {try {
-				const o = self.sets;
-				Common.showInputDialog({
-					title: self.intl.path,
-					singleLine: true,
-					defaultValue: o.stack[0].toString(),
-					callback(s) {
-						const uri = ExternalStorage.toUri(s);
-						if (!ExternalStorage.isDirectory(uri)) {
-							return Common.toast(self.intl.directoryCannotRead);
-						}
-						if (ExternalStorage.canRead(uri)) {
-							o.stack = [uri];
-							self.postRefresh();
-						} else {
-							self.authorizeAndOpen(uri);
-						}
-					}
-				});
-				return true;
-			} catch(e) {erp(e)}}}));
-			self.header.addView(self.path, new G.LinearLayout.LayoutParams(0, -1, 1.0));
-
-			self.newDir = new G.TextView(ctx);
-			self.newDir.setText("\ud83d\udcc1+"); // Emoji:Collapsed Folder
-			self.newDir.setGravity(G.Gravity.CENTER);
-			self.newDir.setPadding(20 * G.dp, 0, 20 * G.dp, 0);
-			Common.applyStyle(self.newDir, "button_default", 2);
-			self.newDir.setOnClickListener(new G.View.OnClickListener({onClick(v) {try {
-				Common.showInputDialog({
-					title: self.intl.createDir,
-					callback(s) {
-						if (!s.length) {
-							Common.toast(self.intl.emptyDirName);
-							return;
-						} else {
-							try {
-								const newDirectory = ExternalStorage.createDirectory(self.sets.cursor, s);
-								if (!newDirectory) {
-									Common.toast(self.intl.failedCreateDir);
-									return;
-								}
-								self.postRefresh();
-							} catch (e) {
-								Common.toast(self.intl.resolve("errCreateDir", e));
-							}
-						}
-					}
-				});
-				return true;
-			} catch(e) {erp(e)}}}));
-			self.header.addView(self.newDir, new G.LinearLayout.LayoutParams(-2, -1));
-			self.linear.addView(self.header, new G.LinearLayout.LayoutParams(-1, -2));
-
-			self.adapter = SimpleListAdapter.getController(new SimpleListAdapter([], self.vmaker, self.vbinder, null, true));
-
-			self.list = new G.ListView(ctx);
-			self.list.setAdapter(self.adapter.self);
-			Common.applyStyle(self.list, "message_bg");
-			self.list.setOnItemClickListener(new G.AdapterView.OnItemClickListener({onItemClick(parent, view, pos, id) {try {
-				const o = self.sets;
-				const e = self.adapter.array[pos];
-				if (e.directory) {
-					if (ExternalStorage.canRead(e.uri)) {
-						if (e.parent) {
-							if (o.stack.length > 1 && o.stack[1].equals(e.uri)) {
-								o.stack.shift();
-							}
-							o.stack[0] = e.uri;
-						} else {
-							o.stack.unshift(e.uri);
-						}
-						self.postRefresh();
-					} else {
-						self.authorizeAndOpen(e.uri);
-					}
-				} else if (o.type == 0) { 
-					self.choose(e.uri);
-				} else if (o.type == 1) {
-					self.fname.setText(e.name);
-				} else if (o.type == 3) {
-					e.selected = !e.selected;
-					self.adapter.notifyChange();
+				if (ExternalStorage.getUriType(o.stack[0]) != "file") {
+					o.stack.push(ExternalStorage.toUri(ExternalStorage.getAccessibleRoot()));
 				}
-				return true;
-			} catch(e) {erp(e)}}}));
-			self.list.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({onItemLongClick(parent, view, pos, id) {try {
-				const e = self.adapter.array[pos];
-				if (!e.parent) {
-					Common.toast(e.name);
+				self.title.setText(Common.toString(o.title || self.intl.defaultTitle));
+				switch (o.type) {
+					case 1: //新建文件（保存）
+						self.exit.setVisibility(G.View.VISIBLE);
+						self.fname.setVisibility(G.View.VISIBLE);
+						self.fname.setText(String(o.defaultFileName || ""));
+						break;
+					case 2: //选择目录（打开）
+					case 3: //选择多个文件（打开）
+						self.exit.setVisibility(G.View.VISIBLE);
+						self.fname.setVisibility(G.View.GONE);
+						break;
+					default:
+						o.type = 0;
+					case 0: //选择文件（打开）
+						self.exit.setVisibility(G.View.GONE);
+						self.fname.setVisibility(G.View.GONE);
 				}
-				return true;
-			} catch(e) {return erp(e), true}}}));
-			self.list.setFastScrollEnabled(true);
-			self.list.setFastScrollAlwaysVisible(false);
-			self.linear.addView(self.list, new G.LinearLayout.LayoutParams(-1, 0, 1.0));
-
-			self.inputbar = new G.LinearLayout(ctx);
-			self.inputbar.setOrientation(G.LinearLayout.HORIZONTAL);
-			Common.applyStyle(self.inputbar, "bar_float");
-
-			self.fname = new G.EditText(ctx);
-			self.fname.setHint(self.intl.fileName);
-			self.fname.setSingleLine(true);
-			self.fname.setGravity(G.Gravity.LEFT | G.Gravity.CENTER);
-			self.fname.setInputType(G.InputType.TYPE_CLASS_TEXT);
-			self.fname.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
-			Common.applyStyle(self.fname, "edittext_default", 3);
-			self.inputbar.addView(self.fname, new G.LinearLayout.LayoutParams(0, -1, 4.0));
-
-			self.exit = new G.TextView(ctx);
-			self.exit.setText(Common.intl.ok);
-			self.exit.setGravity(G.Gravity.CENTER);
-			self.exit.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
-			Common.applyStyle(self.exit, "button_critical", 3);
-			self.exit.setOnClickListener(new G.View.OnClickListener({onClick (v) {try {
-				const o = self.sets;
-				if (o.type == 1) {
-					const fname = String(self.fname.getText());
-					if (!fname.length) {
-						Common.toast(self.intl.emptyFileName);
-						return true;
-					}
-					const newFile = ExternalStorage.createFile(o.stack[0], fname, o.mimeType);
-					if (!newFile) {
-						Common.toast(self.intl.invaildFileName);
-						return true;
-					}
-					self.choose(newFile);
-				} else if (o.type == 2) {
-					self.choose(o.stack[0]);
-				} else if (o.type == 3) {
-					const selected = self.adapter.array.filter((e) => e.selected);
-					self.choose(selected.map((e) => e.uri));
-				}
-				return true;
-			} catch(e) {erp(e)}}}));
-			self.inputbar.addView(self.exit, new G.LinearLayout.LayoutParams(0, -2, 1.0));
-			self.linear.addView(self.inputbar, new G.LinearLayout.LayoutParams(-1, -2));
-
-			self.popup = new PopupPage(self.linear, "ExternalStorage.FileChooser");
-
-			PWM.registerResetFlag(self, "popup");
-		}
-		if (o.onDismiss) self.popup.on("exit", o.onDismiss);
-		self.sets = o;
-		o.result = null;
-		try {
-			o.stack = [ExternalStorage.toUri(o.initial || self.lastDir || ExternalStorage.getAccessibleRoot())];
-			if (!ExternalStorage.canRead(o.stack[0])) {
-				o.stack = [ExternalStorage.toUri(ExternalStorage.getAccessibleRoot())];
-			}
-		} catch (e) {
-			Common.toast(self.intl.resolve("errAccessDir", e));
-			return;
-		}
-		if (ExternalStorage.getUriType(o.stack[0]) != "file") {
-			o.stack.push(ExternalStorage.toUri(ExternalStorage.getAccessibleRoot()));
-		}
-		self.title.setText(Common.toString(o.title || self.intl.defaultTitle));
-		switch (o.type) {
-			case 1: //新建文件（保存）
-			self.exit.setVisibility(G.View.VISIBLE);
-			self.fname.setVisibility(G.View.VISIBLE);
-			self.fname.setText(String(o.defaultFileName || ""));
-			break;
-			case 2: //选择目录（打开）
-			case 3: //选择多个文件（打开）
-			self.exit.setVisibility(G.View.VISIBLE);
-			self.fname.setVisibility(G.View.GONE);
-			break;
-			default:
-			o.type = 0;
-			case 0: //选择文件（打开）
-			self.exit.setVisibility(G.View.GONE);
-			self.fname.setVisibility(G.View.GONE);
-		}
-		self.popup.enter();
-		self.postRefresh();
-	} catch(e) {erp(e)}})}
+				self.popup.enter();
+				self.postRefresh();
+			} catch (e) { erp(e) }
+		})
+	}
 });
