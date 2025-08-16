@@ -4,25 +4,37 @@
 
 ## 项目状态
 
-**更新说明**：虽然原项目目前暂停更新，但作者[ProjectXero](https://gitee.com/projectxero)并**未宣布停止维护**。我们期待作者未来可能的更新，并鼓励社区参与，以确保项目的持续运行和改进。
+**更新说明**：虽然原项目目前暂停更新，但作者[ProjectXero](https://github.com/XeroAlpha)并**未宣布完全停止维护**。我们期待作者未来可能的更新，并鼓励社区参与，以确保项目的持续运行和改进。
 **关于本项目**：为了方便整理，将原本的3个项目合为一个文件方便管理
 
 ## 原项目
 ### 命令助手
-- **链接**: [命令助手核心代码](https://gitee.com/projectxero/ca)
+- **链接**: [命令助手核心代码](https://github.com/XeroAlpha/ca)
 - **描述**: 提供命令的智能补全与纠错，支持命令在线帮助，已汉化的 ID 表，一键粘贴命令等功能。
 - **项目对应**：对应本项目的`ca/`
 
 ### 命令助手Android
-- **链接**: [命令助手Android](https://gitee.com/projectxero/cadroid)
+- **链接**: [命令助手Android](https://github.com/XeroAlpha/cadroid)
 - **描述**: 命令助手的 Android 应用版本，增加了一键粘贴、适配器、从文件管理器加载命令库等功能。
 - **项目对应**：对应本项目的`cadroid/`
 
 ### 命令助手构建工具
-- **链接**: [命令助手构建工具](https://gitee.com/projectxero/cabuildtools)
+- **链接**: [命令助手构建工具](https://github.com/XeroAlpha/cabuildtools)
 - **描述**: 支持自动化构建命令助手、命令助手Android与命令助手拓展包源。
 - **项目对应**：对应本项目的`cabuildtools/`
 
+## 致谢与第三方资源
+
+- **命令补全与 ID 翻译数据**  
+  主要来源 [XeroAlpha/caidlist](https://github.com/XeroAlpha/caidlist)，遵循 MIT 许可证。  
+  再次感谢原作者 [ProjectXero](https://github.com/XeroAlpha) 提供的开源工具链与数据支持！
+
+- **动画、粒子、声音 ID 及中文译名**  
+  由 **南鸢晨星** 独立翻译；原始英文条目取自「中文 Minecraft Wiki」，遵循 CC BY-NC-SA 3.0。
+
+- **悬浮窗与系统设置权限兼容**  
+  集成 [czy1121/settingscompat](https://github.com/czy1121/settingscompat)（Apache-2.0 许可证）。
+  
 ## 安装与使用
 
 > 适用于 **Windows / macOS / Linux**，以下步骤均已在 **JDK 11** 与 **Node.js 16** 环境的**Windows 10/11**验证通过。
