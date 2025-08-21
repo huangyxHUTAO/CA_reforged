@@ -408,7 +408,7 @@
 						return { description: t + "不是数值" }; // 如果不符合格式，返回错误描述
 					}
 
-					Common.toast(JSON.stringify(t2));
+					// Common.toast(JSON.stringify(t2));
 					r = {
 						length: t.length, // 输入的长度
 						input: [], // 输入的补全建议
@@ -440,6 +440,7 @@
 					break;
 
 				case "enum":
+					// Common.toast(JSON.stringify(cp))
 					if (!(t = cp.list instanceof Object ? cp.list : this.library.enums[cp.list])) throw "无法找到指定枚举类型";
 					r = {
 						output: {},
