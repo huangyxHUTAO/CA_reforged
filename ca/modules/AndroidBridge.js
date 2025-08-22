@@ -186,21 +186,24 @@ MapScript.loadModule("AndroidBridge", {
 							return CA.showLibraryMan(onReturn);
 						}
 					},
-					// onDismiss: function () {
-					// 	ctx.revokeUriPermission(ctx.getPackageName(), t);
-					// }
-
-					// 在低版本 Android 上调用双参数
-					// 修复方法签名不匹配导致的崩溃
 					onDismiss: function () {
-						var flag = android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-						var sdk = android.os.Build.VERSION.SDK_INT;
-
-						if (sdk >= 24) {
-							ctx.revokeUriPermission(ctx.getPackageName(), t, flag);
-						} else {
-							ctx.revokeUriPermission(t, flag);
+						const flag = android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+						const revoke = [
+							() => ctx.revokeUriPermission(ctx.getPackageName(), t, flag),
+							() => ctx.revokeUriPermission(ctx.getPackageName(), t),
+							() => ctx.revokeUriPermission(t, flag),
+							() => ctx.revokeUriPermission(t)
+						];
+						let sdk = android.os.Build.VERSION.SDK_INT;
+						let tried = false;
+						for (let fn of (sdk >= 24 ? revoke : revoke.slice(2))) {
+							try {
+								fn();
+								tried = true;
+								break;
+							} catch (e) { Log.e(e); }
 						}
+						if (!tried) Log.e("revokeUriPermission failed");
 					}
 				});
 				break;
