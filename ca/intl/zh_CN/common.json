@@ -14,7 +14,8 @@
 		"light": "明亮",
 		"dark": "暗色",
 		"pink_theme": "晨星粉",
-		"blue_theme": "晨雾蓝"
+		"blue_theme": "晨雾蓝",
+		"purple_theme": "略略紫"
 	},
 	"ChangeTheme": {
 		"title": "主题选择",

@@ -15,6 +15,7 @@ Common.themelist = {
 		// 剩余请见 \ca\modules\Common.js : 39
 		// 这里就不重复写了
 	},
+	
 	"blue_theme": {                     // 主题ID
 		"name": Intl.get("common.theme.blue_theme"),             // 主题名称
 		"bgcolor": "#F0F9FF",           // 主背景：淡天蓝（比#CDE9FB更浅）
@@ -29,6 +30,22 @@ Common.themelist = {
 		"go_touchbgcolor": "#8FB0D5",   // 按下按钮：深海蓝
 		"go_touchtextcolor": "#FFFFFF"  // 按下文字：纯白
 	},
+
+	"purple_theme": {
+		"name": Intl.get("common.theme.purple_theme"),
+		"bgcolor": "#F7EFFF",           // 主背景：更接近左眼白#F7DEFF但更柔和
+		"float_bgcolor": "#DBCFE3",     // 浮动栏：直接使用围巾高光色
+		"message_bgcolor": "#FCF5FF",   // 消息区：微紫白，比背景略浅
+		"textcolor": "#5D4B7B",         // 主文本：深紫灰，从眼睛色#7D7087调整而来
+		"promptcolor": "#9C9FC0",       // 提示文：直接使用左眼睛浅色部分
+		"highlightcolor": "#BB89DA",    // 高亮色：直接使用围巾主色
+		"criticalcolor": "#FF6B6B",     // 警示色：略微调整，更柔和
+		"go_bgcolor": "#BB89DA",        // GO按钮：围巾主色
+		"go_textcolor": "#FFFFFF",      // 按钮文字：纯白
+		"go_touchbgcolor": "#9C6ABA",   // 按下按钮：深紫，从围巾色加深
+		"go_touchtextcolor": "#FFFFFF"  // 按下文字：纯白
+	},
+
 	"light": {
 		"name": Intl.get("common.theme.light"),
 		"bgcolor": "#FAFAFA",
