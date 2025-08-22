@@ -1,12 +1,11 @@
-@version 0.1.2
-@versionCode [0, 1, 2]
-@date 2025-08-14
+@version 0.1.3
+@versionCode [0, 1, 3]
+@date 2025-08-22
 @licenceUpdate 2025/8/14
 @description
-命令助手 - （南鸢晨星）社区版！
-[0.1.2]
-- 官网新域名搬迁 ca.nycx.top
-- 修复导入用户数据时的崩溃
-- 修复revokeUriPermission参数问题
-- 修复showIDList在ID枚举未加载时的异常显示bug
+命令助手 - Reforged
+[0.1.3]
+- 修复 部分机型导入 拓展包 出现问题（再次修复）
+- 隐藏 relative类型的调试信息
+- 增加主题 “略略紫” 感谢略nd关注了我的b站账号
 @end description
