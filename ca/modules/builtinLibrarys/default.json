@@ -1,5 +1,5 @@
 {
-    "name": "测试命令库",
+    "name": "默认命令库",
     "author": "projectXero & 南鸢晨星",
     "description": "ID枚举由 MCBEID表（ProjectXero） 自动生成\n命令及参数提示由 南鸢晨星 手动编写（工作量好大啊...）",
     "uuid": "edd59220-685f-49b7-970f-3d13fa2919df",
@@ -13635,12 +13635,55 @@
                         {
                             "type": "plain",
                             "name": "in",
-                            "prompt": "in"
+                            "prompt": "改变执行维度与坐标系"
                         },
                         {
-                            "type": "text",
-                            "name": "dimension",
-                            "prompt": "dimension"
+                            "type": "enum",
+                            "name": "维度",
+                            "list": {
+                                "overworld": "主世界",
+                                "nether": "下界",
+                                "the_end": "末地"
+                            }
+                        },
+                        {
+                            "type": "subcommand",
+                            "name": "子命令",
+                            "mainCommand": "execute"
+                        }
+                    ]
+                },
+                "execute_in_NEworld": {
+                    "description": "改变执行维度与执行坐标系，并执行后续子命令",
+                    "params": [
+                        {
+                            "type": "plain",
+                            "name": "in",
+                            "prompt": "改变执行维度与坐标系"
+                        },
+                        {
+                            "type": "string",
+                            "name": "维度",
+                            "suggestion": {
+                                "dm3": "网易版预留多世界3",
+                                "dm4": "网易版预留多世界4",
+                                "dm5": "网易版预留多世界5",
+                                "dm6": "网易版预留多世界6",
+                                "dm7": "网易版预留多世界7",
+                                "dm8": "网易版预留多世界8",
+                                "dm9": "网易版预留多世界9",
+                                "dm10": "网易版预留多世界10",
+                                "dm11": "网易版预留多世界11",
+                                "dm12": "网易版预留多世界12",
+                                "dm13": "网易版预留多世界13",
+                                "dm14": "网易版预留多世界14",
+                                "dm15": "网易版预留多世界15",
+                                "dm16": "网易版预留多世界16",
+                                "dm17": "网易版预留多世界17",
+                                "dm18": "网易版预留多世界18",
+                                "dm19": "网易版预留多世界19",
+                                "dm20": "网易版预留多世界20"
+                            }
                         },
                         {
                             "type": "subcommand",
@@ -13745,7 +13788,7 @@
                         {
                             "type": "plain",
                             "name": "run",
-                            "prompt": "run"
+                            "prompt": "执行命令"
                         },
                         {
                             "type": "command",
