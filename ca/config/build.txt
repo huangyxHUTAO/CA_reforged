@@ -8,4 +8,5 @@
 -（上一个版本+）重写拓展包
 - 修正了拓展包的部分错误（比如list打成suggestion等）
 - 修复了拓展包未加载可能导致的"length" from undefined
+- 修复了Assist初学者选项中缺少选择器
 @end description
