@@ -564,10 +564,7 @@
 				"@s" : "选择命令执行者"
 			}
 			self.editLabel = function(e, callback) {
-				var a = [], t = e.param.target;
-				if (t == "entity" || t == "player") a.push("@a", "@p", "@r");
-				if (t == "entity" || t == "nonplayer") a.push("@e");
-				if (t != "nonselector") a.push("@s");
+				var a = Object.keys(self.selectors), t = e.param.target;
 				a = a.map(function(e) {
 					return {
 						text : e,
