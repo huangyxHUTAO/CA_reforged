@@ -10831,7 +10831,8 @@
             "default": "默认模式",
             "survival": "生存模式",
             "creative": "创造模式",
-            "adventure": "冒险模式"
+            "adventure": "冒险模式",
+            "spectator" : "旁观者模式"
         },
         "musicRepeatmode": {
             "loop": "循环播放",
@@ -10997,7 +10998,7 @@
                 "location": {
                     "type": "enum",
                     "name": "槽位类型",
-                    "suggestion": "entity_slot",
+                    "suggestion": "entitySlot",
                     "optional": true
                 },
                 "slot": {
@@ -13406,7 +13407,7 @@
                         {
                             "type": "enum",
                             "name": "坐标轴",
-                            "suggestion": {
+                            "list": {
                                 "x": "X轴",
                                 "y": "Y轴",
                                 "z": "Z轴",
@@ -16141,7 +16142,7 @@
                         {
                             "type": "enum",
                             "name": "显示位置",
-                            "prompt": {
+                            "list": {
                                 "list": "玩家列表",
                                 "sideba": "侧边栏"
                             }
@@ -16154,7 +16155,7 @@
                         {
                             "type": "enum",
                             "name": "排序方式",
-                            "prompt": {
+                            "list": {
                                 "ascending": "[默认]升序：上小下大",
                                 "descending": "降序：上大下小"
                             },
