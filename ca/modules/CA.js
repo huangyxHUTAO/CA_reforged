@@ -3301,7 +3301,10 @@ MapScript.loadModule("CA", {
 						name: "本地拓展包",
 						type: "custom",
 						get: function () {
-							if (CA.settings.enabledLibrarys.length == 0) {
+							if (!CA.settings.enabledLibrarys) {
+								return "加载中或未加载成功";
+							}
+							if (CA.settings.enabledLibrarys.length === 0) {
 								return "没有已启用的拓展包（或扩展包未加载成功）";
 							}
 							return CA.settings.enabledLibrarys.length + "个已启用";
