@@ -1,11 +1,11 @@
-@version 0.1.3
-@versionCode [0, 1, 3]
-@date 2025-08-22
+@version 0.1.4
+@versionCode [0, 1, 4]
+@date 2025-08-23
 @licenceUpdate 2025/8/14
 @description
 命令助手 - Reforged
-[0.1.3]
-- 修复 部分机型导入 拓展包 出现问题（再次修复）
-- 隐藏 relative类型的调试信息
-- 增加主题 “略略紫” 感谢略nd关注了我的b站账号
+[0.1.4]
+-（上一个版本+）重写拓展包
+- 修正了拓展包的部分错误（比如list打成suggestion等）
+- 修复了拓展包未加载可能导致的"length" from undefined
 @end description
