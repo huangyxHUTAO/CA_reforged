@@ -17640,12 +17640,11 @@
                         {
                             "type": "plain",
                             "name": "set",
-                            "prompt": "set"
+                            "prompt": "设置时间"
                         },
                         {
                             "type": "enum",
-                            "name": "time",
-                            "prompt": "time",
+                            "name": "时间列表",
                             "list": {
                                 "sunrise": "日出 (12000)",
                                 "day": "白天 (1000)",
