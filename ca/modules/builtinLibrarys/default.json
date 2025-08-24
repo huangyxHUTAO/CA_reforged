@@ -10832,7 +10832,7 @@
             "survival": "生存模式",
             "creative": "创造模式",
             "adventure": "冒险模式",
-            "spectator" : "旁观者模式"
+            "spectator": "旁观者模式"
         },
         "musicRepeatmode": {
             "loop": "循环播放",
@@ -15683,6 +15683,197 @@
                             "type": "plain",
                             "name": "all",
                             "prompt": "使玩家退出并重新加入世界，同时重载所有行为包和资源包",
+                            "optional": true
+                        }
+                    ]
+                }
+            }
+        },
+        "replaceitem": {
+            "description": "替换方块或实体物品栏内的物品",
+            "patterns": {
+                "replaceitem_block": {
+                    "description": "替换指定方块容器中的物品",
+                    "params": [
+                        {
+                            "type": "plain",
+                            "name": "block",
+                            "prompt": "替换方块内物品"
+                        },
+                        {
+                            "type": "position",
+                            "name": "方块位置"
+                        },
+                        {
+                            "type": "plain",
+                            "name": "slot.container",
+                            "prompt": "容器槽位"
+                        },
+                        {
+                            "type": "int",
+                            "name": "槽位ID"
+                        },
+                        {
+                            "type": "string",
+                            "name": "物品名称",
+                            "suggestion": "item"
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数量",
+                            "optional": true
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数据值",
+                            "optional": true
+                        },
+                        {
+                            "type": "json",
+                            "name": "数据标签",
+                            "component": "item_component",
+                            "optional": true
+                        }
+                    ]
+                },
+                "replaceitem_block_oldItemHandling": {
+                    "description": "替换指定方块容器中的物品",
+                    "params": [
+                        {
+                            "type": "plain",
+                            "name": "block",
+                            "prompt": "替换方块内物品"
+                        },
+                        {
+                            "type": "position",
+                            "name": "方块位置"
+                        },
+                        {
+                            "type": "plain",
+                            "name": "slot.container",
+                            "prompt": "容器槽位"
+                        },
+                        {
+                            "type": "int",
+                            "name": "槽位ID"
+                        },
+                        {
+                            "type": "enum",
+                            "name": "替换方式",
+                            "list": "replaceitem_oldItemHandling"
+                        },
+                        {
+                            "type": "string",
+                            "name": "物品名称",
+                            "suggestion": "item"
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数量",
+                            "optional": true
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数据值",
+                            "optional": true
+                        },
+                        {
+                            "type": "json",
+                            "name": "数据标签",
+                            "component": "item_component",
+                            "optional": true
+                        }
+                    ]
+                },
+                "replaceitem_entity": {
+                    "description": "替换指定实体特定槽位中的物品",
+                    "params": [
+                        {
+                            "type": "plain",
+                            "name": "entity",
+                            "prompt": "替换实体内物品"
+                        },
+                        {
+                            "type": "selector",
+                            "name": "实体"
+                        },
+                        {
+                            "type": "enum",
+                            "name": "实体槽位",
+                            "list": "entitySlot"
+                        },
+                        {
+                            "type": "int",
+                            "name": "槽位ID"
+                        },
+                        {
+                            "type": "string",
+                            "name": "物品名称",
+                            "suggestion": "item"
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数量",
+                            "optional": true
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数据值",
+                            "optional": true
+                        },
+                        {
+                            "type": "json",
+                            "name": "数据标签",
+                            "component": "item_component",
+                            "optional": true
+                        }
+                    ]
+                },
+                "replaceitem_entity_oldItemHandling": {
+                    "description": "替换指定实体特定槽位中的物品",
+                    "params": [
+                        {
+                            "type": "plain",
+                            "name": "entity",
+                            "prompt": "替换实体内物品"
+                        },
+                        {
+                            "type": "selector",
+                            "name": "实体"
+                        },
+                        {
+                            "type": "enum",
+                            "name": "实体槽位",
+                            "list": "entitySlot"
+                        },
+                        {
+                            "type": "int",
+                            "name": "槽位ID"
+                        },
+                        {
+                            "type": "enum",
+                            "name": "替换方式",
+                            "list": "replaceitem_oldItemHandling"
+                        },
+                        {
+                            "type": "string",
+                            "name": "物品名称",
+                            "suggestion": "item"
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数量",
+                            "optional": true
+                        },
+                        {
+                            "type": "uint",
+                            "name": "数据值",
+                            "optional": true
+                        },
+                        {
+                            "type": "json",
+                            "name": "数据标签",
+                            "component": "item_component",
                             "optional": true
                         }
                     ]
