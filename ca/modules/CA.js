@@ -790,7 +790,7 @@ MapScript.loadModule("CA", {
 								if (state != 3) gostate3();
 							} else if (s == "/help") {
 								if (state != 2) gostate2();
-							} else if (s.length() && !CA.Library.loadingStatus) {
+							} else if (s.length() /*&& !CA.Library.loadingStatus*/) {
 								if (state != 1) gostate1();
 							} else {
 								if (state != 0) gostate0();
@@ -899,7 +899,7 @@ MapScript.loadModule("CA", {
 
 					CA.cmd = new G.EditText(ctx);
 					CA.cmd.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -1, 1.0));
-					CA.cmd.setHint("命令");
+					CA.cmd.setHint("输入命令喵~");
 					Common.applyStyle(CA.cmd, "edittext_default", 3);
 					CA.cmd.setInputType(G.InputType.TYPE_CLASS_TEXT | G.InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
 					CA.cmd.setFilters([new G.InputFilter.LengthFilter(32768)])
@@ -1148,7 +1148,7 @@ MapScript.loadModule("CA", {
 						text: "复制",
 						onclick: function (v, tag) {
 							Common.setClipboardText(tag.cmd);
-							Common.toast("已复制到您的剪贴板～");
+							Common.toast("已复制到剪贴板喵~");
 						}
 					}, {
 						text: "添加收藏",

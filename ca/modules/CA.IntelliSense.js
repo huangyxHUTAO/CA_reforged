@@ -30,7 +30,30 @@
 		},
 		proc: function (s) {
 			try {
-				if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3 || CA.Library.loadingStatus) return;
+				if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
+				if (CA.Library.loadingStatus) {
+					// 我这里吐槽一下ProjectXero了，你的变量名怎么起得这么奇怪
+					var pp
+					var c = /^(\/)?(\S*)(\s+)?(.*)/.exec(s);
+
+					pp = new G.SpannableStringBuilder((c[1] ? "/" : "") + c[2] + " ");
+					appendSSB(pp, "...", new G.ForegroundColorSpan(Common.theme.highlightcolor));
+					pp.append("\n");
+					appendSSB(pp, "喵呜...命令库正在努力加载中... 等等吧喵~", new G.ForegroundColorSpan(Common.theme.criticalcolor));
+					
+					// r.prompt.push(pp);
+					this.input = [];
+					this.output = {};
+					this.cmdname = "";
+					this.hasSlash = false;
+					this.strParam = "";
+					this.prompt = [pp];
+					this.help = "命令库正在加载中……";
+					this.patterns = [];
+					//应用更改
+					this.apply();
+					return;
+				}
 				var r = this.procCmd(s);
 				this.source = r.source;
 				this.cmdname = r.cmdname;
