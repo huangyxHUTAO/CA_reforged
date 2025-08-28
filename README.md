@@ -26,11 +26,15 @@
 ## 致谢与第三方资源
 
 - **命令补全与 ID 翻译数据**  
-  主要来源 [XeroAlpha/caidlist](https://github.com/XeroAlpha/caidlist)，遵循 MIT 许可证。  
-  再次感谢原作者 [ProjectXero](https://github.com/XeroAlpha) 提供的开源工具链与数据支持！
+  - ProjectXero
+    - 主要来源 [XeroAlpha/caidlist](https://github.com/XeroAlpha/caidlist)，遵循 MIT 许可证。  
+    再次感谢原作者 [ProjectXero](https://github.com/XeroAlpha) 提供的开源工具链与数据支持！
+  
+  - CHelper
+    - 部分**补全机制**的参考，以及**方块状态**等复杂ID的数据，如果你觉得 *命令助手 Reforged* 不好用，欢迎试试[CHelper](https://github.com/Yancey2023/CHelper-Core)
 
 - **动画、粒子、声音 ID 及中文译名**  
-  由 **南鸢晨星** 独立翻译；原始英文条目取自「中文 Minecraft Wiki」，遵循 CC BY-NC-SA 3.0。
+  由 **南鸢晨星** 独立翻译；原始英文条目取自 [中文 Minecraft Wiki](https://zh.minecraft.wiki) ，遵循 CC BY-NC-SA 3.0。
 
 - **悬浮窗与系统设置权限兼容**  
   集成 [czy1121/settingscompat](https://github.com/czy1121/settingscompat)（Apache-2.0 许可证）。
