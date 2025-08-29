@@ -1,0 +1,4782 @@
+{
+    "name": "方块状态包",
+    "author": "南鸢晨星 & CHelper",
+    "description": "感谢同为命令助手的CHelper开源了方块状态，本包进行了转换格式和补充。",
+    "uuid": "4145a166-7f9e-4ee6-969e-b3b0582ee94f",
+    "require": [],
+    "version": [
+        1,
+        0,
+        0
+    ],
+    "states": {
+        "block": [
+            {
+                "context": [
+                    "acacia_button",
+                    "bamboo_button",
+                    "birch_button",
+                    "cherry_button",
+                    "crimson_button",
+                    "dark_oak_button",
+                    "jungle_button",
+                    "mangrove_button",
+                    "pale_oak_button",
+                    "polished_blackstone_button",
+                    "spruce_button",
+                    "stone_button",
+                    "warped_button",
+                    "wooden_button"
+                ],
+                "schema": {
+                    "\"button_pressed_bit\"": {
+                        "name": "按钮是否按下",
+                        "type": "enum",
+                        "list": {
+                            "false": "按钮没有处于按下状态",
+                            "true": "按钮处于按下状态"
+                        }
+                    },
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_door",
+                    "bamboo_door",
+                    "birch_door",
+                    "cherry_door",
+                    "copper_door",
+                    "crimson_door",
+                    "dark_oak_door",
+                    "exposed_copper_door",
+                    "iron_door",
+                    "jungle_door",
+                    "mangrove_door",
+                    "oxidized_copper_door",
+                    "pale_oak_door",
+                    "spruce_door",
+                    "warped_door",
+                    "waxed_copper_door",
+                    "waxed_exposed_copper_door",
+                    "waxed_oxidized_copper_door",
+                    "waxed_weathered_copper_door",
+                    "weathered_copper_door",
+                    "wooden_door"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 门的朝向，门关闭时把手所在的方向",
+                        "type": "enum",
+                        "list": {
+                            "0": "南",
+                            "1": "西",
+                            "2": "北",
+                            "3": "东"
+                        }
+                    },
+                    "\"door_hinge_bit\"": {
+                        "name": "门轴在哪一侧，当为false时为左侧。储存在上半层的门中，对于下半层的门，该值正常情况下永远为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "门的朝向，门关闭时把手所在的方向",
+                        "type": "enum",
+                        "list": {
+                            "south": "南",
+                            "west": "西",
+                            "north": "北",
+                            "east": "东"
+                        }
+                    },
+                    "\"open_bit\"": {
+                        "name": "门是否已打开，当为true时已打开。储存在下半层的门中，对于上半层的门，该值正常情况下永远为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"upper_block_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是两格高方块组合的下半部分",
+                            "true": "此方块是两格高方块组合的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_double_slab",
+                    "acacia_slab",
+                    "birch_double_slab",
+                    "birch_slab",
+                    "dark_oak_double_slab",
+                    "dark_oak_slab",
+                    "jungle_double_slab",
+                    "jungle_slab",
+                    "oak_double_slab",
+                    "oak_slab",
+                    "spruce_double_slab",
+                    "spruce_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    },
+                    "\"top_slot_bit\"": {
+                        "name": "已弃用，为兼容性而保留 台阶是否是上半台阶，双层台阶正常情况下为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"wood_type\"": {
+                        "name": "已弃用，为兼容性而保留 木质方块的变种",
+                        "type": "enum",
+                        "list": {
+                            "oak": "橡木",
+                            "spruce": "云杉木",
+                            "birch": "白桦木",
+                            "jungle": "丛林木",
+                            "acacia": "金合欢木",
+                            "dark_oak": "深色橡木"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_fence",
+                    "acacia_planks",
+                    "birch_fence",
+                    "birch_planks",
+                    "dark_oak_fence",
+                    "dark_oak_planks",
+                    "jungle_fence",
+                    "jungle_planks",
+                    "oak_fence",
+                    "oak_planks",
+                    "spruce_fence",
+                    "spruce_planks"
+                ],
+                "schema": {
+                    "\"wood_type\"": {
+                        "name": "已弃用，为兼容性而保留 木质方块的变种",
+                        "type": "enum",
+                        "list": {
+                            "oak": "橡木",
+                            "spruce": "云杉木",
+                            "birch": "白桦木",
+                            "jungle": "丛林木",
+                            "acacia": "金合欢木",
+                            "dark_oak": "深色橡木"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_fence_gate",
+                    "bamboo_fence_gate",
+                    "birch_fence_gate",
+                    "cherry_fence_gate",
+                    "crimson_fence_gate",
+                    "dark_oak_fence_gate",
+                    "fence_gate",
+                    "jungle_fence_gate",
+                    "mangrove_fence_gate",
+                    "pale_oak_fence_gate",
+                    "spruce_fence_gate",
+                    "warped_fence_gate"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "朝南",
+                            "1": "朝西",
+                            "2": "朝北",
+                            "3": "朝东"
+                        }
+                    },
+                    "\"in_wall_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "栅栏门没有嵌入墙内，高度更高",
+                            "true": "栅栏门嵌入墙内，高度更低"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"open_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于关闭状态",
+                            "true": "方块处于打开状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_hanging_sign",
+                    "bamboo_hanging_sign",
+                    "birch_hanging_sign",
+                    "cherry_hanging_sign",
+                    "crimson_hanging_sign",
+                    "dark_oak_hanging_sign",
+                    "jungle_hanging_sign",
+                    "mangrove_hanging_sign",
+                    "oak_hanging_sign",
+                    "pale_oak_hanging_sign",
+                    "spruce_hanging_sign",
+                    "warped_hanging_sign"
+                ],
+                "schema": {
+                    "\"attached_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "未使用",
+                            "1": "未使用",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"ground_sign_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南",
+                            "1": "方块朝向南和西南方向之间",
+                            "2": "方块朝向西南",
+                            "3": "方块朝向西和西南方向之间",
+                            "4": "方块朝向西",
+                            "5": "方块朝向西和西北方向之间",
+                            "6": "方块朝向西北",
+                            "7": "方块朝向北和西北方向之间",
+                            "8": "方块朝向北",
+                            "9": "方块朝向北和东北方向之间",
+                            "10": "方块朝向东北",
+                            "11": "方块朝向东和东北方向之间",
+                            "12": "方块朝向东",
+                            "13": "方块朝向东和东南方向之间",
+                            "14": "方块朝向东南",
+                            "15": "方块朝向南和东南方向之间"
+                        }
+                    },
+                    "\"hanging\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块没有悬挂在方块下方",
+                            "true": "此方块悬挂在方块下方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_leaves",
+                    "dark_oak_leaves"
+                ],
+                "schema": {
+                    "\"new_leaf_type\"": {
+                        "name": "已弃用，为兼容性而保留 树叶的类型",
+                        "type": "enum",
+                        "list": {
+                            "acacia": "金合欢树叶",
+                            "dark_oak": "深色橡树树叶"
+                        }
+                    },
+                    "\"persistent_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "树叶距离最近的原木7格以上时会自然消失",
+                            "true": "树叶可以无视距离持久存在"
+                        }
+                    },
+                    "\"update_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "周围没有原木或树叶方块发生变化，不处理下一次随机刻",
+                            "true": "周围有原木或树叶方块发生变化，需要在下一次随机刻时检查是否应枯萎"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_log",
+                    "dark_oak_log"
+                ],
+                "schema": {
+                    "\"new_log_type\"": {
+                        "name": "已弃用，为兼容性而保留 原木的类型",
+                        "type": "enum",
+                        "list": {
+                            "acacia": "金合欢原木",
+                            "dark_oak": "深色橡木原木"
+                        }
+                    },
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_pressure_plate",
+                    "bamboo_pressure_plate",
+                    "birch_pressure_plate",
+                    "cherry_pressure_plate",
+                    "crimson_pressure_plate",
+                    "dark_oak_pressure_plate",
+                    "daylight_detector",
+                    "daylight_detector_inverted",
+                    "heavy_weighted_pressure_plate",
+                    "jungle_pressure_plate",
+                    "light_weighted_pressure_plate",
+                    "mangrove_pressure_plate",
+                    "pale_oak_pressure_plate",
+                    "polished_blackstone_pressure_plate",
+                    "redstone_wire",
+                    "spruce_pressure_plate",
+                    "stone_pressure_plate",
+                    "warped_pressure_plate",
+                    "wooden_pressure_plate"
+                ],
+                "schema": {
+                    "\"redstone_signal\"": {
+                        "name": "红石信号等级",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_sapling",
+                    "birch_sapling",
+                    "dark_oak_sapling",
+                    "jungle_sapling",
+                    "oak_sapling",
+                    "spruce_sapling"
+                ],
+                "schema": {
+                    "\"age_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "树苗刚被种下，在一段时间后此值将变为true",
+                            "true": "树苗在此阶段可以成长为树"
+                        }
+                    },
+                    "\"sapling_type\"": {
+                        "name": "已弃用，为兼容性而保留 树苗的类型",
+                        "type": "enum",
+                        "list": {
+                            "oak": "橡树树苗",
+                            "spruce": "云杉树苗",
+                            "birch": "白桦树苗",
+                            "jungle": "丛林树苗",
+                            "acacia": "金合欢树苗",
+                            "dark_oak": "深色橡树树苗",
+                            "pale_oak": "未使用"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_stairs",
+                    "andesite_stairs",
+                    "bamboo_mosaic_stairs",
+                    "bamboo_stairs",
+                    "birch_stairs",
+                    "blackstone_stairs",
+                    "brick_stairs",
+                    "cherry_stairs",
+                    "cobbled_deepslate_stairs",
+                    "crimson_stairs",
+                    "cut_copper_stairs",
+                    "dark_oak_stairs",
+                    "dark_prismarine_stairs",
+                    "deepslate_brick_stairs",
+                    "deepslate_tile_stairs",
+                    "diorite_stairs",
+                    "end_brick_stairs",
+                    "exposed_cut_copper_stairs",
+                    "granite_stairs",
+                    "jungle_stairs",
+                    "mangrove_stairs",
+                    "mossy_cobblestone_stairs",
+                    "mossy_stone_brick_stairs",
+                    "mud_brick_stairs",
+                    "nether_brick_stairs",
+                    "normal_stone_stairs",
+                    "oak_stairs",
+                    "oxidized_cut_copper_stairs",
+                    "pale_oak_stairs",
+                    "polished_andesite_stairs",
+                    "polished_blackstone_brick_stairs",
+                    "polished_blackstone_stairs",
+                    "polished_deepslate_stairs",
+                    "polished_diorite_stairs",
+                    "polished_granite_stairs",
+                    "polished_tuff_stairs",
+                    "prismarine_bricks_stairs",
+                    "prismarine_stairs",
+                    "purpur_stairs",
+                    "quartz_stairs",
+                    "red_nether_brick_stairs",
+                    "red_sandstone_stairs",
+                    "resin_brick_stairs",
+                    "sandstone_stairs",
+                    "smooth_quartz_stairs",
+                    "smooth_red_sandstone_stairs",
+                    "smooth_sandstone_stairs",
+                    "spruce_stairs",
+                    "stone_brick_stairs",
+                    "stone_stairs",
+                    "tuff_brick_stairs",
+                    "tuff_stairs",
+                    "warped_stairs",
+                    "waxed_cut_copper_stairs",
+                    "waxed_exposed_cut_copper_stairs",
+                    "waxed_oxidized_cut_copper_stairs",
+                    "waxed_weathered_cut_copper_stairs",
+                    "weathered_cut_copper_stairs"
+                ],
+                "schema": {
+                    "\"upside_down_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块主要位于方块网格的下半部分",
+                            "true": "方块主要位于方块网格的上半部分"
+                        }
+                    },
+                    "\"weirdo_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "楼梯面朝西方",
+                            "1": "楼梯面朝东方",
+                            "2": "楼梯面朝北方",
+                            "3": "楼梯面朝南方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_standing_sign",
+                    "bamboo_standing_sign",
+                    "birch_standing_sign",
+                    "cherry_standing_sign",
+                    "crimson_standing_sign",
+                    "darkoak_standing_sign",
+                    "jungle_standing_sign",
+                    "mangrove_standing_sign",
+                    "pale_oak_standing_sign",
+                    "spruce_standing_sign",
+                    "standing_banner",
+                    "standing_sign",
+                    "warped_standing_sign"
+                ],
+                "schema": {
+                    "\"ground_sign_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南",
+                            "1": "方块朝向南和西南方向之间",
+                            "2": "方块朝向西南",
+                            "3": "方块朝向西和西南方向之间",
+                            "4": "方块朝向西",
+                            "5": "方块朝向西和西北方向之间",
+                            "6": "方块朝向西北",
+                            "7": "方块朝向北和西北方向之间",
+                            "8": "方块朝向北",
+                            "9": "方块朝向北和东北方向之间",
+                            "10": "方块朝向东北",
+                            "11": "方块朝向东和东北方向之间",
+                            "12": "方块朝向东",
+                            "13": "方块朝向东和东南方向之间",
+                            "14": "方块朝向东南",
+                            "15": "方块朝向南和东南方向之间"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_trapdoor",
+                    "bamboo_trapdoor",
+                    "birch_trapdoor",
+                    "cherry_trapdoor",
+                    "copper_trapdoor",
+                    "crimson_trapdoor",
+                    "dark_oak_trapdoor",
+                    "exposed_copper_trapdoor",
+                    "iron_trapdoor",
+                    "jungle_trapdoor",
+                    "mangrove_trapdoor",
+                    "oxidized_copper_trapdoor",
+                    "pale_oak_trapdoor",
+                    "spruce_trapdoor",
+                    "trapdoor",
+                    "warped_trapdoor",
+                    "waxed_copper_trapdoor",
+                    "waxed_exposed_copper_trapdoor",
+                    "waxed_oxidized_copper_trapdoor",
+                    "waxed_weathered_copper_trapdoor",
+                    "weathered_copper_trapdoor"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "活板门朝向东方，轴在西方",
+                            "1": "活板门朝向西方，轴在东方",
+                            "2": "活板门朝向南方，轴在北方",
+                            "3": "活板门朝向北方，轴在南方"
+                        }
+                    },
+                    "\"open_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于关闭状态",
+                            "true": "方块处于打开状态"
+                        }
+                    },
+                    "\"upside_down_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块主要位于方块网格的下半部分",
+                            "true": "方块主要位于方块网格的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_wall_sign",
+                    "bamboo_wall_sign",
+                    "birch_wall_sign",
+                    "black_glazed_terracotta",
+                    "blue_glazed_terracotta",
+                    "brown_glazed_terracotta",
+                    "cherry_wall_sign",
+                    "creeper_head",
+                    "crimson_wall_sign",
+                    "cyan_glazed_terracotta",
+                    "darkoak_wall_sign",
+                    "dragon_head",
+                    "end_rod",
+                    "gray_glazed_terracotta",
+                    "green_glazed_terracotta",
+                    "jungle_wall_sign",
+                    "ladder",
+                    "light_blue_glazed_terracotta",
+                    "lime_glazed_terracotta",
+                    "magenta_glazed_terracotta",
+                    "mangrove_wall_sign",
+                    "orange_glazed_terracotta",
+                    "pale_oak_wall_sign",
+                    "piglin_head",
+                    "pink_glazed_terracotta",
+                    "piston",
+                    "piston_arm_collision",
+                    "player_head",
+                    "purple_glazed_terracotta",
+                    "red_glazed_terracotta",
+                    "silver_glazed_terracotta",
+                    "skeleton_skull",
+                    "spruce_wall_sign",
+                    "sticky_piston",
+                    "sticky_piston_arm_collision",
+                    "wall_banner",
+                    "wall_sign",
+                    "warped_wall_sign",
+                    "white_glazed_terracotta",
+                    "wither_skeleton_skull",
+                    "yellow_glazed_terracotta",
+                    "zombie_head"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "未使用",
+                            "1": "未使用",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "acacia_wood",
+                    "birch_wood",
+                    "dark_oak_wood",
+                    "jungle_wood",
+                    "oak_wood",
+                    "spruce_wood",
+                    "stripped_acacia_wood",
+                    "stripped_birch_wood",
+                    "stripped_dark_oak_wood",
+                    "stripped_jungle_wood",
+                    "stripped_oak_wood",
+                    "stripped_spruce_wood"
+                ],
+                "schema": {
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    },
+                    "\"stripped_bit\"": {
+                        "name": "已弃用，为兼容性而保留 方块为去皮木头还是普通木头",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"wood_type\"": {
+                        "name": "已弃用，为兼容性而保留 木质方块的变种",
+                        "type": "enum",
+                        "list": {
+                            "oak": "橡木",
+                            "spruce": "云杉木",
+                            "birch": "白桦木",
+                            "jungle": "丛林木",
+                            "acacia": "金合欢木",
+                            "dark_oak": "深色橡木"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "activator_rail",
+                    "detector_rail",
+                    "golden_rail"
+                ],
+                "schema": {
+                    "\"rail_data_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "铁轨未被激活",
+                            "true": "铁轨被红石信号激活"
+                        }
+                    },
+                    "\"rail_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "南北朝向的平坦铁轨",
+                            "1": "东西朝向的平坦铁轨",
+                            "2": "朝向东的上坡铁轨",
+                            "3": "朝向西的上坡铁轨",
+                            "4": "朝向北的上坡铁轨",
+                            "5": "朝向南的上坡铁轨",
+                            "6": "未使用",
+                            "7": "未使用",
+                            "8": "未使用",
+                            "9": "未使用"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "air",
+                    "allow",
+                    "amethyst_block",
+                    "ancient_debris",
+                    "azalea",
+                    "bamboo_fence",
+                    "bamboo_mosaic",
+                    "bamboo_planks",
+                    "barrier",
+                    "beacon",
+                    "blackstone",
+                    "blue_ice",
+                    "bookshelf",
+                    "brick_block",
+                    "brown_mushroom",
+                    "budding_amethyst",
+                    "bush",
+                    "cactus_flower",
+                    "calcite",
+                    "cartography_table",
+                    "chain",
+                    "cherry_fence",
+                    "cherry_planks",
+                    "chiseled_copper",
+                    "chiseled_deepslate",
+                    "chiseled_nether_bricks",
+                    "chiseled_polished_blackstone",
+                    "chiseled_resin_bricks",
+                    "chiseled_tuff",
+                    "chiseled_tuff_bricks",
+                    "chorus_plant",
+                    "clay",
+                    "closed_eyeblossom",
+                    "coal_block",
+                    "coal_ore",
+                    "cobbled_deepslate",
+                    "cobblestone",
+                    "conduit",
+                    "copper_block",
+                    "copper_grate",
+                    "copper_ore",
+                    "cracked_deepslate_bricks",
+                    "cracked_deepslate_tiles",
+                    "cracked_nether_bricks",
+                    "cracked_polished_blackstone_bricks",
+                    "crafting_table",
+                    "crimson_fence",
+                    "crimson_fungus",
+                    "crimson_nylium",
+                    "crimson_planks",
+                    "crimson_roots",
+                    "crying_obsidian",
+                    "cut_copper",
+                    "dandelion",
+                    "deadbush",
+                    "deepslate_bricks",
+                    "deepslate_coal_ore",
+                    "deepslate_copper_ore",
+                    "deepslate_diamond_ore",
+                    "deepslate_emerald_ore",
+                    "deepslate_gold_ore",
+                    "deepslate_iron_ore",
+                    "deepslate_lapis_ore",
+                    "deepslate_redstone_ore",
+                    "deepslate_tiles",
+                    "deny",
+                    "diamond_block",
+                    "diamond_ore",
+                    "dirt_with_roots",
+                    "dragon_egg",
+                    "dried_kelp_block",
+                    "dripstone_block",
+                    "emerald_block",
+                    "emerald_ore",
+                    "enchanting_table",
+                    "end_bricks",
+                    "end_portal",
+                    "end_stone",
+                    "exposed_chiseled_copper",
+                    "exposed_copper",
+                    "exposed_copper_grate",
+                    "exposed_cut_copper",
+                    "firefly_bush",
+                    "fletching_table",
+                    "flowering_azalea",
+                    "frog_spawn",
+                    "gilded_blackstone",
+                    "glass",
+                    "glass_pane",
+                    "glowstone",
+                    "gold_block",
+                    "gold_ore",
+                    "grass_block",
+                    "grass_path",
+                    "gravel",
+                    "hanging_roots",
+                    "hardened_clay",
+                    "heavy_core",
+                    "honey_block",
+                    "honeycomb_block",
+                    "ice",
+                    "iron_bars",
+                    "iron_block",
+                    "iron_ore",
+                    "jukebox",
+                    "lapis_block",
+                    "lapis_ore",
+                    "lit_deepslate_redstone_ore",
+                    "lit_redstone_lamp",
+                    "lit_redstone_ore",
+                    "lodestone",
+                    "magma",
+                    "mangrove_fence",
+                    "mangrove_planks",
+                    "mangrove_roots",
+                    "melon_block",
+                    "mob_spawner",
+                    "moss_block",
+                    "moss_carpet",
+                    "mossy_cobblestone",
+                    "mud",
+                    "mud_bricks",
+                    "mycelium",
+                    "nether_brick",
+                    "nether_brick_fence",
+                    "nether_gold_ore",
+                    "nether_sprouts",
+                    "nether_wart_block",
+                    "netherite_block",
+                    "netherrack",
+                    "noteblock",
+                    "obsidian",
+                    "open_eyeblossom",
+                    "oxidized_chiseled_copper",
+                    "oxidized_copper",
+                    "oxidized_copper_grate",
+                    "oxidized_cut_copper",
+                    "packed_ice",
+                    "packed_mud",
+                    "pale_moss_block",
+                    "pale_oak_fence",
+                    "pale_oak_planks",
+                    "podzol",
+                    "polished_blackstone",
+                    "polished_blackstone_bricks",
+                    "polished_deepslate",
+                    "polished_tuff",
+                    "powder_snow",
+                    "quartz_bricks",
+                    "quartz_ore",
+                    "raw_copper_block",
+                    "raw_gold_block",
+                    "raw_iron_block",
+                    "red_mushroom",
+                    "red_nether_brick",
+                    "redstone_block",
+                    "redstone_lamp",
+                    "redstone_ore",
+                    "reinforced_deepslate",
+                    "resin_block",
+                    "resin_bricks",
+                    "sculk",
+                    "sea_lantern",
+                    "short_dry_grass",
+                    "shroomlight",
+                    "slime",
+                    "smithing_table",
+                    "smooth_basalt",
+                    "smooth_stone",
+                    "snow",
+                    "soul_sand",
+                    "soul_soil",
+                    "spore_blossom",
+                    "tall_dry_grass",
+                    "target",
+                    "tinted_glass",
+                    "torchflower",
+                    "tuff",
+                    "tuff_bricks",
+                    "undyed_shulker_box",
+                    "warped_fence",
+                    "warped_fungus",
+                    "warped_nylium",
+                    "warped_planks",
+                    "warped_roots",
+                    "warped_wart_block",
+                    "waterlily",
+                    "waxed_chiseled_copper",
+                    "waxed_copper",
+                    "waxed_copper_grate",
+                    "waxed_cut_copper",
+                    "waxed_exposed_chiseled_copper",
+                    "waxed_exposed_copper",
+                    "waxed_exposed_copper_grate",
+                    "waxed_exposed_cut_copper",
+                    "waxed_oxidized_chiseled_copper",
+                    "waxed_oxidized_copper",
+                    "waxed_oxidized_copper_grate",
+                    "waxed_oxidized_cut_copper",
+                    "waxed_weathered_chiseled_copper",
+                    "waxed_weathered_copper",
+                    "waxed_weathered_copper_grate",
+                    "waxed_weathered_cut_copper",
+                    "weathered_chiseled_copper",
+                    "weathered_copper",
+                    "weathered_copper_grate",
+                    "weathered_cut_copper",
+                    "web",
+                    "wither_rose"
+                ],
+                "schema": {}
+            },
+            {
+                "context": [
+                    "allium",
+                    "azure_bluet",
+                    "blue_orchid",
+                    "cornflower",
+                    "lily_of_the_valley",
+                    "orange_tulip",
+                    "oxeye_daisy",
+                    "pink_tulip",
+                    "poppy",
+                    "red_tulip",
+                    "white_tulip"
+                ],
+                "schema": {
+                    "\"flower_type\"": {
+                        "name": "已弃用，为兼容性而保留 花的类型 allium： cornflower： houstonia： lily_of_the_valley： orchid： oxeye： poppy： tulip_orange： tulip_pink： tulip_red： tulip_white：",
+                        "type": "enum",
+                        "list": {
+                            "poppy": "tulip_orange：",
+                            "orchid": "oxeye：",
+                            "allium": "cornflower：",
+                            "houstonia": "lily_of_the_valley：",
+                            "tulip_red": "(待补充)",
+                            "tulip_orange": "(待补充)",
+                            "tulip_white": "(待补充)",
+                            "tulip_pink": "tulip_red：",
+                            "oxeye": "(待补充)",
+                            "cornflower": "(待补充)",
+                            "lily_of_the_valley": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "amethyst_cluster",
+                    "large_amethyst_bud",
+                    "medium_amethyst_bud",
+                    "small_amethyst_bud"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:block_face\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "down": "方块附着在方块底面，朝向下方",
+                            "up": "方块附着在方块顶面，朝向上方",
+                            "north": "方块附着在方块北面，朝向北方",
+                            "south": "方块附着在方块南面，朝向南方",
+                            "west": "方块附着在方块西面，朝向西方",
+                            "east": "方块附着在方块东面，朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "andesite",
+                    "diorite",
+                    "granite",
+                    "polished_andesite",
+                    "polished_diorite",
+                    "polished_granite",
+                    "stone"
+                ],
+                "schema": {
+                    "\"stone_type\"": {
+                        "name": "已弃用，为兼容性而保留 石头的类型 stone： granite： granite_smooth： diorite： diorite_smooth： andesite： andesite_smooth：",
+                        "type": "enum",
+                        "list": {
+                            "stone": "granite：",
+                            "granite": "(待补充)",
+                            "granite_smooth": "diorite：",
+                            "diorite": "(待补充)",
+                            "diorite_smooth": "andesite：",
+                            "andesite": "(待补充)",
+                            "andesite_smooth": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "andesite_double_slab",
+                    "andesite_slab",
+                    "diorite_double_slab",
+                    "diorite_slab",
+                    "end_stone_brick_double_slab",
+                    "end_stone_brick_slab",
+                    "granite_double_slab",
+                    "granite_slab",
+                    "polished_andesite_double_slab",
+                    "polished_andesite_slab",
+                    "polished_diorite_double_slab",
+                    "polished_diorite_slab",
+                    "polished_granite_double_slab",
+                    "polished_granite_slab",
+                    "smooth_red_sandstone_double_slab",
+                    "smooth_red_sandstone_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    },
+                    "\"stone_slab_type_3\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "end_stone_brick": "末地石砖台阶",
+                            "smooth_red_sandstone": "平滑红砂岩台阶",
+                            "polished_andesite": "磨制安山岩台阶",
+                            "andesite": "安山岩台阶",
+                            "diorite": "闪长岩台阶",
+                            "polished_diorite": "磨制闪长岩台阶",
+                            "granite": "花岗岩台阶",
+                            "polished_granite": "磨制花岗岩台阶"
+                        }
+                    },
+                    "\"top_slot_bit\"": {
+                        "name": "已弃用，为兼容性而保留 台阶是否是上半台阶，双层台阶正常情况下为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "andesite_wall",
+                    "brick_wall",
+                    "cobblestone_wall",
+                    "diorite_wall",
+                    "end_stone_brick_wall",
+                    "granite_wall",
+                    "mossy_cobblestone_wall",
+                    "mossy_stone_brick_wall",
+                    "nether_brick_wall",
+                    "prismarine_wall",
+                    "red_nether_brick_wall",
+                    "red_sandstone_wall",
+                    "sandstone_wall",
+                    "stone_brick_wall"
+                ],
+                "schema": {
+                    "\"wall_block_type\"": {
+                        "name": "已弃用，为兼容性而保留 墙的变种",
+                        "type": "enum",
+                        "list": {
+                            "cobblestone": "圆石墙",
+                            "mossy_cobblestone": "苔石墙",
+                            "granite": "花岗岩墙",
+                            "diorite": "闪长岩墙",
+                            "andesite": "安山岩墙",
+                            "sandstone": "砂岩墙",
+                            "brick": "红砖墙",
+                            "stone_brick": "石砖墙",
+                            "mossy_stone_brick": "苔石砖墙",
+                            "nether_brick": "下界砖墙",
+                            "end_brick": "末地石砖墙",
+                            "prismarine": "海晶石墙",
+                            "red_sandstone": "红砂岩墙",
+                            "red_nether_brick": "红色下界砖墙"
+                        }
+                    },
+                    "\"wall_connection_type_east\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向东方连接",
+                            "short": "墙向东方连接，且高度较低",
+                            "tall": "墙向东方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_connection_type_north\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向北方连接",
+                            "short": "墙向北方连接，且高度较低",
+                            "tall": "墙向北方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_connection_type_south\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向南方连接",
+                            "short": "墙向南方连接，且高度较低",
+                            "tall": "墙向南方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_connection_type_west\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向西方连接",
+                            "short": "墙向西方连接，且高度较低",
+                            "tall": "墙向西方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_post_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "墙没有中心柱",
+                            "true": "墙有中心柱"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "anvil",
+                    "chipped_anvil",
+                    "damaged_anvil"
+                ],
+                "schema": {
+                    "\"damage\"": {
+                        "name": "已弃用，为兼容性而保留 ，与完好的铁砧纹理类似，可以正常使用）",
+                        "type": "enum",
+                        "list": {
+                            "undamaged": "铁砧",
+                            "slightly_damaged": "开裂的铁砧",
+                            "very_damaged": "损坏的铁砧",
+                            "broken": "破碎的铁砧（只能通过命令获得"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "azalea_leaves",
+                    "azalea_leaves_flowered",
+                    "cherry_leaves",
+                    "mangrove_leaves",
+                    "pale_oak_leaves"
+                ],
+                "schema": {
+                    "\"persistent_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "树叶距离最近的原木7格以上时会自然消失",
+                            "true": "树叶可以无视距离持久存在"
+                        }
+                    },
+                    "\"update_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "周围没有原木或树叶方块发生变化，不处理下一次随机刻",
+                            "true": "周围有原木或树叶方块发生变化，需要在下一次随机刻时检查是否应枯萎"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bamboo"
+                ],
+                "schema": {
+                    "\"age_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"bamboo_leaf_size\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "no_leaves": "竹子没有任何竹叶",
+                            "small_leaves": "竹子有少量竹叶",
+                            "large_leaves": "竹子有大量竹叶"
+                        }
+                    },
+                    "\"bamboo_stalk_thickness\"": {
+                        "name": "竹子的生长阶段，若此值为thick，竹子会显得更粗",
+                        "type": "enum",
+                        "list": {
+                            "thin": "(待补充)",
+                            "thick": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bamboo_block",
+                    "basalt",
+                    "cherry_log",
+                    "cherry_wood",
+                    "crimson_hyphae",
+                    "crimson_stem",
+                    "deepslate",
+                    "infested_deepslate",
+                    "mangrove_log",
+                    "mangrove_wood",
+                    "muddy_mangrove_roots",
+                    "ochre_froglight",
+                    "pale_oak_log",
+                    "pale_oak_wood",
+                    "pearlescent_froglight",
+                    "polished_basalt",
+                    "stripped_acacia_log",
+                    "stripped_bamboo_block",
+                    "stripped_birch_log",
+                    "stripped_cherry_log",
+                    "stripped_cherry_wood",
+                    "stripped_crimson_hyphae",
+                    "stripped_crimson_stem",
+                    "stripped_dark_oak_log",
+                    "stripped_jungle_log",
+                    "stripped_mangrove_log",
+                    "stripped_mangrove_wood",
+                    "stripped_oak_log",
+                    "stripped_pale_oak_log",
+                    "stripped_pale_oak_wood",
+                    "stripped_spruce_log",
+                    "stripped_warped_hyphae",
+                    "stripped_warped_stem",
+                    "verdant_froglight",
+                    "warped_hyphae",
+                    "warped_stem"
+                ],
+                "schema": {
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bamboo_double_slab",
+                    "bamboo_mosaic_double_slab",
+                    "bamboo_mosaic_slab",
+                    "bamboo_slab",
+                    "blackstone_double_slab",
+                    "blackstone_slab",
+                    "cherry_double_slab",
+                    "cherry_slab",
+                    "cobbled_deepslate_double_slab",
+                    "cobbled_deepslate_slab",
+                    "crimson_double_slab",
+                    "crimson_slab",
+                    "cut_copper_slab",
+                    "deepslate_brick_double_slab",
+                    "deepslate_brick_slab",
+                    "deepslate_tile_double_slab",
+                    "deepslate_tile_slab",
+                    "double_cut_copper_slab",
+                    "exposed_cut_copper_slab",
+                    "exposed_double_cut_copper_slab",
+                    "mangrove_double_slab",
+                    "mangrove_slab",
+                    "mud_brick_double_slab",
+                    "mud_brick_slab",
+                    "oxidized_cut_copper_slab",
+                    "oxidized_double_cut_copper_slab",
+                    "polished_blackstone_brick_double_slab",
+                    "polished_blackstone_brick_slab",
+                    "polished_blackstone_double_slab",
+                    "polished_blackstone_slab",
+                    "polished_deepslate_double_slab",
+                    "polished_deepslate_slab",
+                    "warped_double_slab",
+                    "warped_slab",
+                    "waxed_cut_copper_slab",
+                    "waxed_double_cut_copper_slab",
+                    "waxed_exposed_cut_copper_slab",
+                    "waxed_exposed_double_cut_copper_slab",
+                    "waxed_oxidized_cut_copper_slab",
+                    "waxed_oxidized_double_cut_copper_slab",
+                    "waxed_weathered_cut_copper_slab",
+                    "waxed_weathered_double_cut_copper_slab",
+                    "weathered_cut_copper_slab",
+                    "weathered_double_cut_copper_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    },
+                    "\"top_slot_bit\"": {
+                        "name": "已弃用，为兼容性而保留 台阶是否是上半台阶，双层台阶正常情况下为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bamboo_sapling",
+                    "cherry_sapling",
+                    "pale_oak_sapling"
+                ],
+                "schema": {
+                    "\"age_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "barrel"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"open_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于关闭状态",
+                            "true": "方块处于打开状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bed"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "床头指向南方",
+                            "1": "床头指向西方",
+                            "2": "床头指向北方",
+                            "3": "床头指向东方"
+                        }
+                    },
+                    "\"head_piece_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是床尾",
+                            "true": "此方块是床头"
+                        }
+                    },
+                    "\"occupied_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "床没有被占用，可以睡觉",
+                            "true": "床被生物占用"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bedrock"
+                ],
+                "schema": {
+                    "\"infiniburn_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此基岩上的火焰不能无限燃烧",
+                            "true": "此基岩上的火焰能无限燃烧，用于生成在末地的基岩"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bee_nest",
+                    "beehive"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南方",
+                            "1": "方块朝向西方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向东方"
+                        }
+                    },
+                    "\"honey_level\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "蜂巢或蜂箱内是空的",
+                            "1": "蜂巢或蜂箱的储蜜量",
+                            "2": "蜂巢或蜂箱的储蜜量",
+                            "3": "蜂巢或蜂箱的储蜜量",
+                            "4": "蜂巢或蜂箱的储蜜量",
+                            "5": "蜂巢或蜂箱已满，可以收集蜂蜜或蜜脾"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "beetroot",
+                    "carrots",
+                    "potatoes",
+                    "sweet_berry_bush",
+                    "torchflower_crop",
+                    "wheat"
+                ],
+                "schema": {
+                    "\"growth\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "作物生长第一阶段",
+                            "1": "作物生长第一阶段",
+                            "2": "作物生长第二阶段",
+                            "3": "作物生长第二阶段",
+                            "4": "作物生长第三阶段",
+                            "5": "作物生长第三阶段",
+                            "6": "作物生长第三阶段",
+                            "7": "作物成熟"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bell"
+                ],
+                "schema": {
+                    "\"attachment\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "standing": "钟附着在其他方块的上面",
+                            "hanging": "钟附着在其他方块的下面",
+                            "side": "钟附着在一个其他方块的侧面",
+                            "multiple": "钟附着在两个对向方块的侧面"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南方",
+                            "1": "方块朝向西方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向东方"
+                        }
+                    },
+                    "\"toggle_bit\"": {
+                        "name": "未使用，钟每响一次，该值就切换一次",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "big_dripleaf"
+                ],
+                "schema": {
+                    "\"big_dripleaf_head\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "大型垂滴叶的叶茎部分",
+                            "true": "大型垂滴叶的叶片部分"
+                        }
+                    },
+                    "\"big_dripleaf_tilt\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "大型垂滴叶被红石激活，无法倾斜",
+                            "unstable": "大型垂滴叶处于不稳定状态，当上方有实体时在10游戏刻（0.5秒）后进入下一阶段",
+                            "partial_tilt": "大型垂滴叶处于半倾斜状态",
+                            "full_tilt": "大型垂滴叶完全倾斜，没有碰撞箱"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "birch_leaves",
+                    "jungle_leaves",
+                    "oak_leaves",
+                    "spruce_leaves"
+                ],
+                "schema": {
+                    "\"old_leaf_type\"": {
+                        "name": "已弃用，为兼容性而保留 树叶的类型",
+                        "type": "enum",
+                        "list": {
+                            "oak": "橡树树叶",
+                            "spruce": "云杉树叶",
+                            "birch": "白桦树叶",
+                            "jungle": "丛林树叶"
+                        }
+                    },
+                    "\"persistent_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "树叶距离最近的原木7格以上时会自然消失",
+                            "true": "树叶可以无视距离持久存在"
+                        }
+                    },
+                    "\"update_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "周围没有原木或树叶方块发生变化，不处理下一次随机刻",
+                            "true": "周围有原木或树叶方块发生变化，需要在下一次随机刻时检查是否应枯萎"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "birch_log",
+                    "jungle_log",
+                    "oak_log",
+                    "spruce_log"
+                ],
+                "schema": {
+                    "\"old_log_type\"": {
+                        "name": "已弃用，为兼容性而保留 原木的类型",
+                        "type": "enum",
+                        "list": {
+                            "oak": "橡木原木",
+                            "spruce": "云杉原木",
+                            "birch": "白桦原木",
+                            "jungle": "丛林原木"
+                        }
+                    },
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "black_candle",
+                    "blue_candle",
+                    "brown_candle",
+                    "candle",
+                    "cyan_candle",
+                    "gray_candle",
+                    "green_candle",
+                    "light_blue_candle",
+                    "light_gray_candle",
+                    "lime_candle",
+                    "magenta_candle",
+                    "orange_candle",
+                    "pink_candle",
+                    "purple_candle",
+                    "red_candle",
+                    "white_candle",
+                    "yellow_candle"
+                ],
+                "schema": {
+                    "\"candles\"": {
+                        "name": "方块内额外的蜡烛的数量",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"lit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于熄灭状态",
+                            "true": "方块处于点亮状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "black_candle_cake",
+                    "blue_candle_cake",
+                    "brown_candle_cake",
+                    "candle_cake",
+                    "cyan_candle_cake",
+                    "gray_candle_cake",
+                    "green_candle_cake",
+                    "light_blue_candle_cake",
+                    "light_gray_candle_cake",
+                    "lime_candle_cake",
+                    "magenta_candle_cake",
+                    "orange_candle_cake",
+                    "pink_candle_cake",
+                    "purple_candle_cake",
+                    "red_candle_cake",
+                    "white_candle_cake",
+                    "yellow_candle_cake"
+                ],
+                "schema": {
+                    "\"lit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于熄灭状态",
+                            "true": "方块处于点亮状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "black_carpet",
+                    "black_concrete",
+                    "black_concrete_powder",
+                    "black_shulker_box",
+                    "black_stained_glass",
+                    "black_stained_glass_pane",
+                    "black_terracotta",
+                    "black_wool",
+                    "blue_carpet",
+                    "blue_concrete",
+                    "blue_concrete_powder",
+                    "blue_shulker_box",
+                    "blue_stained_glass",
+                    "blue_stained_glass_pane",
+                    "blue_terracotta",
+                    "blue_wool",
+                    "brown_carpet",
+                    "brown_concrete",
+                    "brown_concrete_powder",
+                    "brown_shulker_box",
+                    "brown_stained_glass",
+                    "brown_stained_glass_pane",
+                    "brown_terracotta",
+                    "brown_wool",
+                    "cyan_carpet",
+                    "cyan_concrete",
+                    "cyan_concrete_powder",
+                    "cyan_shulker_box",
+                    "cyan_stained_glass",
+                    "cyan_stained_glass_pane",
+                    "cyan_terracotta",
+                    "cyan_wool",
+                    "gray_carpet",
+                    "gray_concrete",
+                    "gray_concrete_powder",
+                    "gray_shulker_box",
+                    "gray_stained_glass",
+                    "gray_stained_glass_pane",
+                    "gray_terracotta",
+                    "gray_wool",
+                    "green_carpet",
+                    "green_concrete",
+                    "green_concrete_powder",
+                    "green_shulker_box",
+                    "green_stained_glass",
+                    "green_stained_glass_pane",
+                    "green_terracotta",
+                    "green_wool",
+                    "light_blue_carpet",
+                    "light_blue_concrete",
+                    "light_blue_concrete_powder",
+                    "light_blue_shulker_box",
+                    "light_blue_stained_glass",
+                    "light_blue_stained_glass_pane",
+                    "light_blue_terracotta",
+                    "light_blue_wool",
+                    "light_gray_carpet",
+                    "light_gray_concrete",
+                    "light_gray_concrete_powder",
+                    "light_gray_shulker_box",
+                    "light_gray_stained_glass",
+                    "light_gray_stained_glass_pane",
+                    "light_gray_terracotta",
+                    "light_gray_wool",
+                    "lime_carpet",
+                    "lime_concrete",
+                    "lime_concrete_powder",
+                    "lime_shulker_box",
+                    "lime_stained_glass",
+                    "lime_stained_glass_pane",
+                    "lime_terracotta",
+                    "lime_wool",
+                    "magenta_carpet",
+                    "magenta_concrete",
+                    "magenta_concrete_powder",
+                    "magenta_shulker_box",
+                    "magenta_stained_glass",
+                    "magenta_stained_glass_pane",
+                    "magenta_terracotta",
+                    "magenta_wool",
+                    "orange_carpet",
+                    "orange_concrete",
+                    "orange_concrete_powder",
+                    "orange_shulker_box",
+                    "orange_stained_glass",
+                    "orange_stained_glass_pane",
+                    "orange_terracotta",
+                    "orange_wool",
+                    "pink_carpet",
+                    "pink_concrete",
+                    "pink_concrete_powder",
+                    "pink_shulker_box",
+                    "pink_stained_glass",
+                    "pink_stained_glass_pane",
+                    "pink_terracotta",
+                    "pink_wool",
+                    "purple_carpet",
+                    "purple_concrete",
+                    "purple_concrete_powder",
+                    "purple_shulker_box",
+                    "purple_stained_glass",
+                    "purple_stained_glass_pane",
+                    "purple_terracotta",
+                    "purple_wool",
+                    "red_carpet",
+                    "red_concrete",
+                    "red_concrete_powder",
+                    "red_shulker_box",
+                    "red_stained_glass",
+                    "red_stained_glass_pane",
+                    "red_terracotta",
+                    "red_wool",
+                    "white_carpet",
+                    "white_concrete",
+                    "white_concrete_powder",
+                    "white_shulker_box",
+                    "white_stained_glass",
+                    "white_stained_glass_pane",
+                    "white_terracotta",
+                    "white_wool",
+                    "yellow_carpet",
+                    "yellow_concrete",
+                    "yellow_concrete_powder",
+                    "yellow_shulker_box",
+                    "yellow_stained_glass",
+                    "yellow_stained_glass_pane",
+                    "yellow_terracotta",
+                    "yellow_wool"
+                ],
+                "schema": {
+                    "\"color\"": {
+                        "name": "已弃用，为兼容性而保留 方块的颜色",
+                        "type": "enum",
+                        "list": {
+                            "white": "白色",
+                            "orange": "橙色",
+                            "magenta": "品红色",
+                            "light_blue": "淡蓝色",
+                            "yellow": "黄色",
+                            "lime": "黄绿色",
+                            "pink": "粉红色",
+                            "gray": "灰色",
+                            "silver": "淡灰色",
+                            "cyan": "青色",
+                            "purple": "紫色",
+                            "blue": "蓝色",
+                            "brown": "棕色",
+                            "green": "绿色",
+                            "red": "红色",
+                            "black": "黑色"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "blackstone_wall",
+                    "border_block",
+                    "cobbled_deepslate_wall",
+                    "deepslate_brick_wall",
+                    "deepslate_tile_wall",
+                    "mud_brick_wall",
+                    "polished_blackstone_brick_wall",
+                    "polished_blackstone_wall",
+                    "polished_deepslate_wall",
+                    "polished_tuff_wall",
+                    "resin_brick_wall",
+                    "tuff_brick_wall",
+                    "tuff_wall"
+                ],
+                "schema": {
+                    "\"wall_connection_type_east\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向东方连接",
+                            "short": "墙向东方连接，且高度较低",
+                            "tall": "墙向东方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_connection_type_north\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向北方连接",
+                            "short": "墙向北方连接，且高度较低",
+                            "tall": "墙向北方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_connection_type_south\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向南方连接",
+                            "short": "墙向南方连接，且高度较低",
+                            "tall": "墙向南方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_connection_type_west\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "墙不向西方连接",
+                            "short": "墙向西方连接，且高度较低",
+                            "tall": "墙向西方连接，且高度较高"
+                        }
+                    },
+                    "\"wall_post_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "墙没有中心柱",
+                            "true": "墙有中心柱"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "blast_furnace",
+                    "chest",
+                    "ender_chest",
+                    "furnace",
+                    "lit_blast_furnace",
+                    "lit_furnace",
+                    "lit_smoker",
+                    "smoker",
+                    "stonecutter_block",
+                    "trapped_chest"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bone_block",
+                    "hay_block"
+                ],
+                "schema": {
+                    "\"deprecated\"": {
+                        "name": "已弃用但未被移除的方块状态，作用未知",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "brain_coral",
+                    "brain_coral_block",
+                    "bubble_coral",
+                    "bubble_coral_block",
+                    "dead_brain_coral",
+                    "dead_brain_coral_block",
+                    "dead_bubble_coral",
+                    "dead_bubble_coral_block",
+                    "dead_fire_coral",
+                    "dead_fire_coral_block",
+                    "dead_horn_coral",
+                    "dead_horn_coral_block",
+                    "dead_tube_coral",
+                    "dead_tube_coral_block",
+                    "fire_coral",
+                    "fire_coral_block",
+                    "horn_coral",
+                    "horn_coral_block",
+                    "tube_coral",
+                    "tube_coral_block"
+                ],
+                "schema": {
+                    "\"coral_color\"": {
+                        "name": "已弃用，为兼容性而保留 珊瑚的变种",
+                        "type": "enum",
+                        "list": {
+                            "blue": "管珊瑚变种",
+                            "pink": "脑纹珊瑚变种",
+                            "purple": "气泡珊瑚变种",
+                            "red": "火珊瑚变种",
+                            "yellow": "鹿角珊瑚变种"
+                        }
+                    },
+                    "\"dead_bit\"": {
+                        "name": "已弃用，为兼容性而保留 方块是否因离开水而失活",
+                        "type": "enum",
+                        "list": {
+                            "false": "该方块没有失活",
+                            "true": "该方块因离开水而失活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "brain_coral_fan",
+                    "bubble_coral_fan",
+                    "dead_brain_coral_fan",
+                    "dead_bubble_coral_fan",
+                    "dead_fire_coral_fan",
+                    "dead_horn_coral_fan",
+                    "dead_tube_coral_fan",
+                    "fire_coral_fan",
+                    "horn_coral_fan",
+                    "tube_coral_fan"
+                ],
+                "schema": {
+                    "\"coral_color\"": {
+                        "name": "已弃用，为兼容性而保留 珊瑚的变种",
+                        "type": "enum",
+                        "list": {
+                            "blue": "管珊瑚变种",
+                            "pink": "脑纹珊瑚变种",
+                            "purple": "气泡珊瑚变种",
+                            "red": "火珊瑚变种",
+                            "yellow": "鹿角珊瑚变种"
+                        }
+                    },
+                    "\"coral_fan_direction\"": {
+                        "name": "未使用，正常情况下均为1",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "brain_coral_wall_fan",
+                    "bubble_coral_wall_fan",
+                    "dead_brain_coral_wall_fan",
+                    "dead_bubble_coral_wall_fan",
+                    "dead_fire_coral_wall_fan",
+                    "dead_horn_coral_wall_fan",
+                    "dead_tube_coral_wall_fan",
+                    "fire_coral_wall_fan",
+                    "horn_coral_wall_fan",
+                    "tube_coral_wall_fan"
+                ],
+                "schema": {
+                    "\"coral_direction\"": {
+                        "name": "墙上的珊瑚扇朝向的方向",
+                        "type": "enum",
+                        "list": {
+                            "0": "朝北",
+                            "1": "朝东",
+                            "2": "朝南",
+                            "3": "朝西"
+                        }
+                    },
+                    "\"coral_hang_type_bit\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "false": "管珊瑚扇",
+                            "true": "脑纹珊瑚扇"
+                        }
+                    },
+                    "\"dead_bit\"": {
+                        "name": "已弃用，为兼容性而保留 方块是否因离开水而失活",
+                        "type": "enum",
+                        "list": {
+                            "false": "该方块没有失活",
+                            "true": "该方块因离开水而失活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "brewing_stand"
+                ],
+                "schema": {
+                    "\"brewing_stand_slot_a_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "酿造台的0号槽位没有放置药水",
+                            "true": "酿造台的0号槽位放置了药水"
+                        }
+                    },
+                    "\"brewing_stand_slot_b_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "酿造台的1号槽位没有放置药水",
+                            "true": "酿造台的1号槽位放置了药水"
+                        }
+                    },
+                    "\"brewing_stand_slot_c_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "酿造台的2号槽位没有放置药水",
+                            "true": "酿造台的2号槽位放置了药水"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "brick_double_slab",
+                    "brick_slab",
+                    "cobblestone_double_slab",
+                    "cobblestone_slab",
+                    "nether_brick_double_slab",
+                    "nether_brick_slab",
+                    "petrified_oak_double_slab",
+                    "petrified_oak_slab",
+                    "quartz_double_slab",
+                    "quartz_slab",
+                    "sandstone_double_slab",
+                    "sandstone_slab",
+                    "smooth_stone_double_slab",
+                    "smooth_stone_slab",
+                    "stone_brick_double_slab",
+                    "stone_brick_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    },
+                    "\"stone_slab_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "smooth_stone": "平滑石头台阶",
+                            "sandstone": "砂岩台阶",
+                            "wood": "石化橡木台阶",
+                            "cobblestone": "圆石台阶",
+                            "brick": "红砖台阶",
+                            "stone_brick": "石砖台阶",
+                            "quartz": "石英台阶",
+                            "nether_brick": "下界砖台阶"
+                        }
+                    },
+                    "\"top_slot_bit\"": {
+                        "name": "已弃用，为兼容性而保留 台阶是否是上半台阶，双层台阶正常情况下为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "brown_mushroom_block",
+                    "mushroom_stem",
+                    "red_mushroom_block"
+                ],
+                "schema": {
+                    "\"huge_mushroom_bits\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "6个面都是气孔纹理",
+                            "1": "上面、西面和北面是蘑菇盖纹理，其他面是气孔纹理",
+                            "2": "上面和北面是蘑菇盖纹理，其他面是气孔纹理",
+                            "3": "上面、北面和东面是蘑菇盖纹理，其他面是气孔纹理",
+                            "4": "上面和西面是蘑菇盖纹理，其他面是气孔纹理",
+                            "5": "上面是蘑菇盖纹理，其他面是气孔纹理",
+                            "6": "上面和东面是蘑菇盖纹理，其他面是气孔纹理",
+                            "7": "上面、南面和西面是蘑菇盖纹理，其他面是气孔纹理",
+                            "8": "上面和南面是蘑菇盖纹理，其他面是气孔纹理",
+                            "9": "上面、东面和南面是蘑菇盖纹理，其他面是气孔纹理",
+                            "10": "4个侧面都是蘑菇柄纹理，上面和下面是气孔纹理",
+                            "11": "未使用，6个面都是气孔纹理",
+                            "12": "未使用，6个面都是气孔纹理",
+                            "13": "未使用，6个面都是气孔纹理",
+                            "14": "6个面都是蘑菇盖纹理",
+                            "15": "6个面都是蘑菇柄纹理"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "bubble_column"
+                ],
+                "schema": {
+                    "\"drag_down\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "气泡柱是涌流，向上推动在其中的实体",
+                            "true": "气泡柱是涡流，向下拉动在其中的实体"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "cactus",
+                    "chorus_flower",
+                    "fire",
+                    "frosted_ice",
+                    "nether_wart",
+                    "reeds",
+                    "soul_fire"
+                ],
+                "schema": {
+                    "\"age\"": {
+                        "name": "植物的生长阶段 刚种下或刚生长出的植物方块的该属性值为0 该值随着时间变化不断增长，直到15时可以继续在上方生长出新的植物方块",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "cake"
+                ],
+                "schema": {
+                    "\"bite_counter\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "完整的蛋糕",
+                            "1": "蛋糕被吃掉的片数",
+                            "2": "蛋糕被吃掉的片数",
+                            "3": "蛋糕被吃掉的片数",
+                            "4": "蛋糕被吃掉的片数",
+                            "5": "蛋糕被吃掉的片数",
+                            "6": "蛋糕被吃掉的片数"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "calibrated_sculk_sensor"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"sculk_sensor_phase\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "幽匿感测体未被触发",
+                            "1": "幽匿感测体被触发，发出红石信号",
+                            "2": "幽匿感测体处于冷却状态，不接收振动信号"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "campfire",
+                    "soul_campfire"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"extinguished\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块没有熄灭",
+                            "true": "方块已经熄灭"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "carved_pumpkin",
+                    "lit_pumpkin",
+                    "pumpkin"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "cauldron"
+                ],
+                "schema": {
+                    "\"cauldron_liquid\"": {
+                        "name": "炼药锅中内容物的类型",
+                        "type": "enum",
+                        "list": {
+                            "water": "(待补充)",
+                            "lava": "(待补充)",
+                            "powder_snow": "(待补充)"
+                        }
+                    },
+                    "\"fill_level\"": {
+                        "name": "炼药锅内容物的高度",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "cave_vines",
+                    "cave_vines_body_with_berries",
+                    "cave_vines_head_with_berries"
+                ],
+                "schema": {
+                    "\"growing_plant_age\"": {
+                        "name": "洞穴藤蔓的生长程度 当此值小于25时可以继续生长出新的植物方块，且使得末端植物方块的该属性增加1 当此值达到25时植物不再生长",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)",
+                            "16": "(待补充)",
+                            "17": "(待补充)",
+                            "18": "(待补充)",
+                            "19": "(待补充)",
+                            "20": "(待补充)",
+                            "21": "(待补充)",
+                            "22": "(待补充)",
+                            "23": "(待补充)",
+                            "24": "(待补充)",
+                            "25": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "chain_command_block",
+                    "command_block",
+                    "repeating_command_block"
+                ],
+                "schema": {
+                    "\"conditional_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "命令方块不处于条件制约模式",
+                            "true": "命令方块处于条件制约模式"
+                        }
+                    },
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "chiseled_bookshelf"
+                ],
+                "schema": {
+                    "\"books_stored\"": {
+                        "name": "雕纹书架各槽位是否有书，每个二进制位决定一个槽位有无物品： 0x1：雕纹书架0号槽位有无物品 0x2：雕纹书架1号槽位有无物品 0x4：雕纹书架2号槽位有无物品 0x8：雕纹书架3号槽位有无物品 0x10：雕纹书架4号槽位有无物品 0x20：雕纹书架5号槽位有无物品",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)",
+                            "16": "(待补充)",
+                            "17": "(待补充)",
+                            "18": "(待补充)",
+                            "19": "(待补充)",
+                            "20": "(待补充)",
+                            "21": "(待补充)",
+                            "22": "(待补充)",
+                            "23": "(待补充)",
+                            "24": "(待补充)",
+                            "25": "(待补充)",
+                            "26": "(待补充)",
+                            "27": "(待补充)",
+                            "28": "(待补充)",
+                            "29": "(待补充)",
+                            "30": "(待补充)",
+                            "31": "(待补充)",
+                            "32": "(待补充)",
+                            "33": "(待补充)",
+                            "34": "(待补充)",
+                            "35": "(待补充)",
+                            "36": "(待补充)",
+                            "37": "(待补充)",
+                            "38": "(待补充)",
+                            "39": "(待补充)",
+                            "40": "(待补充)",
+                            "41": "(待补充)",
+                            "42": "(待补充)",
+                            "43": "(待补充)",
+                            "44": "(待补充)",
+                            "45": "(待补充)",
+                            "46": "(待补充)",
+                            "47": "(待补充)",
+                            "48": "(待补充)",
+                            "49": "(待补充)",
+                            "50": "(待补充)",
+                            "51": "(待补充)",
+                            "52": "(待补充)",
+                            "53": "(待补充)",
+                            "54": "(待补充)",
+                            "55": "(待补充)",
+                            "56": "(待补充)",
+                            "57": "(待补充)",
+                            "58": "(待补充)",
+                            "59": "(待补充)",
+                            "60": "(待补充)",
+                            "61": "(待补充)",
+                            "62": "(待补充)",
+                            "63": "(待补充)"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南方",
+                            "1": "方块朝向西方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "chiseled_quartz_block",
+                    "purpur_block",
+                    "purpur_pillar",
+                    "quartz_block",
+                    "quartz_pillar",
+                    "smooth_quartz"
+                ],
+                "schema": {
+                    "\"chisel_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "default": "普通变种",
+                            "chiseled": "雕纹变种",
+                            "lines": "柱变种",
+                            "smooth": "平滑变种"
+                        }
+                    },
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "chiseled_red_sandstone",
+                    "chiseled_sandstone",
+                    "cut_red_sandstone",
+                    "cut_sandstone",
+                    "red_sandstone",
+                    "sandstone",
+                    "smooth_red_sandstone",
+                    "smooth_sandstone"
+                ],
+                "schema": {
+                    "\"sand_stone_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "default": "普通变种",
+                            "heiroglyphs": "雕纹变种",
+                            "cut": "切制变种",
+                            "smooth": "平滑变种"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "chiseled_stone_bricks",
+                    "cracked_stone_bricks",
+                    "mossy_stone_bricks",
+                    "stone_bricks"
+                ],
+                "schema": {
+                    "\"stone_brick_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "default": "石砖",
+                            "mossy": "苔石砖",
+                            "cracked": "裂纹石砖",
+                            "chiseled": "雕纹石砖",
+                            "smooth": "平滑石砖（和普通石砖纹理相同）"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "coarse_dirt",
+                    "dirt"
+                ],
+                "schema": {
+                    "\"dirt_type\"": {
+                        "name": "已弃用，为兼容性而保留 normal coarse",
+                        "type": "enum",
+                        "list": {
+                            "normal": "(待补充)",
+                            "coarse": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "cocoa"
+                ],
+                "schema": {
+                    "\"age\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "可可果刚被种下的状态",
+                            "1": "可可果正在成长中的状态",
+                            "2": "可可果可以被收获的状态",
+                            "3": "未使用",
+                            "4": "未使用",
+                            "5": "未使用",
+                            "6": "未使用",
+                            "7": "未使用",
+                            "8": "未使用",
+                            "9": "未使用",
+                            "10": "未使用",
+                            "11": "未使用",
+                            "12": "未使用",
+                            "13": "未使用",
+                            "14": "未使用",
+                            "15": "未使用"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向北方",
+                            "1": "方块朝向东方",
+                            "2": "方块朝向南方",
+                            "3": "方块朝向西方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "composter"
+                ],
+                "schema": {
+                    "\"composter_fill_level\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "堆肥桶没有内容物",
+                            "1": "堆肥的高度",
+                            "2": "堆肥的高度",
+                            "3": "堆肥的高度",
+                            "4": "堆肥的高度",
+                            "5": "堆肥的高度",
+                            "6": "堆肥的高度",
+                            "7": "堆肥的高度",
+                            "8": "堆肥桶已满，可以收集骨粉"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "copper_bulb",
+                    "exposed_copper_bulb",
+                    "oxidized_copper_bulb",
+                    "waxed_copper_bulb",
+                    "waxed_exposed_copper_bulb",
+                    "waxed_oxidized_copper_bulb",
+                    "waxed_weathered_copper_bulb",
+                    "weathered_copper_bulb"
+                ],
+                "schema": {
+                    "\"lit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于熄灭状态",
+                            "true": "方块处于点亮状态"
+                        }
+                    },
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块未被激活",
+                            "true": "方块被红石信号激活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "crafter"
+                ],
+                "schema": {
+                    "\"crafting\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "合成器没有在合成物品",
+                            "true": "合成器正在合成物品"
+                        }
+                    },
+                    "\"orientation\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "down_east": "方块面朝下，顶部朝东",
+                            "down_north": "方块面朝下，顶部朝北",
+                            "down_south": "方块面朝下，顶部朝南",
+                            "down_west": "方块面朝下，顶部朝西",
+                            "up_east": "方块面朝上，顶部朝东",
+                            "up_north": "方块面朝上，顶部朝北",
+                            "up_south": "方块面朝上，顶部朝南",
+                            "up_west": "方块面朝上，顶部朝西",
+                            "west_up": "方块面朝西，顶部朝上",
+                            "east_up": "方块面朝东，顶部朝上",
+                            "north_up": "方块面朝北，顶部朝上",
+                            "south_up": "方块面朝南，顶部朝上"
+                        }
+                    },
+                    "\"triggered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块未被红石信号激活",
+                            "true": "方块被红石信号激活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "creaking_heart"
+                ],
+                "schema": {
+                    "\"active\"": {
+                        "name": "已弃用，为兼容性而保留 方块是否失活",
+                        "type": "enum",
+                        "list": {
+                            "false": "对应dormant",
+                            "true": "对应uprooted"
+                        }
+                    },
+                    "\"creaking_heart_state\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "uprooted": "嘎枝之心因脱离有效的结构而失活",
+                            "dormant": "嘎枝之心未失活，但因处于白天而休眠",
+                            "awake": "嘎枝之心未失活，且因处于夜晚而激活"
+                        }
+                    },
+                    "\"natural\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块非自然生成",
+                            "true": "方块为自然生成"
+                        }
+                    },
+                    "\"pillar_axis\"": {
+                        "name": "方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "y": "方块垂直朝向",
+                            "x": "方块东西朝向",
+                            "z": "方块南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "cut_red_sandstone_double_slab",
+                    "cut_red_sandstone_slab",
+                    "cut_sandstone_double_slab",
+                    "cut_sandstone_slab",
+                    "mossy_stone_brick_double_slab",
+                    "mossy_stone_brick_slab",
+                    "normal_stone_double_slab",
+                    "normal_stone_slab",
+                    "smooth_quartz_double_slab",
+                    "smooth_quartz_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    },
+                    "\"stone_slab_type_4\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "mossy_stone_brick": "苔石砖台阶",
+                            "smooth_quartz": "平滑石英台阶",
+                            "stone": "石头台阶",
+                            "cut_sandstone": "切制砂岩台阶",
+                            "cut_red_sandstone": "切制红砂岩台阶"
+                        }
+                    },
+                    "\"top_slot_bit\"": {
+                        "name": "已弃用，为兼容性而保留 台阶是否是上半台阶，双层台阶正常情况下为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "dark_prismarine",
+                    "prismarine",
+                    "prismarine_bricks"
+                ],
+                "schema": {
+                    "\"prismarine_block_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "default": "海晶石",
+                            "dark": "暗海晶石",
+                            "bricks": "海晶石砖"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "dark_prismarine_double_slab",
+                    "dark_prismarine_slab",
+                    "mossy_cobblestone_double_slab",
+                    "mossy_cobblestone_slab",
+                    "prismarine_brick_double_slab",
+                    "prismarine_brick_slab",
+                    "prismarine_double_slab",
+                    "prismarine_slab",
+                    "purpur_double_slab",
+                    "purpur_slab",
+                    "red_nether_brick_double_slab",
+                    "red_nether_brick_slab",
+                    "red_sandstone_double_slab",
+                    "red_sandstone_slab",
+                    "smooth_sandstone_double_slab",
+                    "smooth_sandstone_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    },
+                    "\"stone_slab_type_2\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "red_sandstone": "红砂岩台阶",
+                            "purpur": "紫珀台阶",
+                            "prismarine_rough": "海晶石台阶",
+                            "prismarine_dark": "暗海晶石台阶",
+                            "prismarine_brick": "海晶石砖台阶",
+                            "mossy_cobblestone": "苔石台阶",
+                            "smooth_sandstone": "平滑砂岩台阶",
+                            "red_nether_brick": "红色下界砖台阶"
+                        }
+                    },
+                    "\"top_slot_bit\"": {
+                        "name": "已弃用，为兼容性而保留 台阶是否是上半台阶，双层台阶正常情况下为false",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "decorated_pot",
+                    "loom"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南方",
+                            "1": "方块朝向西方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "dispenser",
+                    "dropper"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"triggered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块未被红石信号激活",
+                            "true": "方块被红石信号激活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "dried_ghast"
+                ],
+                "schema": {
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"rehydration_level\"": {
+                        "name": "湿润阶段",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "end_portal_frame"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"end_portal_eye_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "末地传送门框架没有嵌入末影之眼",
+                            "true": "末地传送门框架嵌入了末影之眼"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "farmland"
+                ],
+                "schema": {
+                    "\"moisturized_amount\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "耕地不湿润，且可以转化为泥土",
+                            "1": "耕地不完全湿润，当附近没有水时湿润等级逐渐下降",
+                            "2": "耕地不完全湿润，当附近没有水时湿润等级逐渐下降",
+                            "3": "耕地不完全湿润，当附近没有水时湿润等级逐渐下降",
+                            "4": "耕地不完全湿润，当附近没有水时湿润等级逐渐下降",
+                            "5": "耕地不完全湿润，当附近没有水时湿润等级逐渐下降",
+                            "6": "耕地不完全湿润，当附近没有水时湿润等级逐渐下降",
+                            "7": "耕地完全湿润"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "fern",
+                    "short_grass"
+                ],
+                "schema": {
+                    "\"tall_grass_type\"": {
+                        "name": "已弃用，为兼容性而保留 草丛的类型 ，草灌木",
+                        "type": "enum",
+                        "list": {
+                            "default": "未使用",
+                            "tall": "草",
+                            "fern": "蕨",
+                            "snow": "未使用"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "flower_pot"
+                ],
+                "schema": {
+                    "\"update_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "flowing_lava",
+                    "flowing_water",
+                    "lava",
+                    "water"
+                ],
+                "schema": {
+                    "\"liquid_depth\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "熔岩源方块",
+                            "1": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "2": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "3": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "4": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "5": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "6": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "7": "距最近熔岩源或向下流淌的熔岩的距离，距离越大厚度越薄，在主世界和末地只使用了2、4和6",
+                            "8": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "9": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "10": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "11": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "12": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "13": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "14": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响",
+                            "15": "向下流淌的熔岩，等于它上方非向下流淌的熔岩的等级加上8，数字差异并不会对熔岩的行为造成影响"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "frame",
+                    "glow_frame"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"item_frame_map_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此物品展示框不在展示地图",
+                            "true": "此物品展示框在展示地图"
+                        }
+                    },
+                    "\"item_frame_photo_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此物品展示框不在展示照片",
+                            "true": "此物品展示框在展示照片"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "glow_lichen",
+                    "resin_clump",
+                    "sculk_vein"
+                ],
+                "schema": {
+                    "\"multi_face_direction_bits\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "未使用，行为类似于63",
+                            "1": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "2": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "3": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "4": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "5": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "6": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "7": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "8": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "9": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "10": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "11": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "12": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "13": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "14": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "15": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "16": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "17": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "18": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "19": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "20": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "21": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "22": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "23": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "24": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "25": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "26": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "27": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "28": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "29": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "30": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "31": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "32": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "33": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "34": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "35": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "36": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "37": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "38": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "39": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "40": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "41": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "42": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "43": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "44": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "45": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "46": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "47": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "48": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "49": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "50": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "51": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "52": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "53": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "54": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "55": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "56": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "57": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "58": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "59": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "60": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "61": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "62": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东",
+                            "63": "方块所附着的面，每个二进制位决定一个面： 0x1：下 0x2：上 0x4：北 0x8：南 0x10：西 0x20：东"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "grindstone"
+                ],
+                "schema": {
+                    "\"attachment\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "standing": "砂轮附着在其他方块的上面",
+                            "hanging": "砂轮附着在其他方块的下面",
+                            "side": "砂轮附着在一个其他方块的侧面",
+                            "multiple": "未使用"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南方",
+                            "1": "方块朝向西方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "hopper"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "漏斗的输出方向 漏斗将只会把物品注入这个方向的容器 0：朝下 2：朝北 3：朝南 4：朝西 5：朝东",
+                        "type": "enum",
+                        "list": {
+                            "0": "朝下",
+                            "1": "(待补充)",
+                            "2": "朝北",
+                            "3": "朝南",
+                            "4": "朝西",
+                            "5": "朝东"
+                        }
+                    },
+                    "\"toggle_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "漏斗被禁用，无法吸取和传输物品",
+                            "true": "漏斗可以吸取和传输物品"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "infested_chiseled_stone_bricks",
+                    "infested_cobblestone",
+                    "infested_cracked_stone_bricks",
+                    "infested_mossy_stone_bricks",
+                    "infested_stone",
+                    "infested_stone_bricks"
+                ],
+                "schema": {
+                    "\"monster_egg_stone_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "stone": "虫蚀石头",
+                            "cobblestone": "虫蚀圆石",
+                            "stone_brick": "虫蚀石砖",
+                            "mossy_stone_brick": "虫蚀苔石砖",
+                            "cracked_stone_brick": "虫蚀裂纹石砖",
+                            "chiseled_stone_brick": "虫蚀雕纹石砖"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "jigsaw"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"rotation\"": {
+                        "name": "拼图方块朝向上方或下方时绕Y轴的旋转，朝向水平方向的拼图方块的该属性值为0",
+                        "type": "enum",
+                        "list": {
+                            "0": "北",
+                            "1": "西",
+                            "2": "南",
+                            "3": "东"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "kelp"
+                ],
+                "schema": {
+                    "\"kelp_age\"": {
+                        "name": "海带的生长程度 当此值小于25时可以继续生长出新的植物方块，且使得末端植物方块的该属性增加1 当此值达到25时植物不再生长",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)",
+                            "16": "(待补充)",
+                            "17": "(待补充)",
+                            "18": "(待补充)",
+                            "19": "(待补充)",
+                            "20": "(待补充)",
+                            "21": "(待补充)",
+                            "22": "(待补充)",
+                            "23": "(待补充)",
+                            "24": "(待补充)",
+                            "25": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "lantern",
+                    "soul_lantern"
+                ],
+                "schema": {
+                    "\"hanging\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块没有悬挂在方块下方",
+                            "true": "此方块悬挂在方块下方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "large_fern",
+                    "lilac",
+                    "peony",
+                    "rose_bush",
+                    "sunflower",
+                    "tall_grass"
+                ],
+                "schema": {
+                    "\"double_plant_type\"": {
+                        "name": "已弃用，为兼容性而保留 双层植物的类型 fern grass paeonia rose sunflower syringa",
+                        "type": "enum",
+                        "list": {
+                            "sunflower": "(待补充)",
+                            "syringa": "(待补充)",
+                            "grass": "(待补充)",
+                            "fern": "(待补充)",
+                            "rose": "(待补充)",
+                            "paeonia": "(待补充)"
+                        }
+                    },
+                    "\"upper_block_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是两格高方块组合的下半部分",
+                            "true": "此方块是两格高方块组合的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "leaf_litter",
+                    "wildflowers"
+                ],
+                "schema": {
+                    "\"growth\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "占据方块的四分之一",
+                            "1": "占据方块的四分之二",
+                            "2": "占据方块的四分之三",
+                            "3": "占据整个方块",
+                            "4": "未使用",
+                            "5": "未使用",
+                            "6": "未使用",
+                            "7": "未使用"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "lectern"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "lever"
+                ],
+                "schema": {
+                    "\"lever_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "down_east_west": "拉杆面向下方，关闭时手柄朝向东方",
+                            "east": "拉杆面向东方",
+                            "west": "拉杆面向西方",
+                            "south": "拉杆面向南方",
+                            "north": "拉杆面向北方",
+                            "up_north_south": "拉杆面向上方，关闭时手柄朝向南方",
+                            "up_east_west": "拉杆面向上方，关闭时手柄朝向东方",
+                            "down_north_south": "拉杆面向下方，关闭时手柄朝向南方"
+                        }
+                    },
+                    "\"open_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块处于关闭状态",
+                            "true": "方块处于打开状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "light_block_0",
+                    "light_block_1",
+                    "light_block_10",
+                    "light_block_11",
+                    "light_block_12",
+                    "light_block_13",
+                    "light_block_14",
+                    "light_block_15",
+                    "light_block_2",
+                    "light_block_3",
+                    "light_block_4",
+                    "light_block_5",
+                    "light_block_6",
+                    "light_block_7",
+                    "light_block_8",
+                    "light_block_9"
+                ],
+                "schema": {
+                    "\"block_light_level\"": {
+                        "name": "已弃用，为兼容性而保留 光源方块的亮度等级",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "lightning_rod"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向下方",
+                            "1": "方块朝向上方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块未被激活",
+                            "true": "方块被红石信号激活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "mangrove_propagule"
+                ],
+                "schema": {
+                    "\"hanging\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块没有悬挂在方块下方",
+                            "true": "此方块悬挂在方块下方"
+                        }
+                    },
+                    "\"propagule_stage\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "悬挂的红树胎生苗刚生长出后的幼苗状态",
+                            "1": "悬挂的红树胎生苗正在成长中",
+                            "2": "悬挂的红树胎生苗正在成长中",
+                            "3": "悬挂的红树胎生苗正在成长中",
+                            "4": "悬挂的红树胎生苗可以被收获的状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "melon_stem",
+                    "pumpkin_stem"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "方块朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "未使用",
+                            "1": "未使用",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向南方",
+                            "4": "方块朝向西方",
+                            "5": "方块朝向东方"
+                        }
+                    },
+                    "\"growth\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "植物刚被种下或刚生长出后的幼苗状态",
+                            "1": "植物正在成长中的状态",
+                            "2": "植物正在成长中的状态",
+                            "3": "植物正在成长中的状态",
+                            "4": "植物正在成长中的状态",
+                            "5": "植物正在成长中的状态",
+                            "6": "植物正在成长中的状态",
+                            "7": "植物已生长成熟"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "observer"
+                ],
+                "schema": {
+                    "\"facing_direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:facing_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "down": "方块朝向下方",
+                            "up": "方块朝向上方",
+                            "north": "方块朝向北方",
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pale_hanging_moss"
+                ],
+                "schema": {
+                    "\"tip\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "苍白垂须下方是苍白垂须",
+                            "true": "苍白垂须下方不是苍白垂须"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pale_moss_carpet"
+                ],
+                "schema": {
+                    "\"pale_moss_carpet_side_east\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "东侧没有向上延伸",
+                            "short": "东侧向上延伸，且高度较低",
+                            "tall": "东侧向上延伸，且高度较高"
+                        }
+                    },
+                    "\"pale_moss_carpet_side_north\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "北侧没有向上延伸",
+                            "short": "北侧向上延伸，且高度较低",
+                            "tall": "北侧向上延伸，且高度较高"
+                        }
+                    },
+                    "\"pale_moss_carpet_side_south\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "南侧没有向上延伸",
+                            "short": "南侧向上延伸，且高度较低",
+                            "tall": "南侧向上延伸，且高度较高"
+                        }
+                    },
+                    "\"pale_moss_carpet_side_west\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "none": "西侧没有向上延伸",
+                            "short": "西侧向上延伸，且高度较低",
+                            "tall": "西侧向上延伸，且高度较高"
+                        }
+                    },
+                    "\"upper_block_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是两格高方块组合的下半部分",
+                            "true": "此方块是两格高方块组合的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pale_oak_double_slab",
+                    "pale_oak_slab",
+                    "polished_tuff_double_slab",
+                    "polished_tuff_slab",
+                    "resin_brick_double_slab",
+                    "resin_brick_slab",
+                    "tuff_brick_double_slab",
+                    "tuff_brick_slab",
+                    "tuff_double_slab",
+                    "tuff_slab"
+                ],
+                "schema": {
+                    "\"minecraft:vertical_half\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "bottom": "台阶是下半台阶，双层台阶正常情况下均为此值",
+                            "top": "台阶是上半台阶"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pink_petals"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"growth\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "占据方块的四分之一",
+                            "1": "占据方块的四分之二",
+                            "2": "占据方块的四分之三",
+                            "3": "占据整个方块",
+                            "4": "未使用",
+                            "5": "未使用",
+                            "6": "未使用",
+                            "7": "未使用"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pitcher_crop"
+                ],
+                "schema": {
+                    "\"growth\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": " 瓶子草成熟",
+                            "5": "未使用",
+                            "6": "未使用",
+                            "7": "未使用"
+                        }
+                    },
+                    "\"upper_block_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是两格高方块组合的下半部分",
+                            "true": "此方块是两格高方块组合的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pitcher_plant"
+                ],
+                "schema": {
+                    "\"upper_block_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是两格高方块组合的下半部分",
+                            "true": "此方块是两格高方块组合的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "pointed_dripstone"
+                ],
+                "schema": {
+                    "\"dripstone_thickness\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "tip": "  滴水石锥的末梢，只有一段连接",
+                            "frustum": "  滴水石锥的末端部分，连接末梢",
+                            "middle": "  滴水石锥的中间部分，在长度超过三格的结构上被使用",
+                            "base": "  滴水石锥的基底部分，在长度达到三格的结构上被使用",
+                            "merge": "  滴水石锥的末梢，与另一个末梢连接形成石柱"
+                        }
+                    },
+                    "\"hanging\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块没有悬挂在方块下方",
+                            "true": "此方块悬挂在方块下方"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "portal"
+                ],
+                "schema": {
+                    "\"portal_axis\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "unknown": "未使用，下界传送门的朝向取决于毗邻的下界传送门",
+                            "x": "下界传送门东西朝向",
+                            "z": "下界传送门南北朝向"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "powered_comparator",
+                    "unpowered_comparator"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"output_lit_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "比较器无输出信号",
+                            "true": "比较器有输出信号"
+                        }
+                    },
+                    "\"output_subtract_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "红石比较器处于比较模式",
+                            "true": "红石比较器处于减法模式"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "powered_repeater",
+                    "unpowered_repeater"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"repeater_delay\"": {
+                        "name": "红石中继器的挡位 每升高一档，延迟时间增加1红石刻（0.1秒）",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "rail"
+                ],
+                "schema": {
+                    "\"rail_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "南北朝向的平坦铁轨",
+                            "1": "东西朝向的平坦铁轨",
+                            "2": "朝向东的上坡铁轨",
+                            "3": "朝向西的上坡铁轨",
+                            "4": "朝向北的上坡铁轨",
+                            "5": "朝向南的上坡铁轨",
+                            "6": "东南方向的转弯铁轨",
+                            "7": "西南方向的转弯铁轨",
+                            "8": "西北方向的转弯铁轨",
+                            "9": "东北方向的转弯铁轨"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "red_sand",
+                    "sand"
+                ],
+                "schema": {
+                    "\"sand_type\"": {
+                        "name": "已弃用，为兼容性而保留 normal： red：",
+                        "type": "enum",
+                        "list": {
+                            "normal": "red：",
+                            "red": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "redstone_torch",
+                    "soul_torch",
+                    "torch",
+                    "unlit_redstone_torch"
+                ],
+                "schema": {
+                    "\"torch_facing_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "unknown": "火把在物品栏时的状态，当使用命令放置此状态的火把时，会自动附着在可附着的方块表面上",
+                            "west": "火把附着在西边的方块",
+                            "east": "火把附着在东边的方块",
+                            "north": "火把附着在北边的方块",
+                            "south": "火把附着在南边的方块",
+                            "top": "火把附着在方块的顶部"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "respawn_anchor"
+                ],
+                "schema": {
+                    "\"respawn_anchor_charge\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "重生锚没有能量，不能使玩家重生在此处",
+                            "1": "重生锚的能量等级，在玩家重生在此处后等级下降1",
+                            "2": "重生锚的能量等级，在玩家重生在此处后等级下降1",
+                            "3": "重生锚的能量等级，在玩家重生在此处后等级下降1",
+                            "4": "重生锚的能量等级，在玩家重生在此处后等级下降1"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "scaffolding"
+                ],
+                "schema": {
+                    "\"stability\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "脚手架是“中心脚手架”，垂直方向上直接接触地面",
+                            "1": "脚手架与最近中心脚手架的水平距离",
+                            "2": "脚手架与最近中心脚手架的水平距离",
+                            "3": "脚手架与最近中心脚手架的水平距离",
+                            "4": "脚手架与最近中心脚手架的水平距离",
+                            "5": "脚手架与最近中心脚手架的水平距离",
+                            "6": "脚手架与最近中心脚手架的水平距离",
+                            "7": "脚手架距离最近的中心脚手架过远，将变为下落的方块"
+                        }
+                    },
+                    "\"stability_check\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "脚手架放置后还未进行稳定性检查",
+                            "true": "脚手架放置后已稳定存在"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "sculk_catalyst"
+                ],
+                "schema": {
+                    "\"bloom\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "幽匿催发体不处于蔓延状态",
+                            "true": "幽匿催发体处于蔓延状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "sculk_sensor"
+                ],
+                "schema": {
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块未被激活",
+                            "true": "方块被红石信号激活"
+                        }
+                    },
+                    "\"sculk_sensor_phase\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "幽匿感测体未被触发",
+                            "1": "幽匿感测体被触发，发出红石信号",
+                            "2": "幽匿感测体处于冷却状态，不接收振动信号"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "sculk_shrieker"
+                ],
+                "schema": {
+                    "\"active\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"can_summon\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "幽匿尖啸体不能召唤监守者",
+                            "true": "幽匿尖啸体可以召唤监守者"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "sea_pickle"
+                ],
+                "schema": {
+                    "\"cluster_count\"": {
+                        "name": "方块内额外的海泡菜的数量",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"dead_bit\"": {
+                        "name": "方块是否因离开水而失活",
+                        "type": "enum",
+                        "list": {
+                            "false": "该方块没有失活",
+                            "true": "该方块因离开水而失活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "seagrass"
+                ],
+                "schema": {
+                    "\"sea_grass_type\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "default": "此方块是普通海草",
+                            "double_top": "此方块是高海草的上半部",
+                            "double_bot": "此方块是高海草的下半部"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "small_dripleaf_block"
+                ],
+                "schema": {
+                    "\"direction\"": {
+                        "name": "已弃用，为兼容性而保留 方块的朝向",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"upper_block_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "此方块是两格高方块组合的下半部分",
+                            "true": "此方块是两格高方块组合的上半部分"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "sniffer_egg"
+                ],
+                "schema": {
+                    "\"cracked_state\"": {
+                        "name": "蛋的孵化阶段",
+                        "type": "enum",
+                        "list": {
+                            "no_cracks": "(待补充)",
+                            "cracked": "(待补充)",
+                            "max_cracked": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "snow_layer"
+                ],
+                "schema": {
+                    "\"covered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "普通的雪层",
+                            "true": "含雪植物里的雪层"
+                        }
+                    },
+                    "\"height\"": {
+                        "name": "方块中额外的雪层厚度",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "sponge",
+                    "wet_sponge"
+                ],
+                "schema": {
+                    "\"sponge_type\"": {
+                        "name": "已弃用，为兼容性而保留 海绵的类型",
+                        "type": "enum",
+                        "list": {
+                            "dry": "海绵",
+                            "wet": "湿海绵"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "structure_block"
+                ],
+                "schema": {
+                    "\"structure_block_type\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "data": "结构方块处于数据模式",
+                            "save": "结构方块处于保存模式",
+                            "load": "结构方块处于加载模式",
+                            "corner": "结构方块处于角落模式",
+                            "invalid": "作用未知",
+                            "export": "结构方块处于3D输出模式"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "structure_void"
+                ],
+                "schema": {
+                    "\"structure_void_type\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "void": "结构空位",
+                            "air": "结构空气（已移除）"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "suspicious_gravel",
+                    "suspicious_sand"
+                ],
+                "schema": {
+                    "\"brushed_progress\"": {
+                        "name": "可疑的方块被清刷的程度",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)"
+                        }
+                    },
+                    "\"hanging\"": {
+                        "name": "作用未知，为false时不读取其战利品表",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "tnt"
+                ],
+                "schema": {
+                    "\"allow_underwater_bit\"": {
+                        "name": "已弃用，为兼容性而保留",
+                        "type": "enum",
+                        "list": {
+                            "false": "TNT",
+                            "true": "水下TNT"
+                        }
+                    },
+                    "\"explode_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "TNT未被点燃",
+                            "true": "标记该TNT方块已被点燃，将会生成被激活的TNT实体"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "trial_spawner"
+                ],
+                "schema": {
+                    "\"ominous\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块为普通变种",
+                            "true": "方块为不祥变种"
+                        }
+                    },
+                    "\"trial_spawner_state\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "试炼刷怪笼处于未激活状态",
+                            "1": "试炼刷怪笼可以被激活，正在等待玩家加入试炼",
+                            "2": "试炼刷怪笼处于激活状态，可以刷新生物",
+                            "3": "所有试炼生物已经被清除，等待喷出奖励",
+                            "4": "试炼刷怪笼喷出奖励",
+                            "5": "试炼刷怪笼处于冷却阶段，无法被激活"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "trip_wire"
+                ],
+                "schema": {
+                    "\"attached_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "绊线和绊线钩没有连接在一起",
+                            "true": "绊线和有效的绊线钩连接在一起"
+                        }
+                    },
+                    "\"disarmed_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "绊线没有被拆除，经过绊线时会使得连接的绊线钩发出红石信号",
+                            "true": "绊线已经被拆除，经过绊线时不会使得连接的绊线钩发出红石信号"
+                        }
+                    },
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    },
+                    "\"suspended_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "绊线未曾在有效的绊线线路中",
+                            "true": "绊线组成有效绊线线路中时变为true，具有较矮的击中箱"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "tripwire_hook"
+                ],
+                "schema": {
+                    "\"attached_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "绊线和绊线钩没有连接在一起",
+                            "true": "绊线和有效的绊线钩连接在一起"
+                        }
+                    },
+                    "\"direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "方块朝向南方",
+                            "1": "方块朝向西方",
+                            "2": "方块朝向北方",
+                            "3": "方块朝向东方"
+                        }
+                    },
+                    "\"powered_bit\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "(待补充)",
+                            "true": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "turtle_egg"
+                ],
+                "schema": {
+                    "\"cracked_state\"": {
+                        "name": "蛋的孵化阶段",
+                        "type": "enum",
+                        "list": {
+                            "no_cracks": "(待补充)",
+                            "cracked": "(待补充)",
+                            "max_cracked": "(待补充)"
+                        }
+                    },
+                    "\"turtle_egg_count\"": {
+                        "name": "海龟蛋的个数",
+                        "type": "enum",
+                        "list": {
+                            "one_egg": "(待补充)",
+                            "two_egg": "(待补充)",
+                            "three_egg": "(待补充)",
+                            "four_egg": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "twisting_vines"
+                ],
+                "schema": {
+                    "\"twisting_vines_age\"": {
+                        "name": "缠怨藤的生长程度 当此值小于25时可以继续生长出新的植物方块，且使得末端植物方块的该属性增加1 当此值达到25时植物不再生长",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)",
+                            "16": "(待补充)",
+                            "17": "(待补充)",
+                            "18": "(待补充)",
+                            "19": "(待补充)",
+                            "20": "(待补充)",
+                            "21": "(待补充)",
+                            "22": "(待补充)",
+                            "23": "(待补充)",
+                            "24": "(待补充)",
+                            "25": "(待补充)"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "vault"
+                ],
+                "schema": {
+                    "\"minecraft:cardinal_direction\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "south": "方块朝向南方",
+                            "west": "方块朝向西方",
+                            "north": "方块朝向北方",
+                            "east": "方块朝向东方"
+                        }
+                    },
+                    "\"ominous\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "false": "方块为普通变种",
+                            "true": "方块为不祥变种"
+                        }
+                    },
+                    "\"vault_state\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "inactive": "宝库周围没有有效的玩家，处于未激活状态",
+                            "active": "宝库周围有有效的玩家，处于激活状态",
+                            "unlocking": "宝库被试炼钥匙解锁，在后进入喷出物品状态",
+                            "ejecting": "宝库喷出物品，物品全部喷出后回到激活或未激活状态"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "vine"
+                ],
+                "schema": {
+                    "\"vine_direction_bits\"": {
+                        "name": "(待补充)",
+                        "type": "enum",
+                        "list": {
+                            "0": "未使用",
+                            "1": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "2": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "3": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "4": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "5": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "6": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "7": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "8": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "9": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "10": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "11": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "12": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "13": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "14": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理",
+                            "15": "方块所附着的面，每个二进制位决定一个面 0x1：北 0x2：东 0x4：南 0x8：西 顶面不由方块状态控制，如果上方方块底面可附着藤蔓，则显示顶面的纹理"
+                        }
+                    }
+                }
+            },
+            {
+                "context": [
+                    "weeping_vines"
+                ],
+                "schema": {
+                    "\"weeping_vines_age\"": {
+                        "name": "垂泪藤的生长程度 当此值小于25时可以继续生长出新的植物方块，且使得末端植物方块的该属性增加1当此值达到25时植物不再生长",
+                        "type": "enum",
+                        "list": {
+                            "0": "(待补充)",
+                            "1": "(待补充)",
+                            "2": "(待补充)",
+                            "3": "(待补充)",
+                            "4": "(待补充)",
+                            "5": "(待补充)",
+                            "6": "(待补充)",
+                            "7": "(待补充)",
+                            "8": "(待补充)",
+                            "9": "(待补充)",
+                            "10": "(待补充)",
+                            "11": "(待补充)",
+                            "12": "(待补充)",
+                            "13": "(待补充)",
+                            "14": "(待补充)",
+                            "15": "(待补充)",
+                            "16": "(待补充)",
+                            "17": "(待补充)",
+                            "18": "(待补充)",
+                            "19": "(待补充)",
+                            "20": "(待补充)",
+                            "21": "(待补充)",
+                            "22": "(待补充)",
+                            "23": "(待补充)",
+                            "24": "(待补充)",
+                            "25": "(待补充)"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
