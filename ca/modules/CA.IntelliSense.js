@@ -661,7 +661,7 @@
 						let pathArr = selResult.stack ? selResult.stack.slice() : [];  // 补全路径
 						let keys = selResult.keys
 						if (selResult.state == "wait_key") {
-							recommend_enums = this.getSelectorParamCompletions(input, ps, this.removeKeysFromSchema(schema,keys), "=")
+							recommend_enums = this.getSelectorParamCompletions(input, ps, this.removeKeysFromSchema(schema, keys), "=")
 						} else if (selResult.state == "wait_value") {
 							// 补全操作
 							if (input.length >= 1) {
@@ -674,8 +674,10 @@
 								var rec = param.output || param.recommend || {};
 								var bb = ps.slice(0, ps.lastIndexOf('=') + 1);   // key= 前缀
 								for (var k in rec) {
-									if (rec.hasOwnProperty(k)) {
-										recommend_enums[k] = bb + rec[k];
+									if (rec) {
+										if (rec.hasOwnProperty(k)) {
+											recommend_enums[k] = bb + rec[k];
+										}
 									}
 								}
 							}
@@ -683,9 +685,11 @@
 						}
 					}
 					for (var key in recommend_enums) {
-						if (recommend_enums.hasOwnProperty(key)) {
-							// 如果 recommend 中已经存在该键，则更新其值
-							recommend[key] = recommend_enums[key];
+						if (recommend_enums) {
+							if (recommend_enums.hasOwnProperty(key)) {
+								// 如果 recommend 中已经存在该键，则更新其值
+								recommend[key] = recommend_enums[key];
+							}
 						}
 					}
 					r.recommend = recommend
@@ -1711,15 +1715,14 @@
 			return null;
 		},
 		removeKeysFromSchema: function (schema, keys) {
-			// 创建 schema 的副本
-			var result = JSON.parse(JSON.stringify(schema));
+			if (!schema || typeof schema !== 'object') return {};
 
-			keys.forEach(function (key) {
-				if (result.hasOwnProperty(key)) {
-					delete result[key];
+			var result = {};                // 浅拷贝
+			for (var k in schema) {
+				if (schema.hasOwnProperty(k) && keys.indexOf(k) === -1) {
+					result[k] = schema[k];
 				}
-			});
-
+			}
 			return result;
 		}
 	}
