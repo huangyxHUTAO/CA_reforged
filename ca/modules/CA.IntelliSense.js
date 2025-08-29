@@ -68,7 +68,9 @@
 				this.apply();
 			} catch (e) {
 				erp(e, true);
-				Common.showTextDialog("当前命令库解析出错。\n" + e + (e instanceof Error ? "\n堆栈：\n" + e.stack : ""));
+				let text = ("当前命令库解析出错。\n" + e + (e instanceof Error ? "\n堆栈：\n" + e.stack : ""))
+				// Common.showTextDialog(text);
+				Common.toast(text);
 			}
 		},
 		procCmd: function (s) {
