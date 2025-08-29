@@ -12,6 +12,7 @@
 			enums: {},
 			selectors: {},
 			json: {},
+			states: {},
 			help: {},
 			tutorials: [],
 			idlist: [],
@@ -543,6 +544,8 @@
 			if (!(l.commands instanceof Object)) l.commands = {};
 			if (!(l.enums instanceof Object)) l.enums = {};
 			if (!(l.selectors instanceof Object)) l.selectors = {};
+			if (!(l.json instanceof Object)) l.json = {};
+			if (!(l.states instanceof Object)) l.states = {};
 			if (!(l.help instanceof Object)) l.help = {};
 			for (i in l.commands) {
 				if (l.mode == "remove") {
@@ -582,6 +585,13 @@
 					delete cur.json[i];
 				} else {
 					cur.json[i] = l.json[i];
+				}
+			}
+			for (i in l.states) {
+				if (l.mode == "remove") {
+					delete cur.states[i];
+				} else {
+					cur.states[i] = l.states[i];
 				}
 			}
 			for (i in l.help) {

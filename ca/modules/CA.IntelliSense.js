@@ -40,7 +40,7 @@
 					appendSSB(pp, "...", new G.ForegroundColorSpan(Common.theme.highlightcolor));
 					pp.append("\n");
 					appendSSB(pp, "喵呜...命令库正在努力加载中... 等等吧喵~", new G.ForegroundColorSpan(Common.theme.criticalcolor));
-					
+
 					// r.prompt.push(pp);
 					this.input = [];
 					this.output = {};
@@ -188,6 +188,7 @@
 		procParams: function (c) {
 			var i, j, cm = this.library.commands[c.cmdname], ps, pa, ci, cp, t, f = true, k, u, ms, pp, cpl = [], nn = false, erm = [];
 
+
 			//别名处理
 			while (cm.alias) cm = this.library.commands[cm.alias];
 
@@ -197,6 +198,7 @@
 
 			//对每一种模式进行判断
 			for (i in ps) {
+				var parsedParams = [];
 				pa = ps[i].params;
 				ci = 0;
 
@@ -208,12 +210,19 @@
 				for (j = 0; j < pa.length; j++) {
 					cp = pa[j];
 
-					//匹配参数
-					t = this.matchParam(cp, c.strParam.slice(ci));
+					// 记录当前参数的开始位置
+					var paramStart = ci;
 
+					//匹配参数
+					t = this.matchParam(cp, c.strParam.slice(ci), parsedParams);
 					if (t && t.length >= 0 && ((/^\s?$/).test(c.strParam.slice(ci += t.length, ++ci)))) {
 						//分类 - 匹配成功
 						ci += (/^\s*/).exec(c.strParam.slice(ci))[0].length;
+
+						var parsedParam = c.strParam.slice(paramStart, paramStart + t.length).trim();
+						if (parsedParam) {
+							parsedParams.push(parsedParam);
+						}
 
 						if (ci > c.strParam.length) {
 							//分类 - 到达末尾
@@ -329,6 +338,7 @@
 		 * @param {string} [cp.mainCommand] 主命令前缀（subcommand 类型用）
 		 * @param {string|Object} [cp.suggestion] 额外候选值命名空间
 		 * @param {string} ps  用户当前已输入的完整参数字符串
+		 * @param {string} parsedParams 除了当前输入以外的命令完整参数（如["setblock","~ ~ ~","command_blcok"]）
 		 * @returns {{
 		 *   length: number,       // 已匹配 token 的字符长度（-1 表示非法，或未完成，此时canFinish必须为false）
 		 *   canFinish: boolean,   // 当前 token 是否完整，可继续下一个参数
@@ -339,7 +349,7 @@
 		 *   tag?: string          // 简短提示标签
 		 * }}
 		 */
-		matchParam: function (cp, ps) {
+		matchParam: function (cp, ps, parsedParams) {
 			var i, r, t, t2, t3, t4;
 			// Common.toast(cp.type)
 			switch (cp.type) {
@@ -443,7 +453,6 @@
 						r.input = ["~ - 相对标识符"];
 						r.assist = { "~ - 相对标识符": "~" };
 					}
-					
 					break;
 
 				case "position":
@@ -600,6 +609,7 @@
 						});
 					}
 					break;
+
 				case "string":
 					// 把被双引号包围的片段先抓出来
 					const quotedMatches = ps.match(/"[^"]*"/g) || [];
@@ -630,6 +640,58 @@
 						canFinish: t.length > 0
 					};
 					break;
+
+				case "status":
+					// 不得不说，我现在就像projectXero一样写旧版选择器逻辑，终有一日我会因此后悔（就跟旧版选择器一样）
+					let recommend = {}
+					let recommend_enums = {}
+					r = {
+						canFinish: false,
+						length: ps.length,
+						recommend: {},
+						input: []
+					}
+					if (ps.length == 0) {
+						recommend["[...] - 插入状态"] = ps + "[";
+					} else if (ps.length > 0) {
+						var selResult = this.parseSelectorPath(ps);
+						let context = parsedParams[parsedParams.length - 1]
+						let input = selResult.currentInput || "";
+						let schema = this.getSchemaByContext(context, "block")
+						let pathArr = selResult.stack ? selResult.stack.slice() : [];  // 补全路径
+						let keys = selResult.keys
+						if (selResult.state == "wait_key") {
+							recommend_enums = this.getSelectorParamCompletions(input, ps, this.removeKeysFromSchema(schema,keys), "=")
+						} else if (selResult.state == "wait_value") {
+							// 补全操作
+							if (input.length >= 1) {
+								recommend[", - 下一个参数"] = ps + ",";
+								recommend["] - 结束参数"] = ps + "]";
+							}
+
+							if (pathArr[pathArr.length - 2] && schema && schema[pathArr[pathArr.length - 2]]) {
+								let param = this.matchParam(schema[pathArr[pathArr.length - 2]], input, []) // 先什么都不传吧，这里应该用不到 （我感觉我会后悔）
+								var rec = param.output || param.recommend || {};
+								var bb = ps.slice(0, ps.lastIndexOf('=') + 1);   // key= 前缀
+								for (var k in rec) {
+									if (rec.hasOwnProperty(k)) {
+										recommend_enums[k] = bb + rec[k];
+									}
+								}
+							}
+
+						}
+					}
+					for (var key in recommend_enums) {
+						if (recommend_enums.hasOwnProperty(key)) {
+							// 如果 recommend 中已经存在该键，则更新其值
+							recommend[key] = recommend_enums[key];
+						}
+					}
+					r.recommend = recommend
+					r.input = Object.keys(recommend)
+					break;
+
 				default:
 					t = ps.search(" ") < 0 ? ps : ps.slice(0, ps.search(" "));
 					r = {
@@ -712,6 +774,10 @@
 							return md.tag;
 						}
 						z += ":命令";
+						break;
+
+					case "status":
+						z += "状态"
 						break;
 
 					case "text":
@@ -856,7 +922,6 @@
 						}
 					}
 				} else if (pathArr[pathArr.length - 1] === "...") {
-
 					if (input.length > 0) {
 						recommend[", - 下一个参数"] = ps + ","
 						// if (pathArr.length == 2) recommend["] - 结束选择器"] = ps + "]"
@@ -1271,6 +1336,7 @@
 			}
 			Common.showTextDialog(pp);
 		},
+
 		// === 选择器补全链分析相关 ===
 		isSelectorComplete: function (inputStr) {
 			var stack = []; // 用于跟踪未闭合的括号
@@ -1348,7 +1414,8 @@
 					stack: [],
 					state: 'complete',
 					debug: selectorCompleteResult.debugInfo,
-					currentInput: ''
+					currentInput: '',
+					keys: []
 				};
 			}
 
@@ -1426,7 +1493,10 @@
 			 * @param {Array} parentStack - 父级解析栈
 			 * @returns {Object} 包含状态、栈和当前输入的对象
 			 */
-			function _recursiveParse(currentStr, parentStack) {
+			function _recursiveParse(currentStr, parentStack, keys) {
+				if (keys == undefined) {
+					keys = []
+				}
 				currentStr = currentStr.trim();
 				var stack = parentStack.slice(); // 复制父级栈
 
@@ -1441,6 +1511,11 @@
 					var innerContent = currentStr.slice(1);
 					// 按逗号分割数组元素
 					var items = _splitByComma(innerContent);
+					items.forEach(item => {
+						let key = item.substring(0, _findTopLevelEqual(item)).trim();
+						keys.push(key)
+					})
+
 					// 获取最后一个元素（当前活跃部分）
 					var activeItem = items[items.length - 1].trim();
 
@@ -1448,15 +1523,15 @@
 					if (activeItem === '') {
 						if (stack[stack.length - 1] === '{...}') {
 							// 对象上下文：等待键
-							return { stack: stack, state: 'wait_key', currentInput: '' };
+							return { stack: stack, state: 'wait_key', currentInput: '', keys: keys };
 						} else {
 							// 数组上下文：等待数组元素
-							return { stack: stack, state: 'wait_value_array', currentInput: '' };
+							return { stack: stack, state: 'wait_value_array', currentInput: '', keys: keys };
 						}
 					}
 
 					// 递归解析活跃元素
-					return _recursiveParse(activeItem, stack);
+					return _recursiveParse(activeItem, stack, keys);
 				}
 
 				// === 处理对象开头 '{' ===
@@ -1474,11 +1549,11 @@
 					// 如果最后一个键值对为空
 					if (activeItem === '') {
 						// 等待键
-						return { stack: stack, state: 'wait_key', currentInput: '' };
+						return { stack: stack, state: 'wait_key', currentInput: '', keys: keys };
 					}
 
 					// 递归解析活跃元素
-					return _recursiveParse(activeItem, stack);
+					return _recursiveParse(activeItem, stack, keys);
 				}
 
 				// === 处理键值对 ===
@@ -1502,14 +1577,15 @@
 					// 如果值是嵌套结构（数组或对象）
 					if (value.startsWith('[') || value.startsWith('{')) {
 						// 递归解析嵌套值
-						return _recursiveParse(value, stack);
+						return _recursiveParse(value, stack, keys);
 					} else {
 						// 等待值输入
 						stack.push('...');
 						return {
 							stack: stack,
 							state: 'wait_value',
-							currentInput: currentInput
+							currentInput: currentInput,
+							keys: keys
 						};
 					}
 				}
@@ -1522,14 +1598,16 @@
 							return {
 								stack: stack,
 								state: 'wait_value_array',
-								currentInput: ''
+								currentInput: '',
+								keys: keys
 							};
 						} else {
 							// 等待键
 							return {
 								stack: stack,
 								state: 'wait_key',
-								currentInput: ''
+								currentInput: '',
+								keys: keys
 							};
 						}
 					}
@@ -1540,7 +1618,8 @@
 						return {
 							stack: stack,
 							state: 'wait_key',
-							currentInput: currentStr
+							currentInput: currentStr,
+							keys: keys
 						};
 					}
 
@@ -1548,7 +1627,8 @@
 					return {
 						stack: stack,
 						state: 'wait_value',
-						currentInput: currentStr
+						currentInput: currentStr,
+						keys: keys
 					};
 				}
 			}
@@ -1559,6 +1639,7 @@
 			result.debug = selectorCompleteResult.debugInfo;
 			return result;
 		},
+
 		/**
 		 * 为选择器参数生成补全建议列表。
 		 *
@@ -1609,6 +1690,37 @@
 			}
 
 			return completions;
+		},
+		getSchemaByContext: function (contextValue, type) {
+			const blockStates = this &&
+				this.library &&
+				this.library.states &&
+				this.library.states[type] || [];
+
+			for (var i = 0; i < blockStates.length; i++) {
+				var item = blockStates[i];
+				var ctx = item.context;
+				if (Array.isArray(ctx)) {
+					for (var j = 0; j < ctx.length; j++) {
+						if (ctx[j] === contextValue) {
+							return item.schema || null;
+						}
+					}
+				}
+			}
+			return null;
+		},
+		removeKeysFromSchema: function (schema, keys) {
+			// 创建 schema 的副本
+			var result = JSON.parse(JSON.stringify(schema));
+
+			keys.forEach(function (key) {
+				if (result.hasOwnProperty(key)) {
+					delete result[key];
+				}
+			});
+
+			return result;
 		}
 	}
 )
