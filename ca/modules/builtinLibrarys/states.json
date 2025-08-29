@@ -1,7 +1,7 @@
 {
     "name": "方块状态包",
     "author": "南鸢晨星 & CHelper",
-    "description": "感谢同为命令助手的CHelper开源了方块状态，本包进行了转换格式和补充。",
+    "description": "感谢同为命令助手的CHelper开源了方块状态，本包进行了转换格式和补充。\n编译时间：2025-08-29 21:47:12",
     "uuid": "4145a166-7f9e-4ee6-969e-b3b0582ee94f",
     "require": [],
     "version": [
