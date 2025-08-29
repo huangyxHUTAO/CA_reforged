@@ -1,12 +1,11 @@
-@version 0.1.4
-@versionCode [0, 1, 4]
-@date 2025-08-23
+@version 0.1.5
+@versionCode [0, 1, 5]
+@date 2025-08-29
 @licenceUpdate 2025/8/14
 @description
 命令助手 - Reforged
-[0.1.4]
--（上一个版本+）重写拓展包
-- 修正了拓展包的部分错误（比如list打成suggestion等）
-- 修复了拓展包未加载可能导致的"length" from undefined
-- 修复了Assist初学者选项中缺少选择器
+[0.1.5]
+- 增加了 `status` 类型的补全机制
+    - 增加了方块状态
+- 修复了拓展包的已知bug
 @end description
