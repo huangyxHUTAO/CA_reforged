@@ -13260,7 +13260,7 @@
                         },
                         {
                             "type": "plain",
-                            "name": "block",
+                            "name": "blocks",
                             "prompt": "指定区域方块满足..."
                         },
                         {
