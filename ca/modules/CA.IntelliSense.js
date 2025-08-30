@@ -657,6 +657,11 @@
 						recommend["[...] - 插入状态"] = ps + "[";
 					} else if (ps.length > 0) {
 						var selResult = this.parseSelectorPath(ps);
+						if (selResult.state == "complete") {
+							r.length = selResult.debug.selectorEnd
+							r.canFinish = true;
+							return r;
+						}
 						let context = parsedParams[parsedParams.length - 1]
 						let input = selResult.currentInput || "";
 						let schema = this.getSchemaByContext(context, "block")
@@ -668,7 +673,7 @@
 							// 补全操作
 							if (input.length >= 1) {
 								recommend[", - 下一个参数"] = ps + ",";
-								recommend["] - 结束参数"] = ps + "]";
+								recommend["] - 结束参数"] = ps + "] ";
 							}
 
 							if (pathArr[pathArr.length - 2] && schema && schema[pathArr[pathArr.length - 2]]) {
