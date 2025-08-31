@@ -10973,6 +10973,11 @@
             "name": "标签",
             "hasInverted": true
         },
+        "family": {
+            "type": "string",
+            "name": "族",
+            "hasInverted": true
+        },
         "hasitem": {
             "name": "物品条件",
             "type": [
@@ -12802,7 +12807,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态(补全逻辑未实现)",
+                            "name": "方块状态",
                             "optional": true
                         }
                     ]
@@ -13209,7 +13214,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态(补全逻辑未实现)",
+                            "name": "方块状态",
                             "optional": true
                         },
                         {
@@ -13727,7 +13732,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态(补全逻辑未实现)"
+                            "name": "方块状态"
                         },
                         {
                             "type": "enum",
@@ -13755,7 +13760,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态(补全逻辑未实现)"
+                            "name": "方块状态"
                         },
                         {
                             "type": "plain",
@@ -13770,7 +13775,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "被替换的方块状态(补全逻辑未实现)",
+                            "name": "被替换的方块状态",
                             "optional": true
                         }
                     ]
@@ -13828,7 +13833,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "被替换的方块状态(补全逻辑未实现)",
+                            "name": "被替换的方块状态",
                             "optional": true
                         }
                     ]
@@ -16763,7 +16768,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态(补全逻辑未实现)",
+                            "name": "方块状态",
                             "list": "block",
                             "optional": true
                         },
@@ -17564,7 +17569,7 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态(补全逻辑未实现)",
+                            "name": "方块状态",
                             "optional": true
                         }
                     ]
