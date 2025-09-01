@@ -426,6 +426,18 @@ MapScript.loadModule("AndroidBridge", {
 					}
 				}
 			}, {
+				name: "图案字体",
+				description: "如果字体显示不正常，请关闭次选项，但是不再显示图案",
+				type: "boolean",
+				get: function () {
+					return Boolean(CA.settings.iconFont);
+				},
+				set: function (v) {
+					CA.settings.iconFont = Boolean(v);
+					CA.trySave();
+					Common.toast("图案字体 " + (v ? "已启用" : "已禁用") + " 重启应用后生效");
+				}
+			}, {
 				name: "开机自动启动",
 				description: "需要系统允许开机自启",
 				type: "boolean",
