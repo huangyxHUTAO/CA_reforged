@@ -7,7 +7,7 @@ JDK中jarsigner.exe的路径，没有安装JDK则可使用(Android Studio安装�
 @zipalignPath C:\Users\33532\AppData\Local\Android\Sdk\build-tools\30.0.3\zipalign.exe
 Build Tools中zipalign.exe的路径
 
-@dexPath .\app\build\intermediates\dex\release\mergeDexRelease\out\classes.dex
+@dexPath .\app\build\intermediates\dex\release\minifyReleaseWithR8\classes.dex
 Gradle Build时生成的classes.dex文件路径，可以为相对于shellPath的相对路径
 
 @releaseSignPath .\app\signatures\release.signature
