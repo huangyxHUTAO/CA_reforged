@@ -1,12 +1,11 @@
-@version 0.1.5
-@versionCode [0, 1, 5]
-@date 2025-08-29
+@version 0.1.6
+@versionCode [0, 1, 6]
+@date 2025-09-01
 @licenceUpdate 2025/8/14
 @description
 命令助手 - Reforged
 [0.1.5]
-- 增加了 `status` 类型的补全机制
-    - 增加了方块状态
-- 修复了拓展包的已知bug
-- 修改命令补全报错的格式
+- 增加了 日志服务器 用于调试
+- 优化拓展包在没有 `update` 字段的情况下依旧尝试更新的情况
+- 为拓展包增加一个 `bool` 枚举以保留兼容性 
 @end description
