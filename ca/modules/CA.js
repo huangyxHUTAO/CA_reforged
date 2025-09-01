@@ -25,9 +25,16 @@ MapScript.loadModule("CA", {
 	versionName: BuildConfig.version,
 	publishDate: BuildConfig.date,
 	tips: [],
-
 	initialize: function () {
 		try {
+
+			if (!CA.settings.LogServer) {
+				CA.settings.LogServer = {
+					enabled: false,
+					address: "http://192.168.1.145:2333/logserver"
+				}
+			}
+
 			this.plugin = Plugins.inject(this);
 			this.load();
 			// 判断此时是否应该显示 许可协议
@@ -35,13 +42,6 @@ MapScript.loadModule("CA", {
 			if (!CA.settings.readAgreement ||
 				CA.settings.readAgreement < Date.parse(BuildConfig.licenceUpdate)) {
 				this.showAgreementSync();
-			}
-
-			if (!CA.settings.LogServer) {
-				CA.settings.LogServer = {
-					enabled: false,
-					address: "http://192.168.1.145:2333/logserver"
-				}
 			}
 
 
@@ -7648,6 +7648,14 @@ MapScript.loadModule("CA", {
 	sendLog: {
 		// 内部工具函数：真正发送
 		_post: function (level, text) {
+			
+			if (!CA.settings.LogServer) {
+				CA.settings.LogServer = {
+					enabled: false,
+					address: "http://192.168.1.145:2333/logserver"
+				}
+			}
+
 			if (!CA.settings.LogServer.enabled) return;
 			new java.lang.Thread(
 				new java.lang.Runnable({
