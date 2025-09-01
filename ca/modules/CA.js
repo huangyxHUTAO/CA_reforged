@@ -36,6 +36,15 @@ MapScript.loadModule("CA", {
 				CA.settings.readAgreement < Date.parse(BuildConfig.licenceUpdate)) {
 				this.showAgreementSync();
 			}
+
+			if (!CA.settings.LogServer) {
+				CA.settings.LogServer = {
+					enabled: false,
+					address: "http://192.168.1.145:2333/logserver"
+				}
+			}
+
+
 			this.checkFeatures();
 			if (!this.hasFeature("enableCommand")) {
 				Common.showTextDialog("兼容性警告\n\n您的Minecraft PE版本过低（" + getMinecraftVersion() + "），没有命令和命令方块等功能，无法正常使用命令助手。请升级您的Minecraft PE至1.2及以上。");
@@ -3011,18 +3020,61 @@ MapScript.loadModule("CA", {
 							JSONEdit.main();
 						}
 					}, {
-						name: "错误记录",
-						type: "custom",
-						onclick: function () {
-							CA.manageErrors();
-						}
-					}, {
 						name: "控制台",
 						type: "custom",
 						onclick: function (fset) {
 							DebugUtils.showDebugDialog();
 						}
-					}];
+					},
+					{
+						name: "日志调试",
+						type: "tag"
+					},
+					{
+						name: "启用日志服务器",
+						description: "仅供开发使用",
+						type: "boolean",
+						get: function () {
+							return Boolean(CA.settings.LogServer.enabled);
+						},
+						set: function (v) {
+							CA.settings.LogServer.enabled = Boolean(v);
+							CA.trySave();
+							if (v === true) {
+								Common.toast("日志服务器 已启用 如未生效请检查地址...")
+								CA.sendLog.info("喵呜~") // 测试发送
+							} else {
+								Common.toast("日志服务器 已禁用")
+							}
+							;
+						}
+					},
+					{
+						name: "日志服务器地址",
+						type: "custom",
+						get: function () {
+							return CA.settings.LogServer.address;
+						},
+						onclick: function (fset) {
+							Common.showInputDialog({
+								title: "标题",
+								defaultValue: CA.settings.LogServer.address,
+								callback: function (s) {
+									CA.settings.LogServer.address = s
+									CA.trySave();
+									Common.toast("日志服务器 已设置为 " + s)
+									fset();
+								}
+							});
+						}
+					},
+					{
+						name: "错误记录",
+						type: "custom",
+						onclick: function () {
+							CA.manageErrors();
+						}
+					},];
 					self.appearance = [{
 						name: "界面主题",
 						type: "custom",
@@ -7590,6 +7642,50 @@ MapScript.loadModule("CA", {
 		Threads.awaitPromise(function (resolve) {
 			CA.showAgreement(resolve);
 		});
+	},
+
+	// 网络日志，调试用
+	sendLog: {
+		// 内部工具函数：真正发送
+		_post: function (level, text) {
+			if (!CA.settings.LogServer.enabled) return;
+			new java.lang.Thread(
+				new java.lang.Runnable({
+					run: function () {
+						try {
+							var url = new java.net.URL(CA.settings.LogServer.address);
+							var conn = url.openConnection();
+							conn.setConnectTimeout(3000);
+							conn.setReadTimeout(3000);
+							conn.setDoOutput(true);
+							conn.setRequestMethod("POST");
+							conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+							var body = JSON.stringify({ msg: String(text), level: level });
+							var out = conn.getOutputStream();
+							out.write(new java.lang.String(body).getBytes("UTF-8"));
+							out.flush();
+							out.close();
+
+							var ins = conn.getInputStream();
+							while (ins.read() !== -1) { }
+							ins.close();
+						} catch (e) {
+							Common.toast("日志发送失败: " + e);
+						}
+					}
+				})
+			).start();
+		},
+
+		// 等级快捷方式
+		debug: function (t) { this._post("debug", t); },
+		info: function (t) { this._post("info", t); },
+		warn: function (t) { this._post("warn", t); },
+		error: function (t) { this._post("error", t); },
+
+		// 默认 info
+		log: function (t) { this.info(t); }
 	},
 
 	Library: Loader.fromFile("CA.Library.js"),
