@@ -7,6 +7,7 @@
 		var info, flag = true, t, t2, lib;
 		if (this.loadingStatus) return false;
 		this.loadingStatus = "core";
+	var startTime = Date.now();
 		CA.IntelliSense.library = lib = {
 			commands: {},
 			enums: {},
@@ -19,9 +20,13 @@
 			info: info = []
 		};
 		this.processDeprecated();
+	CA.sendLog && CA.sendLog.info("[调试] 开始加载核心库，共 " + CA.settings.coreLibrarys.length + " 个");
 		CA.settings.coreLibrarys.forEach(function (e, i, a) {
 			CA.Library.currentLoadingLibrary = e;
+	    var libStart = Date.now();
 			var data = CA.Library.loadLibrary(String(e), null);
+	    var libEnd = Date.now();
+	    CA.sendLog && CA.sendLog.info("[调试] 加载核心库 " + e + " 用时 " + (libEnd - libStart) + "ms");
 			data.core = true;
 			data.index = i;
 			if (data.hasError) flag = false;
@@ -32,9 +37,13 @@
 			try {
 				// 第一次运行的话会崩，只能加个判断是否为空
 				if (CA.settings.enabledLibrarys) {
+		    CA.sendLog && CA.sendLog.info("[调试] 开始加载已启用库，共 " + CA.settings.enabledLibrarys.length + " 个");
 					CA.settings.enabledLibrarys.forEach(function (e, i, a) {
 						CA.Library.currentLoadingLibrary = e;
+			    var libStart = Date.now();
 						var data = CA.Library.loadLibrary(String(e), lib);
+			    var libEnd = Date.now();
+			    CA.sendLog && CA.sendLog.info("[调试] 加载已启用库 " + e + " 用时 " + (libEnd - libStart) + "ms");
 						data.index = i;
 						if (data.hasError) flag = false;
 						info.push(data);
@@ -43,6 +52,8 @@
 				//快捷操作
 				CA.Library.onLibraryLoadFinished(lib);
 				CA.Library.loadingStatus = null;
+		    var endTime = Date.now();
+		    CA.sendLog && CA.sendLog.info("[调试] 拓展包全部加载完成，总耗时 " + (endTime - startTime) + "ms");
 				if (callback) callback(flag);
 
 			} catch (e) { erp(e) }
@@ -888,6 +899,12 @@
 	},
 	requestUpdateInfo: function (libinfo, callback) {
 		var r, u = libinfo.update, t;
+
+		// 没有更新信息就不要硬检查更新
+		if (!u) {
+			callback(-1);
+			return;
+		}
 		try {
 			if (typeof u == "function") {
 				r = libinfo.update();
@@ -945,9 +962,13 @@
 		if (level <= 0) return 0;
 		CA.IntelliSense.library.info.forEach(function (e) {
 			e.updateState = "checking";
+			var updateStart = Date.now();
+			CA.sendLog && CA.sendLog.info("[调试] 检查库更新开始：" + e.name + "（" + e.src + ")");
 			Threads.awaitDefault(function () {
 				try {
 					CA.Library.requestUpdateInfo(e, function (statusCode, arg1, arg2) {
+							var updateEnd = Date.now();
+							CA.sendLog && CA.sendLog.info("[调试] 检查库更新结束：" + e.name + "（" + e.src + ")，耗时 " + (updateEnd - updateStart) + "ms，状态码 " + statusCode);
 						if (statusCode == 1) {
 							e.updateInfo = arg1;
 							e.updateState = "ready";
@@ -968,6 +989,7 @@
 							e.updateState = "latest";
 						} else if (statusCode < 0) {
 							e.updateState = "unavailable";
+								CA.sendLog && CA.sendLog.info("[调试] 检查库更新异常：" + e.name + "（" + e.src + ")，状态码 " + statusCode + "，详情：" + arg1);
 						}
 					});
 				} catch (e) { erp(e) }
