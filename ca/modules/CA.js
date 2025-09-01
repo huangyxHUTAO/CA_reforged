@@ -3057,7 +3057,7 @@ MapScript.loadModule("CA", {
 						},
 						onclick: function (fset) {
 							Common.showInputDialog({
-								title: "标题",
+								title: "日志服务器地址",
 								defaultValue: CA.settings.LogServer.address,
 								callback: function (s) {
 									CA.settings.LogServer.address = s
