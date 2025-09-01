@@ -10976,6 +10976,7 @@
         "family": {
             "type": "string",
             "name": "族",
+            "suggestion": "entityFamily",
             "hasInverted": true
         },
         "hasitem": {
