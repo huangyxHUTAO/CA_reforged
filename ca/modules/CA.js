@@ -7661,7 +7661,7 @@ MapScript.loadModule("CA", {
 							conn.setRequestMethod("POST");
 							conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
-							var body = JSON.stringify({ msg: String(text), level: level });
+							var body = JSON.stringify({ msg: String(text), level: level, ts: Date.now() });
 							var out = conn.getOutputStream();
 							out.write(new java.lang.String(body).getBytes("UTF-8"));
 							out.flush();
