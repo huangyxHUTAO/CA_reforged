@@ -10882,6 +10882,11 @@
         "teleport_checkForBlocks": {
             "true": "检查方块碰撞",
             "false": "[默认]不检查方块碰撞"
+        },
+        // 为兼容性所留
+        "bool": {
+            "true": "是",
+            "false": "否"
         }
     },
     "selectors": {
