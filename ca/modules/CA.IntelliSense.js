@@ -14,7 +14,7 @@
 		patterns: [],
 		mode: 0,
 		last: {},
-		callDelay: function self(s) {
+		callDelay: function self(s, cursor) {
 			if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
 			if (!self.pool) {
 				self.pool = java.util.concurrent.Executors.newCachedThreadPool();
@@ -22,14 +22,15 @@
 				self.pool.setRejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.DiscardPolicy());
 			}
 			self.pool.execute(function () {
-				CA.IntelliSense.proc(s);
+				CA.IntelliSense.proc(s, cursor);
 			});
 		},
 		apply: function () {
 			if (this.ui) this.show.apply(this);
 		},
-		proc: function (s) {
+		proc: function (s, cursor) {
 			try {
+				CA.sendLog.info("光标位置(补全器处): " + cursor);
 				if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
 				if (CA.Library.loadingStatus) {
 					// 我这里吐槽一下ProjectXero了，你的变量名怎么起得这么奇怪

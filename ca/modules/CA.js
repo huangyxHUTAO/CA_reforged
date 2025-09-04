@@ -792,7 +792,7 @@ MapScript.loadModule("CA", {
 							self.add.setVisibility(G.View.GONE);
 							self.clear.setVisibility(G.View.GONE);
 						}
-						return function (s) {
+						return function (s, cursor) {
 							s.setSpan(self.spanWatcher, 0, s.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 							CA.cmdstr = String(s);
 							if ((CA.settings.iiMode == 1 || CA.settings.iiMode == 3) && CA.Assist.active) {
@@ -808,9 +808,9 @@ MapScript.loadModule("CA", {
 							if (CA.settings.autoFormatCmd) rep(s);
 							if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3 || state != 1) return;
 							if (CA.settings.senseDelay) {
-								CA.IntelliSense.callDelay(String(s));
+								CA.IntelliSense.callDelay(String(s), cursor);
 							} else {
-								CA.IntelliSense.proc(String(s));
+								CA.IntelliSense.proc(String(s), cursor);
 							}
 						}
 					})();
@@ -920,7 +920,7 @@ MapScript.loadModule("CA", {
 					CA.cmd.addTextChangedListener(new G.TextWatcher({
 						afterTextChanged: function (s) {
 							try {
-								self.textUpdate(s);
+								self.textUpdate(s, CA.cmd.getSelectionStart());
 							} catch (e) { erp(e) }
 						}
 						//beforeTextChanged : function(s, start, count, after) {},
@@ -1115,7 +1115,7 @@ MapScript.loadModule("CA", {
 					CA.gen.on("resume", function () {
 						G.ui(function () {
 							try {
-								self.textUpdate(CA.cmd.getText());
+								self.textUpdate(CA.cmd.getText(), CA.cmd.getSelectionStart());
 							} catch (e) { erp(e) }
 						});
 					});
@@ -1125,7 +1125,7 @@ MapScript.loadModule("CA", {
 					PWM.registerResetFlag(self, "main");
 				}
 				CA.gen.enter();
-				self.textUpdate(CA.cmd.getText());
+				self.textUpdate(CA.cmd.getText(), CA.cmd.getSelectionStart());
 				self.activate(false);
 				if (noani) return;
 				var animation = new G.TranslateAnimation(G.Animation.RELATIVE_TO_SELF, 0, G.Animation.RELATIVE_TO_SELF, 0, G.Animation.RELATIVE_TO_SELF, CA.settings.barTop ? -1 : 1, G.Animation.RELATIVE_TO_SELF, 0);
@@ -7648,7 +7648,7 @@ MapScript.loadModule("CA", {
 	sendLog: {
 		// 内部工具函数：真正发送
 		_post: function (level, text) {
-			
+
 			if (!CA.settings.LogServer) {
 				CA.settings.LogServer = {
 					enabled: false,
@@ -7698,5 +7698,6 @@ MapScript.loadModule("CA", {
 
 	Library: Loader.fromFile("CA.Library.js"),
 	IntelliSense: Loader.fromFile("CA.IntelliSense.js"),
-	Assist: Loader.fromFile("CA.Assist.js")
+	Assist: Loader.fromFile("CA.Assist.js"),
+	// JSON: Loader.fromFile("JSON_test.js")
 });

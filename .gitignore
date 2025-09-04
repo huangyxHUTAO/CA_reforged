@@ -1,22 +1,33 @@
-# === 忽略所有文件 白名单写法 ===
-*
-# /ca 目录
-!ca/
-!ca/intl
-!ca/intl/**
-!ca/pages
-!ca/pages/**
-!ca/modules
-!ca/modules/**
-!ca/config
-!ca/config/build.txt
-# /cadroid 目录
-# 其他的手动更新
-!cadroid/
-!cadroid/src/**
-!cadroid/build.gradle
-!cadroid/gradlew*
-!cadroid/gradle/
-!cadroid/app/src/**
-!cadroid/app/build.gradle
-cadroid/app/src/main/assets/script.js
+# ./ca 目录
+/ca/build/
+/ca/compact_log.txt
+/ca/node_modules/
+/ca/update.json
+ca/sign_apk.ps1
+
+# ./cabuildtools 目录
+/cabuildtools/node_modules/
+
+# ./cadroid 目录 (Android项目)
+/cadroid/.gradle/
+/cadroid/.idea/
+/cadroid/app/build/
+/cadroid/app/signatures/
+/cadroid/build/
+/cadroid/*.log
+/cadroid/local.properties
+/cadroid/cadroid.iml
+/cadroid/project_*.bat
+/cadroid/app/src/main/assets/script.js
+
+# 忽略./tool 目录
+/tool
+
+# 通用忽略规则
+*.apk
+*.aab
+*.keystore
+*.jks
+*.log
+.DS_Store
+Thumbs.db
