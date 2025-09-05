@@ -663,9 +663,15 @@
 							r.canFinish = true;
 							return r;
 						}
-						let context = parsedParams[parsedParams.length - 1]
+						let context = parsedParams[parsedParams.length - 1];
 						let input = selResult.currentInput || "";
-						let schema = this.getSchemaByContext(context, "block")
+						let schema = this.getSchemaByContext(context, cp.subject);
+
+						if (!schema) {
+							schema = {}; // 最差的结果就是没法补全
+							r.description = "无法找到该命令的状态参数信息";
+						}
+
 						let pathArr = selResult.stack ? selResult.stack.slice() : [];  // 补全路径
 						let keys = selResult.keys
 						if (selResult.state == "wait_key") {
@@ -786,10 +792,6 @@
 							return md.tag;
 						}
 						z += ":命令";
-						break;
-
-					case "status":
-						z += "状态"
 						break;
 
 					case "text":
