@@ -12814,6 +12814,45 @@
                         {
                             "type": "status",
                             "name": "方块状态",
+                            "subject": "block",
+                            "optional": true
+                        }
+                    ]
+                },
+                "clone_filtered_int": {
+                    "description": "在区域间复制方块",
+                    "params": [
+                        {
+                            "type": "position",
+                            "name": "起点"
+                        },
+                        {
+                            "type": "position",
+                            "name": "终点"
+                        },
+                        {
+                            "type": "position",
+                            "name": "目标点"
+                        },
+                        {
+                            "type": "plain",
+                            "name": "filtered",
+                            "prompt": "仅复制方块状态符合的方块"
+                        },
+                        {
+                            "type": "enum",
+                            "name": "复制模式",
+                            "optional": true,
+                            "list": "clone_mode"
+                        },
+                        {
+                            "type": "string",
+                            "name": "方块ID",
+                            "suggestion": "block"
+                        },
+                        {
+                            "type": "int",
+                            "name": "数据值",
                             "optional": true
                         }
                     ]
@@ -13221,6 +13260,43 @@
                         {
                             "type": "status",
                             "name": "方块状态",
+                            "subject": "block",
+                            "optional": true
+                        },
+                        {
+                            "type": "subcommand",
+                            "name": "子命令",
+                            "mainCommand": "execute",
+                            "optional": true
+                        }
+                    ]
+                },
+                "execute_conditional_block_blockStates_int": {
+                    "description": "当指定坐标的方块满足条件时，执行后续子命令",
+                    "params": [
+                        {
+                            "type": "enum",
+                            "name": "条件",
+                            "list": "execute_conditional"
+                        },
+                        {
+                            "type": "plain",
+                            "name": "block",
+                            "prompt": "指定方块满足..."
+                        },
+                        {
+                            "type": "position",
+                            "name": "位置"
+                        },
+                        {
+                            "type": "string",
+                            "name": "方块ID",
+                            "suggestion": "block"
+                        },
+                        {
+                            "type": "int",
+                            "name": "数据值",
+                            "subject": "block",
                             "optional": true
                         },
                         {
@@ -13738,7 +13814,8 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态"
+                            "name": "方块状态",
+                            "subject": "block"
                         },
                         {
                             "type": "enum",
@@ -13766,7 +13843,8 @@
                         },
                         {
                             "type": "status",
-                            "name": "方块状态"
+                            "name": "方块状态",
+                            "subject": "block"
                         },
                         {
                             "type": "plain",
@@ -13782,6 +13860,7 @@
                         {
                             "type": "status",
                             "name": "被替换的方块状态",
+                            "subject": "block",
                             "optional": true
                         }
                     ]
@@ -13840,6 +13919,107 @@
                         {
                             "type": "status",
                             "name": "被替换的方块状态",
+                            "subject": "block",
+                            "optional": true
+                        }
+                    ]
+                },
+                "fill_blockStates_int": {
+                    "description": "用指定方块填充区域",
+                    "params": [
+                        {
+                            "type": "position",
+                            "name": "起点"
+                        },
+                        {
+                            "type": "position",
+                            "name": "终点"
+                        },
+                        {
+                            "type": "string",
+                            "name": "方块ID",
+                            "suggestion": "block"
+                        },
+                        {
+                            "type": "int",
+                            "name": "数据值"
+                        },
+                        {
+                            "type": "enum",
+                            "name": "旧方块处理方式",
+                            "list": "fill_old_block_handling",
+                            "optional": true
+                        }
+                    ]
+                },
+                "fill_blockStates_replace_int": {
+                    "description": "用指定方块替换区域中的特定方块",
+                    "params": [
+                        {
+                            "type": "position",
+                            "name": "起点"
+                        },
+                        {
+                            "type": "position",
+                            "name": "终点"
+                        },
+                        {
+                            "type": "string",
+                            "name": "方块ID",
+                            "suggestion": "block"
+                        },
+                        {
+                            "type": "int",
+                            "name": "数据值"
+                        },
+                        {
+                            "type": "plain",
+                            "name": "replace",
+                            "prompt": "[默认]替换所有：用指定方块替换填充区域内所有方块或另一指定方块。"
+                        },
+                        {
+                            "type": "string",
+                            "name": "被替换的方块ID",
+                            "suggestion": "block",
+                            "optional": true
+                        },
+                        {
+                            "type": "int",
+                            "name": "被替换方块的数据值",
+                            "optional": true
+                        }
+                    ]
+                },
+                "fill_replace_int": {
+                    "description": "用指定方块替换区域中的特定方块",
+                    "params": [
+                        {
+                            "type": "position",
+                            "name": "起点"
+                        },
+                        {
+                            "type": "position",
+                            "name": "终点"
+                        },
+                        {
+                            "type": "string",
+                            "name": "方块ID",
+                            "suggestion": "block"
+                        },
+                        {
+                            "type": "plain",
+                            "name": "replace",
+                            "prompt": "[默认]替换所有：用指定方块替换填充区域内所有方块或另一指定方块。"
+                        },
+                        {
+                            "type": "string",
+                            "name": "被替换的方块ID",
+                            "suggestion": "block",
+                            "optional": true
+                        },
+                        {
+                            "type": "int",
+                            "name": "被替换方块的数据值",
                             "optional": true
                         }
                     ]
@@ -16775,7 +16955,32 @@
                         {
                             "type": "status",
                             "name": "方块状态",
-                            "list": "block",
+                            "subject": "block",
+                            "optional": true
+                        },
+                        {
+                            "type": "enum",
+                            "name": "替换方式",
+                            "list": "setblock_old_block_handling",
+                            "optional": true
+                        }
+                    ]
+                },
+                "setblock_blockStates_int": {
+                    "description": "更改指定坐标位置的方块",
+                    "params": [
+                        {
+                            "type": "position",
+                            "name": "坐标"
+                        },
+                        {
+                            "type": "string",
+                            "name": "方块ID",
+                            "suggestion": "block"
+                        },
+                        {
+                            "type": "int",
+                            "name": "数据值",
                             "optional": true
                         },
                         {
@@ -17576,6 +17781,7 @@
                         {
                             "type": "status",
                             "name": "方块状态",
+                            "subject": "block",
                             "optional": true
                         }
                     ]
