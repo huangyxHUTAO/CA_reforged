@@ -917,6 +917,8 @@ MapScript.loadModule("CA", {
 					CA.cmd.setImeOptions(G.EditorInfo.IME_FLAG_NO_FULLSCREEN);
 					CA.cmd.setTypeface(iconFont);
 					CA.cmd.setText(CA.cmdstr);
+
+					// 文本变化监听器
 					CA.cmd.addTextChangedListener(new G.TextWatcher({
 						afterTextChanged: function (s) {
 							try {
@@ -926,6 +928,16 @@ MapScript.loadModule("CA", {
 						//beforeTextChanged : function(s, start, count, after) {},
 						//onTextChanged : function(s, start, before, count) {},
 					}));
+
+					// 光标监听器
+					CA.cmd.setOnSelectionChangeListener(
+						new Packages.com.huangyx.ca.OnSelectionChangeListener({
+							onSelectionChanged: function (start, end) {
+								CA.sendLog.log("光标 " + start + " → " + end);
+							}
+						})
+					);
+
 					CA.cmd.setOnClickListener(new G.View.OnClickListener({
 						onClick: function (v) {
 							try {
@@ -938,6 +950,7 @@ MapScript.loadModule("CA", {
 							} catch (e) { erp(e) }
 						}
 					}));
+
 					CA.cmd.setOnTouchListener(new G.View.OnTouchListener({
 						onTouch: function touch(v, e) {
 							try {
@@ -7699,5 +7712,5 @@ MapScript.loadModule("CA", {
 	Library: Loader.fromFile("CA.Library.js"),
 	IntelliSense: Loader.fromFile("CA.IntelliSense.js"),
 	Assist: Loader.fromFile("CA.Assist.js"),
-	// JSON: Loader.fromFile("JSON_test.js")
+	WebViewJs: Loader.fromFile("CA.WebViewJs.js"),
 });

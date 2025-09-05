@@ -42,3 +42,11 @@
 -keep public class org.java_websocket.** {
     public *;
 }
+
+# 保留接口本身
+-keep interface com.huangyx.ca.OnSelectionChangeListener { *; }
+
+# 保留实现类 + 接口 + 所有 public 方法
+-keep public class com.huangyx.ca.MyEditText {
+    public *;
+}

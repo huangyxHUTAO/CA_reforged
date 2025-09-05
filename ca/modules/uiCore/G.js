@@ -82,7 +82,9 @@ MapScript.loadModule("G", {
 	CycleInterpolator: android.view.animation.CycleInterpolator,
 	DecelerateInterpolator: android.view.animation.DecelerateInterpolator,
 	Drawable: android.graphics.drawable.Drawable,
-	EditText: android.widget.EditText,
+
+	EditText: com.huangyx.ca.MyEditText,
+
 	EditorInfo: android.view.inputmethod.EditorInfo,
 	ForegroundColorSpan: android.text.style.ForegroundColorSpan,
 	FrameLayout: android.widget.FrameLayout,
