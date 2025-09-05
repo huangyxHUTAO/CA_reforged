@@ -1,11 +1,11 @@
-@version 0.1.6
-@versionCode [0, 1, 6]
-@date 2025-09-01
+@version 0.1.7
+@versionCode [0, 1, 7]
+@date 2025-09-05
 @licenceUpdate 2025/8/14
 @description
 命令助手 - Reforged
-[0.1.6]
-- 增加了 日志服务器 用于调试
-- 优化拓展包在没有 `update` 字段的情况下依旧尝试更新的情况
-- 为拓展包增加一个 `bool` 枚举以保留兼容性 
+[0.1.7]
+- 获取光标位置（为JSON-Pro编辑器做准备）
+- 更正 拓展包 的错别字和兼容
+- `status` 类型增加 `subject` 字段用于自定义枚举
 @end description
