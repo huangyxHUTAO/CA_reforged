@@ -37,7 +37,7 @@ dependencies {
 
     // implementation files('libs/SaaS_TalkingDataSDK_Android_V5.0.9.jar')
     implementation 'com.android.support:support-annotations:28.0.0'
-    implementation 'org.mozilla:rhino-runtime:1.7.14'
+    implementation 'org.mozilla:rhino-runtime:1.7.15'
     implementation 'net.lingala.zip4j:zip4j:2.11.2'
     implementation 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
     implementation 'org.java-websocket:Java-WebSocket:1.5.3'
