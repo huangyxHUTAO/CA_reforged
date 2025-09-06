@@ -1137,7 +1137,7 @@ MapScript.loadModule("CA", {
 					PWM.registerResetFlag(CA, "cmd");
 					PWM.registerResetFlag(self, "main");
 				}
-				CA.gen.enter();
+				if (CA.gen) CA.gen.enter();  //实际上main应该存在，但如果前面报错了，由于try（用户选择忽略错误），这里就会运行
 				self.textUpdate(CA.cmd.getText(), CA.cmd.getSelectionStart());
 				self.activate(false);
 				if (noani) return;
