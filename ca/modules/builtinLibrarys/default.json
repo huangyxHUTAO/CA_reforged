@@ -10883,6 +10883,31 @@
             "true": "检查方块碰撞",
             "false": "[默认]不检查方块碰撞"
         },
+        "dimensions": {
+            "overworld": "主世界",
+            "nether": "下界",
+            "the_end": "末地"
+        },
+        "dimensions_netease": {
+            "dm3": "网易版预留多世界3",
+            "dm4": "网易版预留多世界4",
+            "dm5": "网易版预留多世界5",
+            "dm6": "网易版预留多世界6",
+            "dm7": "网易版预留多世界7",
+            "dm8": "网易版预留多世界8",
+            "dm9": "网易版预留多世界9",
+            "dm10": "网易版预留多世界10",
+            "dm11": "网易版预留多世界11",
+            "dm12": "网易版预留多世界12",
+            "dm13": "网易版预留多世界13",
+            "dm14": "网易版预留多世界14",
+            "dm15": "网易版预留多世界15",
+            "dm16": "网易版预留多世界16",
+            "dm17": "网易版预留多世界17",
+            "dm18": "网易版预留多世界18",
+            "dm19": "网易版预留多世界19",
+            "dm20": "网易版预留多世界20"
+        },
         // 为兼容性所留
         "bool": {
             "true": "是",
@@ -13635,11 +13660,7 @@
                         {
                             "type": "enum",
                             "name": "维度",
-                            "list": {
-                                "overworld": "主世界",
-                                "nether": "下界",
-                                "the_end": "末地"
-                            }
+                            "list": "dimensions"
                         },
                         {
                             "type": "subcommand",
@@ -13648,7 +13669,7 @@
                         }
                     ]
                 },
-                "execute_in_NEworld": {
+                "execute_in_netease": {
                     "description": "改变执行维度与执行坐标系，并执行后续子命令",
                     "params": [
                         {
@@ -13657,28 +13678,9 @@
                             "prompt": "改变执行维度与坐标系"
                         },
                         {
-                            "type": "string",
+                            "type": "text",
                             "name": "维度",
-                            "suggestion": {
-                                "dm3": "网易版预留多世界3",
-                                "dm4": "网易版预留多世界4",
-                                "dm5": "网易版预留多世界5",
-                                "dm6": "网易版预留多世界6",
-                                "dm7": "网易版预留多世界7",
-                                "dm8": "网易版预留多世界8",
-                                "dm9": "网易版预留多世界9",
-                                "dm10": "网易版预留多世界10",
-                                "dm11": "网易版预留多世界11",
-                                "dm12": "网易版预留多世界12",
-                                "dm13": "网易版预留多世界13",
-                                "dm14": "网易版预留多世界14",
-                                "dm15": "网易版预留多世界15",
-                                "dm16": "网易版预留多世界16",
-                                "dm17": "网易版预留多世界17",
-                                "dm18": "网易版预留多世界18",
-                                "dm19": "网易版预留多世界19",
-                                "dm20": "网易版预留多世界20"
-                            }
+                            "suggestion": "dimensions_netease"
                         },
                         {
                             "type": "subcommand",
@@ -15773,7 +15775,7 @@
                         {
                             "type": "string",
                             "name": "动画控制器",
-                            "suggestion": "animation_controller",
+                            "suggestion": "animationController",
                             "optional": true
                         }
                     ]
@@ -17899,9 +17901,25 @@
                             "prompt": "列出常加载区域"
                         },
                         {
+                            "type": "enum",
+                            "name": "所有维度",
+                            "list": "dimensions",
+                            "optional": true
+                        }
+                    ]
+                },
+                "tickingarea_list_netease": {
+                    "description": "列出常加载区域",
+                    "params": [
+                        {
+                            "type": "plain",
+                            "name": "list",
+                            "prompt": "列出常加载区域"
+                        },
+                        {
                             "type": "text",
-                            "name": "all-dimensions",
-                            "prompt": "所有维度",
+                            "name": "所有维度",
+                            "suggestion": "dimensions_netease",
                             "optional": true
                         }
                     ]
