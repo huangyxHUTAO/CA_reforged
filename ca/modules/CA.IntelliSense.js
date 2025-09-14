@@ -55,7 +55,7 @@
 					this.apply();
 					return;
 				}
-				var r = this.procCmd(s);
+				var r = this.procCmd(s, cursor);
 				this.source = r.source;
 				this.cmdname = r.cmdname;
 				this.hasSlash = r.hasSlash;
@@ -74,7 +74,7 @@
 				Common.toast(text);
 			}
 		},
-		procCmd: function (s) {
+		procCmd: function (s, cursor) {
 			var c, ca, t, i, pp, r;
 
 			//分析命令结构 - 拆分
@@ -98,7 +98,7 @@
 				//分类 - 输入参数中
 				if (c[2] in this.library.commands) {
 					//分类 - 存在命令
-					this.procParams(r);
+					this.procParams(r, cursor);
 				} else {
 					//分类 - 不存在命令
 					//提示命令未找到
@@ -188,7 +188,7 @@
 		 *    - `c.mode` 标识解析成功或失败。
 		 * 4. 若所有模式均失败，则生成错误提示并压入 `c.prompt`。
 		 */
-		procParams: function (c) {
+		procParams: function (c, cursor) {
 			var i, j, cm = this.library.commands[c.cmdname], ps, pa, ci, cp, t, f = true, k, u, ms, pp, cpl = [], nn = false, erm = [];
 
 
@@ -217,7 +217,7 @@
 					var paramStart = ci;
 
 					//匹配参数
-					t = this.matchParam(cp, c.strParam.slice(ci), parsedParams);
+					t = this.matchParam(cp, c.strParam.slice(ci), parsedParams, cursor);
 					if (t && t.length >= 0 && ((/^\s?$/).test(c.strParam.slice(ci += t.length, ++ci)))) {
 						//分类 - 匹配成功
 						ci += (/^\s*/).exec(c.strParam.slice(ci))[0].length;
@@ -352,7 +352,7 @@
 		 *   tag?: string          // 简短提示标签
 		 * }}
 		 */
-		matchParam: function (cp, ps, parsedParams) {
+		matchParam: function (cp, ps, parsedParams, cursor) {
 			var i, r, t, t2, t3, t4;
 			// Common.toast(cp.type)
 			switch (cp.type) {
@@ -376,6 +376,12 @@
 						length: ps.length,
 						canFinish: true
 					};
+					break;
+
+				case "jsonPro":
+					var schema = this.library.jsonSchema[cp.schema]
+					// 暂未实现，目前只能获取到 schema
+
 					break;
 
 				case "plain":

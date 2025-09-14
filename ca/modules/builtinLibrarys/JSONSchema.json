@@ -1,0 +1,116 @@
+    {
+        "name": "JSON Schema包",
+        "author": "南鸢晨星",
+        "description": "提供JSON Schema验证功能",
+        "uuid": "a1471826-7086-022e-cd02-8a5a317e825a",
+        "require": [],
+        "version": [
+            1,
+            0,
+            0
+        ],
+        "jsonSchema": {
+            // 直接写入JSON Schema
+            "rawtext": {
+                "title": "Minecraft Bedrock RawText Schema",
+                "description": "用于验证和补全 Minecraft 基岩版的文本组件",
+                "type": "object",
+                "properties": {
+                    "rawtext": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "text": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "text"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "translate": {
+                                            "type": "string"
+                                        },
+                                        "with": {
+                                            "oneOf": [
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "rawtext": {
+                                                            "$ref": "#/properties/rawtext"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "rawtext"
+                                                    ],
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "translate"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "score": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "objective": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "name",
+                                                "objective"
+                                            ],
+                                            "additionalProperties": false
+                                        }
+                                    },
+                                    "required": [
+                                        "score"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "selector": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "selector"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "rawtext"
+                ],
+                "additionalProperties": false
+            }
+        }
+    }

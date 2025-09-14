@@ -7,12 +7,13 @@
 		var info, flag = true, t, t2, lib;
 		if (this.loadingStatus) return false;
 		this.loadingStatus = "core";
-	var startTime = Date.now();
+		var startTime = Date.now();
 		CA.IntelliSense.library = lib = {
 			commands: {},
 			enums: {},
 			selectors: {},
 			json: {},
+			jsonSchema: {},
 			states: {},
 			help: {},
 			tutorials: [],
@@ -20,13 +21,13 @@
 			info: info = []
 		};
 		this.processDeprecated();
-	CA.sendLog && CA.sendLog.info("[调试] 开始加载核心库，共 " + CA.settings.coreLibrarys.length + " 个");
+		CA.sendLog && CA.sendLog.info("[调试] 开始加载核心库，共 " + CA.settings.coreLibrarys.length + " 个");
 		CA.settings.coreLibrarys.forEach(function (e, i, a) {
 			CA.Library.currentLoadingLibrary = e;
-	    var libStart = Date.now();
+			var libStart = Date.now();
 			var data = CA.Library.loadLibrary(String(e), null);
-	    var libEnd = Date.now();
-	    CA.sendLog && CA.sendLog.info("[调试] 加载核心库 " + e + " 用时 " + (libEnd - libStart) + "ms");
+			var libEnd = Date.now();
+			CA.sendLog && CA.sendLog.info("[调试] 加载核心库 " + e + " 用时 " + (libEnd - libStart) + "ms");
 			data.core = true;
 			data.index = i;
 			if (data.hasError) flag = false;
@@ -37,13 +38,13 @@
 			try {
 				// 第一次运行的话会崩，只能加个判断是否为空
 				if (CA.settings.enabledLibrarys) {
-		    CA.sendLog && CA.sendLog.info("[调试] 开始加载已启用库，共 " + CA.settings.enabledLibrarys.length + " 个");
+					CA.sendLog && CA.sendLog.info("[调试] 开始加载已启用库，共 " + CA.settings.enabledLibrarys.length + " 个");
 					CA.settings.enabledLibrarys.forEach(function (e, i, a) {
 						CA.Library.currentLoadingLibrary = e;
-			    var libStart = Date.now();
+						var libStart = Date.now();
 						var data = CA.Library.loadLibrary(String(e), lib);
-			    var libEnd = Date.now();
-			    CA.sendLog && CA.sendLog.info("[调试] 加载已启用库 " + e + " 用时 " + (libEnd - libStart) + "ms");
+						var libEnd = Date.now();
+						CA.sendLog && CA.sendLog.info("[调试] 加载已启用库 " + e + " 用时 " + (libEnd - libStart) + "ms");
 						data.index = i;
 						if (data.hasError) flag = false;
 						info.push(data);
@@ -52,8 +53,8 @@
 				//快捷操作
 				CA.Library.onLibraryLoadFinished(lib);
 				CA.Library.loadingStatus = null;
-		    var endTime = Date.now();
-		    CA.sendLog && CA.sendLog.info("[调试] 拓展包全部加载完成，总耗时 " + (endTime - startTime) + "ms");
+				var endTime = Date.now();
+				CA.sendLog && CA.sendLog.info("[调试] 拓展包全部加载完成，总耗时 " + (endTime - startTime) + "ms");
 				if (callback) callback(flag);
 
 			} catch (e) { erp(e) }
@@ -556,6 +557,7 @@
 			if (!(l.enums instanceof Object)) l.enums = {};
 			if (!(l.selectors instanceof Object)) l.selectors = {};
 			if (!(l.json instanceof Object)) l.json = {};
+			if (!(l.jsonSchema instanceof Object)) l.jsonSchema = {};
 			if (!(l.states instanceof Object)) l.states = {};
 			if (!(l.help instanceof Object)) l.help = {};
 			for (i in l.commands) {
@@ -589,6 +591,13 @@
 					delete cur.selectors[i];
 				} else {
 					cur.selectors[i] = l.selectors[i];
+				}
+			}
+			for (i in l.jsonSchema) {
+				if (l.mode == "remove") {
+					delete cur.jsonSchema[i];
+				} else {
+					cur.jsonSchema[i] = l.jsonSchema[i];
 				}
 			}
 			for (i in l.json) {
@@ -967,8 +976,8 @@
 			Threads.awaitDefault(function () {
 				try {
 					CA.Library.requestUpdateInfo(e, function (statusCode, arg1, arg2) {
-							var updateEnd = Date.now();
-							CA.sendLog && CA.sendLog.info("[调试] 检查库更新结束：" + e.name + "（" + e.src + ")，耗时 " + (updateEnd - updateStart) + "ms，状态码 " + statusCode);
+						var updateEnd = Date.now();
+						CA.sendLog && CA.sendLog.info("[调试] 检查库更新结束：" + e.name + "（" + e.src + ")，耗时 " + (updateEnd - updateStart) + "ms，状态码 " + statusCode);
 						if (statusCode == 1) {
 							e.updateInfo = arg1;
 							e.updateState = "ready";
@@ -989,7 +998,7 @@
 							e.updateState = "latest";
 						} else if (statusCode < 0) {
 							e.updateState = "unavailable";
-								CA.sendLog && CA.sendLog.info("[调试] 检查库更新异常：" + e.name + "（" + e.src + ")，状态码 " + statusCode + "，详情：" + arg1);
+							CA.sendLog && CA.sendLog.info("[调试] 检查库更新异常：" + e.name + "（" + e.src + ")，状态码 " + statusCode + "，详情：" + arg1);
 						}
 					});
 				} catch (e) { erp(e) }

@@ -9,6 +9,7 @@ if (variables.buildConfig.variants == "release") {
 CA.Library.inner["default"] = Loader.fromFile("builtinLibrarys/default.json");
 CA.Library.inner["basicedu"] = Loader.fromFile("builtinLibrarys/basicedu.json");
 CA.Library.inner["states"] = Loader.fromFile("builtinLibrarys/states.json");
+CA.Library.inner["JSONSchema"] = Loader.fromFile("builtinLibrarys/JSONSchema.json");
 
 Common.themelist = {
 	"pink_theme": {					// 主题ID：pink_theme

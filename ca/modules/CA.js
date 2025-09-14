@@ -53,6 +53,7 @@ MapScript.loadModule("CA", {
 			} else if (this.hasFeature("version_1_1")) {
 				Common.showTextDialog("兼容性警告\n\n您的Minecraft PE版本较低（" + getMinecraftVersion() + "），可以使用命令，但没有ID表，且部分命令有bug。推荐升级您的Minecraft PE至1.2及以上，或者使用网易代理的我的世界最新版本。\n您也可在设置→拓展包→切换版本→自定义中设置版本为1.2。");
 			}
+
 			Common.toast("命令助手 " + this.version.join(".") + " by ProjectXero&南鸢晨星\n\n" + this.getTip(), 1);
 			this.fine = true;
 			this.screenChangeHook();
@@ -73,6 +74,17 @@ MapScript.loadModule("CA", {
 				iconFont = G.Typeface.MONOSPACE || G.Typeface.DEFAULT;
 			}
 
+			// // 初始化json ATS解析器
+			// if (!CA.jsonToAst.pares) {
+			// 	try {
+			// 		CA.jsonToAst.init()
+			// 		if (CA.jsonToAst.pares) {
+			// 			Common.toast("喵呜！json ATS解析器初始化成功！");
+			// 		}
+			// 	} catch {
+			// 		Common.toast("喵呜... json ATS解析器加载失败...");
+			// 	}
+			// }
 		} catch (e) { erp(e) }
 	},
 	unload: function () {
@@ -7712,4 +7724,5 @@ MapScript.loadModule("CA", {
 	Library: Loader.fromFile("CA.Library.js"),
 	IntelliSense: Loader.fromFile("CA.IntelliSense.js"),
 	Assist: Loader.fromFile("CA.Assist.js"),
+	// jsonToAst: Loader.fromFile("jsonToAst.js")
 });
