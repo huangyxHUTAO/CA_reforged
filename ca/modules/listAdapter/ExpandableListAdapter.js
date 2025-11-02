@@ -1,24 +1,24 @@
-MapScript.loadModule("ExpandableListAdapter", (function() {
+MapScript.loadModule("ExpandableListAdapter", (function () {
 	const DEPTH_LIMIT = 40;
 	function buildExtendData(e, i, parent, children, idHolder, newDepth) {
 		return {
-			data : e,
-			id : idHolder[0]++,
-			group : Array.isArray(children),
-			children : children,
-			extend : null,
-			expanded : false,
-			children_expanded : 0,
-			parent : parent,
-			index : i,
-			depth : newDepth
+			data: e,
+			id: idHolder[0]++,
+			group: Array.isArray(children),
+			children: children,
+			extend: null,
+			expanded: false,
+			children_expanded: 0,
+			parent: parent,
+			index: i,
+			depth: newDepth
 		};
 	}
 	function extendArray(item, getChildren, idHolder, params) {
 		if (!item.group) return;
 		var newDepth = item.depth + 1;
 		if (newDepth > DEPTH_LIMIT) return item.extend = item.children = [];
-		item.extend = item.children.map(function(e, i, a) {
+		item.extend = item.children.map(function (e, i, a) {
 			return buildExtendData(e, i, item, getChildren(e, i, a, newDepth, params), idHolder, newDepth);
 		});
 		return item.extend;
@@ -29,7 +29,7 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 	}
 	function extendNodeTree(controller, node) {
 		if (!node.extend) extendArray(data, controller._getChildren, controller.idHolder, controller.params);
-		node.extend.forEach(function(e) {
+		node.extend.forEach(function (e) {
 			if (e.group) extendNodeTree(controller, e);
 		});
 	}
@@ -115,7 +115,7 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 		}
 		return false;
 	}
-	var r = function(arr, getChildren, itemMaker, itemBinder, groupMaker, groupBinder, params) {
+	var r = function (arr, getChildren, itemMaker, itemBinder, groupMaker, groupBinder, params) {
 		//arr是列表数组
 		//getChildren(element, groupIndex, groupArray, depth, params)返回该group的子对象，如果不是group则返回null
 		//itemMaker(holder, params)生成item基础view
@@ -124,93 +124,105 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 		//groupBinder(holder, element, groupIndex, groupArray, depth, isExpanded, params)修改view使其实现指定的group界面
 		var root, extend, itemholders = [], groupholders = [], dso = [], controller, idHolder = [0];
 		root = {
-			data : arr,
-			id : idHolder[0]++,
-			group : true,
-			children : arr,
-			extend : null,
-			expanded : true,
-			depth : -1,
-			pos : NaN
+			data: arr,
+			id: idHolder[0]++,
+			group: true,
+			children: arr,
+			extend: null,
+			expanded: true,
+			depth: -1,
+			pos: NaN
 		};
 		extend = extendArray(root, getChildren, idHolder, params).slice();
 		controller = new ExpandableListAdapter.Controller(root, extend, getChildren, groupholders, itemholders, itemMaker, groupMaker, itemBinder, groupBinder, dso, idHolder, params);
 		makePointer(controller);
 		return new G.ListAdapter({
-			getCount : function() {
+			getCount: function () {
 				return extend.length;
 			},
-			getItem : function(pos) {
+			getItem: function (pos) {
 				if (pos == -1) return controller;
 				return extend[pos].data;
 			},
-			getItemId : function(pos) {
+			getItemId: function (pos) {
 				return extend[pos].id;
 			},
-			getItemViewType : function(pos) {
+			getItemViewType: function (pos) {
 				return extend[pos].group ? 1 : 0;
 			},
-			getView : function(pos, convert, parent) {
+			getView: function (pos, convert, parent) {
 				var holder, e;
 				try {
 					e = extend[pos];
 					if (e.group) {
-						if (!convert || !(convert.getTag() in groupholders)) {
+						// 修复 group 分支
+						var groupTag = convert ? convert.getTag() : null;
+						var groupIndex = groupTag != null ? parseInt(groupTag) : -1;
+
+						if (!convert || groupTag == null || isNaN(groupIndex) || groupIndex < 0 || groupIndex >= groupholders.length || !groupholders[groupIndex]) {
 							holder = {};
 							convert = groupMaker(holder, params);
 							holder.self = convert;
-							convert.setTag(groupholders.length.toString());
+							var newGroupIndex = groupholders.length;
+							convert.setTag(newGroupIndex.toString());
 							groupholders.push(holder);
+						} else {
+							holder = groupholders[groupIndex];
 						}
-						holder = groupholders[convert.getTag()];
 						holder.pos = parseInt(pos);
 						groupBinder(holder, e.data, e.index, e.parent.children, e.depth, e.expanded, params);
 					} else {
-						if (!convert || !(convert.getTag() in itemholders)) {
+						// 修复 item 分支
+						var itemTag = convert ? convert.getTag() : null;
+						var itemIndex = itemTag != null ? parseInt(itemTag) : -1;
+
+						if (!convert || itemTag == null || isNaN(itemIndex) || itemIndex < 0 || itemIndex >= itemholders.length || !itemholders[itemIndex]) {
 							holder = {};
 							convert = itemMaker(holder, params);
 							holder.self = convert;
-							convert.setTag(itemholders.length.toString());
+							var newItemIndex = itemholders.length;
+							convert.setTag(newItemIndex.toString());
 							itemholders.push(holder);
+						} else {
+							holder = itemholders[itemIndex];
 						}
-						holder = itemholders[convert.getTag()];
 						holder.pos = parseInt(pos);
 						itemBinder(holder, e.data, e.index, e.parent.children, e.depth, params);
 					}
 					return convert;
-				} catch(e) {
+				} catch (e) {
 					var a = new G.TextView(ctx);
 					a.setText(e + "\n" + e.stack);
 					erp(e);
 					return a;
 				}
 			},
-			getViewTypeCount : function() {
+			getViewTypeCount: function () {
 				return 2;
 			},
-			hasStableIds : function() {
+			hasStableIds: function () {
 				return true;
 			},
-			isEmpty : function() {
+			isEmpty: function () {
 				return extend.length === 0;
 			},
-			areAllItemsEnabled : function() {
+			areAllItemsEnabled: function () {
 				return true;
 			},
-			isEnabled : function(pos) {
+			isEnabled: function (pos) {
 				return pos >= 0 && pos < extend.length;
 			},
-			registerDataSetObserver : function(p) {
+			registerDataSetObserver: function (p) {
 				if (dso.indexOf(p) >= 0) return;
 				dso.push(p);
 			},
-			unregisterDataSetObserver : function(p) {
+			unregisterDataSetObserver: function (p) {
 				var i = dso.indexOf(p);
 				if (p >= 0) dso.splice(i, 1);
 			}
 		});
 	}
-	r.Controller = function(root, extend, getChildren, groupholders, itemholders, itemMaker, groupMaker, itemBinder, groupBinder, dso, idHolder, params) {
+	r.Controller = function (root, extend, getChildren, groupholders, itemholders, itemMaker, groupMaker, itemBinder, groupBinder, dso, idHolder, params) {
 		this.root = root;
 		this.extend = extend;
 		this._getChildren = getChildren;
@@ -225,57 +237,65 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 		this.params = params;
 	}
 	r.Controller.prototype = {
-		bindListView : function(lv, o) {
+		bindListView: function (lv, o) {
 			var adpt = this;
 			lv.setAdapter(adpt.self);
-			lv.setOnItemClickListener(new G.AdapterView.OnItemClickListener({onItemClick : function(parent, view, pos, id) {try {
-				var hn = parent.getHeaderViewsCount(), fn = parent.getFooterViewsCount(), c = parent.getCount();
-				if (pos < hn) {
-					if (o.onHeaderClick) o.onHeaderClick(pos);
-					return;
-				} else if (pos >= c - fn) {
-					if (o.onFooterClick) o.onFooterClick(pos - c + fn);
-					return;
+			lv.setOnItemClickListener(new G.AdapterView.OnItemClickListener({
+				onItemClick: function (parent, view, pos, id) {
+					try {
+						var hn = parent.getHeaderViewsCount(), fn = parent.getFooterViewsCount(), c = parent.getCount();
+						if (pos < hn) {
+							if (o.onHeaderClick) o.onHeaderClick(pos);
+							return;
+						} else if (pos >= c - fn) {
+							if (o.onFooterClick) o.onFooterClick(pos - c + fn);
+							return;
+						}
+						pos -= hn;
+						var e = adpt.extend[pos], args = [e.data, pos, parent, view, adpt];
+						if (e.group) {
+							if (e.expanded) {
+								adpt.collapse(pos);
+								if (o.onGroupCollapse) o.onGroupCollapse.apply(o, args);
+							} else {
+								adpt.expand(pos);
+								if (o.onGroupExpand) o.onGroupExpand.apply(o, args);
+							}
+							if (o.onGroupClick) o.onGroupClick.apply(o, args);
+						} else {
+							if (o.onItemClick) o.onItemClick.apply(o, args);
+						}
+						if (o.onClick) o.onClick.apply(o, args);
+					} catch (e) { erp(e) }
 				}
-				pos -= hn;
-				var e = adpt.extend[pos], args = [e.data, pos, parent, view, adpt];
-				if (e.group) {
-					if (e.expanded) {
-						adpt.collapse(pos);
-						if (o.onGroupCollapse) o.onGroupCollapse.apply(o, args);
-					} else {
-						adpt.expand(pos);
-						if (o.onGroupExpand) o.onGroupExpand.apply(o, args);
-					}
-					if (o.onGroupClick) o.onGroupClick.apply(o, args);
-				} else {
-					if (o.onItemClick) o.onItemClick.apply(o, args);
-				}
-				if (o.onClick) o.onClick.apply(o, args);
-			} catch(e) {erp(e)}}}));
+			}));
 			if (o.onLongClick || o.onGroupLongClick || o.onItemLongClick || o.onHeaderLongClick || o.onFooterLongClick) {
-				lv.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({onItemLongClick : function(parent, view, pos, id) {try {
-					var hn = parent.getHeaderViewsCount(), fn = parent.getFooterViewsCount(), c = parent.getCount();
-					if (pos < hn) {
-						if (o.onHeaderLongClick) o.onHeaderLongClick(pos);
-						return true;
-					} else if (pos >= c - fn) {
-						if (o.onFooterLongClick) o.onFooterLongClick(pos - c + fn);
-						return true;
+				lv.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({
+					onItemLongClick: function (parent, view, pos, id) {
+						try {
+							var hn = parent.getHeaderViewsCount(), fn = parent.getFooterViewsCount(), c = parent.getCount();
+							if (pos < hn) {
+								if (o.onHeaderLongClick) o.onHeaderLongClick(pos);
+								return true;
+							} else if (pos >= c - fn) {
+								if (o.onFooterLongClick) o.onFooterLongClick(pos - c + fn);
+								return true;
+							}
+							pos -= hn;
+							var e = adpt.extend[pos], args = [e.data, pos, parent, view, adpt];
+							if (e.group) {
+								if (o.onGroupLongClick) o.onGroupLongClick.apply(o, args);
+							} else {
+								if (o.onItemLongClick) o.onItemLongClick.apply(o, args);
+							}
+							if (o.onLongClick) o.onLongClick.apply(o, args);
+							return true;
+						} catch (e) { return erp(e), true }
 					}
-					pos -= hn;
-					var e = adpt.extend[pos], args = [e.data, pos, parent, view, adpt];
-					if (e.group) {
-						if (o.onGroupLongClick) o.onGroupLongClick.apply(o, args);
-					} else {
-						if (o.onItemLongClick) o.onItemLongClick.apply(o, args);
-					}
-					if (o.onLongClick) o.onLongClick.apply(o, args);
-					return true;
-				} catch(e) {return erp(e), true}}}));
+				}));
 			}
 		},
-		collapse : function(pos, recursive) {
+		collapse: function (pos, recursive) {
 			var i, e = this.extend[pos], delpos = [];
 			if (!e.expanded) return;
 			collapseNode(this, delpos, e, recursive);
@@ -287,7 +307,7 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			makePointer(this);
 			this.notifyChange();
 		},
-		collapseAll : function() {
+		collapseAll: function () {
 			var i, a = this.root.extend, e, delpos = [];
 			for (i = 0; i < a.length; i++) {
 				e = a[i];
@@ -305,10 +325,10 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			makePointer(this);
 			this.notifyChange();
 		},
-		collapseTree : function(pos) {
+		collapseTree: function (pos) {
 			this.collapse(pos, true);
 		},
-		clearHolder : function() {
+		clearHolder: function () {
 			var i;
 			for (i in this.holders) {
 				this.holders[i].self.setTag("");
@@ -316,25 +336,25 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			this.holders.length = 0;
 			this.notifyChange();
 		},
-		extendAll : function() {
+		extendAll: function () {
 			extendNodeTree(this, this.root);
 		},
-		expand : function(pos, recursive) {
+		expand: function (pos, recursive) {
 			var e = this.extend[pos];
 			if (!e.group || e.expanded) return;
 			expandNode(this, [pos + 1], e, recursive ? 1 : 0);
 			makePointer(this);
 			this.notifyChange();
 		},
-		expandAll : function() {
+		expandAll: function () {
 			expandNode(this, [0], this.root, 1);
 			makePointer(this);
 			this.notifyChange();
 		},
-		expandTree : function(pos) {
+		expandTree: function (pos) {
 			this.expand(pos, true);
 		},
-		findNodePath : function(node) {
+		findNodePath: function (node) {
 			var r = [];
 			if (searchNode(this, node, this.root, r)) {
 				r.reverse();
@@ -342,43 +362,43 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			}
 			return null;
 		},
-		findNodePos : function(node) {
+		findNodePos: function (node) {
 			var i;
 			for (i in this.extend) {
 				if (extend[i].data == node) return i;
 			}
 			return -1;
 		},
-		getChildren : function(pos) {
+		getChildren: function (pos) {
 			return this.extend[pos].children;
 		},
-		getDepth : function(pos) {
+		getDepth: function (pos) {
 			return this.extend[pos].depth;
 		},
-		getGroupIndex : function(pos) {
+		getGroupIndex: function (pos) {
 			return this.extend[pos].index;
 		},
-		getHolder : function(view) {
+		getHolder: function (view) {
 			return this.holders[view.getTag()];
 		},
-		getVisibleChildren : function(pos, arr) {
+		getVisibleChildren: function (pos, arr) {
 			var i, e = this.extend[pos];
 			if (!arr) arr = [];
 			if (!e.extend) return arr;
 			for (i in e.extend) if (!isNaN(e.extend[i].pos)) arr.push(e.extend[i].pos);
 		},
-		getItem : function(pos) {
+		getItem: function (pos) {
 			return this.extend[pos].data;
 		},
-		getParent : function(pos) {
+		getParent: function (pos) {
 			return this.extend[pos].parent.pos;
 		},
-		getSiblings : function(pos, arr) {
+		getSiblings: function (pos, arr) {
 			var i, e = this.extend[pos].parent;
 			if (!arr) arr = [];
 			for (i in e.extend) arr.push(e.extend[i].pos);
 		},
-		getTree : function(pos, arr) {
+		getTree: function (pos, arr) {
 			var i, e = this.extend[pos];
 			if (!arr) arr = [];
 			arr.push(pos);
@@ -388,14 +408,14 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			}
 			return arr;
 		},
-		getPath : function(pos, arr) {
+		getPath: function (pos, arr) {
 			if (!arr) arr = [];
 			if (isNaN(pos)) return arr;
 			this.getPath(this.getParent(pos), arr);
 			arr.push(this.extend[pos].index);
 			return arr;
 		},
-		getPosition : function(path) {
+		getPosition: function (path) {
 			var s = this.root, i;
 			for (i = 0; i < path.length; i++) {
 				if (!s.extend) return NaN;
@@ -404,32 +424,32 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			}
 			return s.pos;
 		},
-		hasChildren : function(pos) {
+		hasChildren: function (pos) {
 			return this.isGroup(pos) && this.extend[pos].children.length > 0;
 		},
-		isCollapsed : function(pos) {
+		isCollapsed: function (pos) {
 			return !this.extend[pos].expanded;
 		},
-		isExpanded : function(pos) {
+		isExpanded: function (pos) {
 			return this.extend[pos].expanded;
 		},
-		isGroup : function(pos) {
+		isGroup: function (pos) {
 			return this.extend[pos].group;
 		},
-		isVisible : function(node) {
+		isVisible: function (node) {
 			return this.findNode(node) >= 0;
 		},
-		notifyChange : function() {
-			this.dso.forEach(function(e) {
+		notifyChange: function () {
+			this.dso.forEach(function (e) {
 				if (e) e.onChanged();
 			});
 		},
-		notifyInvalidate : function() {
-			this.dso.forEach(function(e) {
+		notifyInvalidate: function () {
+			this.dso.forEach(function (e) {
 				if (e) e.onInvalidated();
 			});
 		},
-		rebind : function(pos) {
+		rebind: function (pos) {
 			var i, e;
 			for (i in this.groupholders) {
 				if (this.groupholders[i].pos == pos) {
@@ -444,7 +464,7 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 				}
 			}
 		},
-		reveal : function(path) {
+		reveal: function (path) {
 			var s = this.root, i;
 			for (i = 0; i < path.length; i++) {
 				if (!s.extend) return NaN;
@@ -454,12 +474,12 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			}
 			return s.pos;
 		},
-		revealNode : function(node) {
+		revealNode: function (node) {
 			var a = this.findNodePath(node);
 			if (a) return this.reveal(a);
 			return NaN;
 		},
-		setArray : function(a) {
+		setArray: function (a) {
 			var i, u;
 			this.extend.length = 0;
 			this.root.data = this.root.children = a;
@@ -468,18 +488,18 @@ MapScript.loadModule("ExpandableListAdapter", (function() {
 			makePointer(this);
 			this.notifyChange();
 		},
-		update : function(pos) {
+		update: function (pos) {
 			Array.prototype.splice.apply(this.extend, updateNode(this, this.extend[pos], [pos + 1, getLastNodePos(this.extend[pos]) - pos], false, false));
 			makePointer(this);
 			this.notifyChange();
 		},
-		updateAll : function() {
+		updateAll: function () {
 			Array.prototype.splice.apply(this.extend, updateNode(this, this.root, [0, this.extend.length], true, false));
 			makePointer(this);
 			this.notifyChange();
 		}
 	}
-	r.control = function(adapter) {
+	r.control = function (adapter) {
 		var r = adapter.getItem(-1);
 		r.self = adapter;
 		return r;

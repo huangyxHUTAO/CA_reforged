@@ -7724,5 +7724,4 @@ MapScript.loadModule("CA", {
 	Library: Loader.fromFile("CA.Library.js"),
 	IntelliSense: Loader.fromFile("CA.IntelliSense.js"),
 	Assist: Loader.fromFile("CA.Assist.js"),
-	// jsonToAst: Loader.fromFile("jsonToAst.js")
 });
