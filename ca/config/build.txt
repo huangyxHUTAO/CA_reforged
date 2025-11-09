@@ -1,11 +1,12 @@
-@version 0.1.7
-@versionCode [0, 1, 7]
-@date 2025-09-05
+@version 0.1.8
+@versionCode [0, 1, 8]
+@date 2025-11-02
 @licenceUpdate 2025/8/14
 @description
 命令助手 - Reforged
-[0.1.7]
-- 获取光标位置（为JSON-Pro编辑器做准备）
-- 更正 拓展包 的错别字和兼容
-- `status` 类型增加 `subject` 字段用于自定义枚举
+[0.1.8]
+- 修复特定情况下CA.gen未定义的崩溃
+- 修复安卓16的holder创建复用问题
+- 加入JSON Schema拓展包为JSON 编辑器做准备
+- 修正拓展包数据
 @end description
