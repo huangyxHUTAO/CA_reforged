@@ -13678,7 +13678,7 @@
                             "prompt": "改变执行维度与坐标系"
                         },
                         {
-                            "type": "text",
+                            "type": "string",
                             "name": "维度",
                             "suggestion": "dimensions_netease"
                         },
