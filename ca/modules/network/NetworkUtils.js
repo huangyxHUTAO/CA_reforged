@@ -1,11 +1,11 @@
 MapScript.loadModule("NetworkUtils", {
-	queryPage : function(url) {
+	queryPage: function (url) {
 		return this.request(url, "GET");
 	},
-	postPage : function(url, data, headers) {
+	postPage: function (url, data, headers) {
 		return this.request(url, "POST", data, headers);
 	},
-	request : function(url, method, data, headers) {
+	request: function (url, method, data, headers) {
 		var url = new java.net.URL(url);
 		var conn = url.openConnection(), i;
 		conn.setConnectTimeout(5000);
@@ -37,10 +37,10 @@ MapScript.loadModule("NetworkUtils", {
 			while (ln = rd.readLine()) s.push(ln);
 			rd.close();
 			return s.join("\n");
-		} catch(e) {
+		} catch (e) {
 			try {
 				rd = conn.getErrorStream();
-			} catch(er) {
+			} catch (er) {
 				throw e;
 			}
 			err = this.RequestError.create(e);
@@ -56,7 +56,18 @@ MapScript.loadModule("NetworkUtils", {
 			throw err;
 		}
 	},
-	download : function(url, path) {
+	/**
+	 * 从指定 URL 下载资源并保存到本地文件。
+	 *
+	 * @function download
+	 * @param {string} url  - 要下载的远程资源地址（HTTP/HTTPS）。
+	 * @param {string} path - 下载后保存到本地的完整文件路径（含文件名）。
+	 * @throws {java.io.IOException} 网络异常、文件读写异常或 HTTP 错误时抛出。
+	 * @example
+	 * // 将远程图片保存到本地
+	 * download("https://example.com/logo.png", "/tmp/logo.png");
+	 */
+	download: function (url, path) {
 		const BUFFER_SIZE = 8192;
 		var url = new java.net.URL(url);
 		var conn = url.openConnection();
@@ -72,7 +83,7 @@ MapScript.loadModule("NetworkUtils", {
 		os.close();
 		is.close();
 	},
-	downloadGz : function(url, path, sha1) {
+	downloadGz: function (url, path, sha1) {
 		const BUFFER_SIZE = 8192;
 		var url = new java.net.URL(url);
 		var conn = url.openConnection();
@@ -90,7 +101,7 @@ MapScript.loadModule("NetworkUtils", {
 		is.close();
 		return android.util.Base64.encodeToString(digest.digest(), android.util.Base64.NO_WRAP) == sha1;
 	},
-	verifyFile : function(path, sha1) {
+	verifyFile: function (path, sha1) {
 		const BUFFER_SIZE = 8192;
 		var is, digest, buf, hr;
 		digest = java.security.MessageDigest.getInstance("SHA-1");
@@ -100,7 +111,7 @@ MapScript.loadModule("NetworkUtils", {
 		is.close();
 		return android.util.Base64.encodeToString(digest.digest(), android.util.Base64.NO_WRAP) == sha1;
 	},
-	toQueryString : function(obj) {
+	toQueryString: function (obj) {
 		var i, r = [];
 		for (i in obj) {
 			if (obj[i] == undefined) continue;
@@ -108,7 +119,7 @@ MapScript.loadModule("NetworkUtils", {
 		}
 		return r.join("&");
 	},
-	getIps : function() {
+	getIps: function () {
 		var ni = Common.iterableToArray(java.net.NetworkInterface.getNetworkInterfaces());
 		var i, e, ips = [];
 		for (i = 0; i < ni.length; i++) {
@@ -122,16 +133,16 @@ MapScript.loadModule("NetworkUtils", {
 		}
 		return ips;
 	},
-	RequestError : (function() {
+	RequestError: (function () {
 		var o = Object.create(Error.prototype);
-		o.toString = function() {
+		o.toString = function () {
 			return [
 				"RequestError: " + this.responseCode + " " + this.responseMessage,
 				this.errorMessage,
 				this.error
 			].join("\n");
 		}
-		o.create = function(err) {
+		o.create = function (err) {
 			var r = Object.create(this);
 			r.error = err;
 			r.message = err.message;
@@ -140,13 +151,13 @@ MapScript.loadModule("NetworkUtils", {
 		}
 		return o;
 	})(),
-	requestApi : function(method, url) {
+	requestApi: function (method, url) {
 		var regexp = /:(\w+)/g, argCount = arguments.length, argIndex = 2;
 		var params, foundParam, query, content, result;
 		if (regexp.test(url) && argIndex < argCount) {
 			foundParam = false;
 			params = arguments[argIndex];
-			url = url.replace(regexp, function(match, key) {
+			url = url.replace(regexp, function (match, key) {
 				if (key in params) {
 					foundParam = true;
 					return encodeURIComponent(params[key]);
@@ -177,13 +188,13 @@ MapScript.loadModule("NetworkUtils", {
 				content ? "application/json" : null
 			));
 			//Log.d(JSON.stringify(result, null, 4));
-		} catch(e) {
+		} catch (e) {
 			//Log.d(e);
 			throw NetworkUtils.parseError(e);
 		}
 		return result.result;
 	},
-	parseError : function(e) {
+	parseError: function (e) {
 		var json, message;
 		if (!e.errorMessage) return e;
 		if (e.responseCode == 500) {
@@ -193,7 +204,7 @@ MapScript.loadModule("NetworkUtils", {
 		}
 		try {
 			json = JSON.parse(e.errorMessage);
-		} catch(err) {/* Not a json */}
+		} catch (err) {/* Not a json */ }
 		if (!json) return e;
 		message = this.errorMessages[json.error];
 		if (!message) {
@@ -201,115 +212,123 @@ MapScript.loadModule("NetworkUtils", {
 		}
 		return message;
 	},
-	addErrorMessages : function(messages) {
+	addErrorMessages: function (messages) {
 		var i;
 		for (i in messages) {
 			this.errorMessages[i] = messages[i];
 		}
 	},
-	connectWSEvent : function(uri, listeners) {
+	connectWSEvent: function (uri, listeners) {
 		if (typeof ScriptInterface != "object") {
 			return null;
 		}
 		var wsInterface, wsClient = ScriptInterface.createWSClient(uri, {
-			onOpen : function(thisObj, handshake) {try {
-				wsInterface.available = true;
-				if (listeners.onOpen) listeners.onOpen(wsInterface);
-			} catch(e) {erp(e)}},
-			onClose : function(thisObj, code, reason, remote) {try {
-				wsInterface.available = false;
-				if (listeners.onClose) listeners.onClose(wsInterface, code, reason, remote);
-			} catch(e) {erp(e)}},
-			onMessage : function(thisObj, message) {try {
-				var json;
+			onOpen: function (thisObj, handshake) {
 				try {
-					json = JSON.parse(message);
-					if (typeof json != "object") throw null;
-				} catch(e) {
-					wsInterface.sendError("wsevent.invalidFormat");
-					wsClient.close();
-					return;
-				}
-				switch (json.type) {
-					case "event":
-					if (listeners.onEvent) listeners.onEvent(wsInterface, json.name, json.data);
-					break;
-					case "command":
-					if (listeners.onCommand) listeners.onCommand(wsInterface, json.requestId, json.name, json.data);
-					break;
-					case "command_response":
-					if (listeners.onCommandResponse) listeners.onCommandResponse(wsInterface, json.requestId, json.data);
-					break;
-					case "ping":
-					wsInterface.sendPong(json.time);
-					break;
-					case "pong":
-					if (listeners.onPingPong) listeners.onPingPong(wsInterface, (android.os.SystemClock.uptimeMillis() - time) / 1000);
-					break;
-					default:
-					wsInterface.sendError("wsevent.invalidType");
-				}
-			} catch(e) {erp(e)}},
-			onError : function(thisObj, err) {try {
-				if (listeners.onError) listeners.onError(wsInterface, err);
-			} catch(e) {erp(e)}}
+					wsInterface.available = true;
+					if (listeners.onOpen) listeners.onOpen(wsInterface);
+				} catch (e) { erp(e) }
+			},
+			onClose: function (thisObj, code, reason, remote) {
+				try {
+					wsInterface.available = false;
+					if (listeners.onClose) listeners.onClose(wsInterface, code, reason, remote);
+				} catch (e) { erp(e) }
+			},
+			onMessage: function (thisObj, message) {
+				try {
+					var json;
+					try {
+						json = JSON.parse(message);
+						if (typeof json != "object") throw null;
+					} catch (e) {
+						wsInterface.sendError("wsevent.invalidFormat");
+						wsClient.close();
+						return;
+					}
+					switch (json.type) {
+						case "event":
+							if (listeners.onEvent) listeners.onEvent(wsInterface, json.name, json.data);
+							break;
+						case "command":
+							if (listeners.onCommand) listeners.onCommand(wsInterface, json.requestId, json.name, json.data);
+							break;
+						case "command_response":
+							if (listeners.onCommandResponse) listeners.onCommandResponse(wsInterface, json.requestId, json.data);
+							break;
+						case "ping":
+							wsInterface.sendPong(json.time);
+							break;
+						case "pong":
+							if (listeners.onPingPong) listeners.onPingPong(wsInterface, (android.os.SystemClock.uptimeMillis() - time) / 1000);
+							break;
+						default:
+							wsInterface.sendError("wsevent.invalidType");
+					}
+				} catch (e) { erp(e) }
+			},
+			onError: function (thisObj, err) {
+				try {
+					if (listeners.onError) listeners.onError(wsInterface, err);
+				} catch (e) { erp(e) }
+			}
 		});
 		wsInterface = {
-			sendRaw : function() {
+			sendRaw: function () {
 				wsClient.send(JSON.stringify(json));
 			},
-			sendEvent : function(eventName, data) {
+			sendEvent: function (eventName, data) {
 				wsInterface.sendRaw({
-					type : "event",
-					name : eventName,
-					data : data
+					type: "event",
+					name: eventName,
+					data: data
 				});
 			},
-			sendCommand : function(requestId, commandName, data) {
+			sendCommand: function (requestId, commandName, data) {
 				wsInterface.sendRaw({
-					type : "command",
-					requestId : requestId,
-					name : commandName,
-					data : data
+					type: "command",
+					requestId: requestId,
+					name: commandName,
+					data: data
 				});
 			},
-			sendCommandResponse : function(requestId, data) {
+			sendCommandResponse: function (requestId, data) {
 				wsInterface.sendRaw({
-					type : "command_response",
-					requestId : requestId,
-					data : data
+					type: "command_response",
+					requestId: requestId,
+					data: data
 				});
 			},
-			sendError : function(error, data) {
+			sendError: function (error, data) {
 				wsInterface.sendRaw({
-					type : "error",
-					error : error,
-					data : data
+					type: "error",
+					error: error,
+					data: data
 				});
 			},
-			sendPing : function() {
+			sendPing: function () {
 				wsInterface.sendRaw({
-					type : "ping",
-					time : android.os.SystemClock.uptimeMillis()
+					type: "ping",
+					time: android.os.SystemClock.uptimeMillis()
 				});
 			},
-			sendPong : function(time) {
+			sendPong: function (time) {
 				wsInterface.sendRaw({
-					type : "pong",
-					time : time
+					type: "pong",
+					time: time
 				});
 			},
-			close : function() {
+			close: function () {
 				wsClient.close();
 			},
-			client : wsClient,
-			listeners : listeners,
-			available : false
+			client: wsClient,
+			listeners: listeners,
+			available: false
 		};
 		wsClient.connect();
 		return wsInterface;
 	},
-	onCreate : function() {
+	onCreate: function () {
 		Object.defineProperty(this, "errorMessages", {
 			enumerable: false,
 			configurable: false,
@@ -317,8 +336,8 @@ MapScript.loadModule("NetworkUtils", {
 			value: Object.create(null)
 		});
 	},
-	urlBase : {
-		api : "https://ca.projectxero.top",
-		ws : "wss://ca.projectxero.top"
+	urlBase: {
+		api: "https://ca.projectxero.top",
+		ws: "wss://ca.projectxero.top"
 	}
 });

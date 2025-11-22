@@ -935,7 +935,7 @@
 						recommend_enums = this.getSelectorParamCompletions(input, ps, this.library.selectors, "=");
 					} else if (filteredPathArr.length == 2) {
 						if (filteredPathArr[filteredPathArr.length - 2] && this.library.selectors[filteredPathArr[filteredPathArr.length - 2]]) {
-							let selectors = this.library.selectors[filteredPathArr[filteredPathArr.length - 2]];
+							var selectors = this.library.selectors[filteredPathArr[filteredPathArr.length - 2]];
 							if (selectors["fields"]) {
 								recommend_enums = this.getSelectorParamCompletions(input, ps, selectors["fields"], "=");
 							}
@@ -967,7 +967,7 @@
 
 					}
 					let suggestion = undefined
-					let selectors = getFieldByPath(this.library.selectors, pathArr.slice(0, -1))
+					var selectors = getFieldByPath(this.library.selectors, pathArr.slice(0, -1))
 					if (selectors) {
 						// 控制反选
 						if (input.length == 0) {

@@ -1,5 +1,5 @@
 MapScript.loadModule("DebugUtils", {
-	showDebugDialog : function self(interface) {G.ui(function() {try {
+	showDebugDialog : function self(iface) {G.ui(function() {try {
 		var lastInterface;
 		if (!self.main) {
 			self.LINE_LIMIT = 200;
@@ -247,7 +247,7 @@ MapScript.loadModule("DebugUtils", {
 			PWM.registerResetFlag(self, "main");
 		}
 		lastInterface = self.interface;
-		self.interface = interface || self.defaultInterface;
+		self.interface = iface || self.defaultInterface;
 		self.interface.setPrinter(self.print.bind(self));
 		if (self.interface != lastInterface) {
 			self.cls();

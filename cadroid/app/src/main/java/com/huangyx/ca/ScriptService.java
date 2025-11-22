@@ -27,8 +27,10 @@ public class ScriptService extends Service {
     @Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
         if (sInstance != null) {
+            // 已有实例在运行
             return super.onStartCommand(intent, flags, startId);
         }
+        // 设置当前实例
         sInstance = new WeakReference<>(this);
         if (intent == null) {
             stopSelf();
@@ -52,7 +54,7 @@ public class ScriptService extends Service {
             stopSelf();
         } else {
             mManager.setCacheDir(getCacheDir().getPath());
-            checkHotfix();
+            checkHotfix(); // 检查并应用“快速更新”
             if (ACTION_PREPARE.equals(intent.getAction())) {
                 mManager.prepareScript(this, sourceName, false);
             } else if (ACTION_RUN.equals(intent.getAction())) {
@@ -75,6 +77,7 @@ public class ScriptService extends Service {
 		return null;
 	}
 
+    // 获取“快速更新”的js文件并直接使用
     private void checkHotfix() {
         File base = getDir("rhino", MODE_PRIVATE);
         File core = new File(base, "core.js");
