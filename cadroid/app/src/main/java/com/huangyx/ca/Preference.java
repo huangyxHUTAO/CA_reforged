@@ -14,6 +14,7 @@ public class Preference {
     public static final String SETTING_FIRST_RUN = "firstRun";
     public static final String SETTING_USER_ID = "userID";
     public static final String PREFERENCE_NAME = "user_settings";
+    public static final String SETTING_LAST_APK_VERSION_CODE = "lastApkVersionCode";
 
     private static Preference sInstance = null;
 
@@ -78,5 +79,13 @@ public class Preference {
             mPreferences.edit().putString(SETTING_USER_ID, uuid).apply();
         }
         return uuid;
+    }
+
+    public int getLastApkVersionCode() {
+        return mPreferences.getInt(SETTING_LAST_APK_VERSION_CODE, -1); // 默认值为 -1 表示未存储
+    }
+
+    public void setLastApkVersionCode(int versionCode) {
+        mPreferences.edit().putInt(SETTING_LAST_APK_VERSION_CODE, versionCode).apply();
     }
 }

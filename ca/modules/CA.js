@@ -27,6 +27,15 @@ MapScript.loadModule("CA", {
 	tips: [],
 	initialize: function () {
 		try {
+			// JS侧也需要做个版本检测，只进行删除，但是Java侧会删除然后启动，js只能在下一次启动时生效
+			const curr = ScriptInterface.getVersionCode();
+			if (CA.settings.lastApkVc !== curr) {
+				// 删除快速更新文件
+				new java.io.File(MapScript.baseDir + "core.js").delete();
+				new java.io.File(MapScript.baseDir + "core.sign").delete();
+				CA.settings.lastApkVc = curr;
+				CA.trySave();
+			}
 
 			if (!CA.settings.LogServer) {
 				CA.settings.LogServer = {
