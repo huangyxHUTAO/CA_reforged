@@ -561,7 +561,8 @@
 				"@p" : "选择距离最近的玩家",
 				"@r" : "选择随机玩家",
 				"@e" : "选择所有实体",
-				"@s" : "选择命令执行者"
+				"@s" : "选择命令执行者",
+				'@n' : "选择最近的实体"
 			}
 			self.editLabel = function(e, callback) {
 				var a = Object.keys(self.selectors), t = e.param.target;

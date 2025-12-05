@@ -918,6 +918,7 @@
 				recommend["@r - 选择随机玩家"] = "@r";
 				recommend["@e - 选择所有实体"] = "@e";
 				recommend["@s - 选择命令执行者"] = "@s";
+				recommend["@n - 选择最近的实体"] = "@n";
 			}
 
 			// 选择器补全部分（终于进入主题来了）
@@ -1659,15 +1660,7 @@
 			result.debug = selectorCompleteResult.debugInfo;
 			return result;
 		},
-
-		/**
-		 * 为选择器参数生成补全建议列表。
-		 *
-		 * @param {string} input - 用户输入，用于过滤补全项。如果提供，则只包含 displayText 包含该输入的补全项。
-		 * @param {string} base - 每个补全建议前缀的基础字符串。
-		 * @param {Object.<string, {name: string} | string>} selectors - 选择器对象，key 为参数名，value 为包含 name 属性的对象或字符串。
-		 * @returns {Object.<string, string>} 返回一个对象，key 为显示文本（格式为 "key - selectorName"），value 为对应的补全字符串。
-		 */
+		
 		/**
 		 * 为选择器参数生成补全建议列表。
 		 *
