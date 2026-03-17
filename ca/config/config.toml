@@ -1,0 +1,89 @@
+# CA Build Tools 配置文件
+# 此文件会被 Git 追踪，不要在此存放敏感信息（密码等）
+# 敏感信息请放在 sign.local.toml 中
+
+# ==================== Shell 配置 ====================
+[shell]
+# cadroid 项目的路径
+path = "../cadroid"
+
+# ==================== 工具路径 ====================
+[tools]
+
+[tools.jarsigner]
+# JDK 中 jarsigner.exe 的路径
+# 没有安装 JDK 则可使用 (Android Studio 安装目录)\jre\bin\jarsigner.exe
+path = "D:\\Program Files\\Java\\jdk-11\\bin\\jarsigner.exe"
+
+[tools.apksigner]
+# Android Build Tools 中 apksigner.bat 的路径，用于 V2+V3 签名
+path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\36.0.0\\apksigner.bat"
+
+[tools.zipalign]
+# Build Tools 中 zipalign.exe 的路径
+path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\30.0.3\\zipalign.exe"
+
+# ==================== 构建配置 ====================
+[build]
+# 版本号
+version = "0.1.8"
+
+# 版本号数组
+versionCode = [0, 1, 8]
+
+# 发布日期
+date = "2025-11-02"
+
+# 许可证更新日期
+licenceUpdate = "2025/8/14"
+
+# 更新说明（多行文本）
+description = """命令助手 - Reforged
+[0.1.8]
+- 修复特定情况下CA.gen未定义的崩溃
+- 修复安卓16的holder创建复用问题
+- 加入JSON Schema拓展包为JSON 编辑器做准备
+- 修正拓展包数据"""
+
+# Gradle Build 时生成的 classes.dex 文件路径，相对于 shell.path
+dex_path = ".\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex"
+
+# ==================== 签名配置 ====================
+[sign]
+# 签名文件路径，相对于 shell.path
+keystore = ".\\app\\signatures\\release.keystore"
+
+# 密钥别名
+key_alias = "huangyxalias"
+
+# 正式版安装包签名公钥文件路径，相对于 shell.path
+release_pubkey = ".\\app\\signatures\\release.signature"
+
+# 调试用安装包签名公钥文件路径，相对于 shell.path
+debug_pubkey = ".\\app\\signatures\\debug.signature"
+
+# 热更新签名用私钥文件路径，相对于 shell.path
+hotfix_private_key = ".\\app\\signatures\\privateKey.pem"
+
+# 注意：密码配置在 sign.local.toml 中，该文件不会被 Git 追踪
+
+# ==================== 发布配置 ====================
+[publish]
+# 发布方式：local (本地文件) 或 sftp (远程服务器)
+method = "local"
+
+# 如果使用本地发布，需要 dest_path 字段
+# 如果使用 SFTP 发布，需要 remote_root 和 ssh_config 字段
+dest_path = ""
+
+# SFTP 配置（当 method = "sftp" 时使用）
+# remote_root = "远程主机的发布目录"
+# ssh_config = { host = "example.com", port = 22, username = "user", privateKey = "..." }
+
+# ==================== 更新配置 ====================
+[update]
+# 可用的下载地址列表
+downloadSource = []
+
+# 更新源站点目录，以/结尾
+remoteRoot = ""
