@@ -5,6 +5,7 @@
 /ca/update.json
 /ca/sign_apk.ps1
 /ca/node_modules/
+/ca/config/*.local.toml
 
 # ./cabuildtools 目录
 /cabuildtools/node_modules/
