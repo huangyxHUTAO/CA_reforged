@@ -32,10 +32,10 @@ MapScript.loadModule("SimpleListAdapter", (function () {
 						convert.setTag(newIndex.toString());
 						holders.push(holder);
 
-						CA.sendLog.log("创建新holder: index=" + newIndex);
+						// CA.sendLog.log("创建新holder: index=" + newIndex);
 					} else {
 						holder = holders[index];
-						CA.sendLog.log("复用holder: index=" + index);
+						// CA.sendLog.log("复用holder: index=" + index);
 					}
 
 					holder.pos = parseInt(pos);
