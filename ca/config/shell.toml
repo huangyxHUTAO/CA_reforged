@@ -17,7 +17,11 @@ android_jar_path = "D:\\APPdata\\huangyx\\Local\\Android\\Sdk\\platforms\\androi
 path = "D:\\Program Files\\Java\\jdk-11\\bin\\jarsigner.exe"
 
 [shell.tools.apksigner]
-path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\36.0.0\\apksigner.bat"
+# apksigner.jar 路径（在 build-tools 目录下的 lib 文件夹中）
+# 使用 jar 文件直接调用，避免 Windows .bat 脚本问题
+jar_path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\36.0.0\\lib\\apksigner.jar"
+# Java 可执行文件路径
+java_path = "D:\\Program Files\\Java\\jdk-11\\bin\\java.exe"
 
 [shell.tools.zipalign]
 path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\30.0.3\\zipalign.exe"
