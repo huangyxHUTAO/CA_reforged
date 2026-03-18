@@ -1,0 +1,8 @@
+# 更新配置
+
+[update]
+# 可用的下载地址列表
+download_source = []
+
+# 更新源站点目录，以 / 结尾
+remote_root = ""

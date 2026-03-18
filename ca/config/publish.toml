@@ -1,0 +1,15 @@
+# 发布配置
+
+[publish]
+# 发布方式：local (本地文件) 或 sftp (远程服务器)
+method = "local"
+
+# 本地发布目录
+dest_path = ""
+
+# 远程发布根目录（SFTP 时使用）
+remote_root = ""
+
+# SSH 配置（SFTP 时使用）
+# 格式: { host = "example.com", port = 22, username = "user", privateKey = "..." }
+ssh_config = {}

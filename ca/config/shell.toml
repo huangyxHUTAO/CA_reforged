@@ -1,0 +1,23 @@
+# Android 构建环境配置
+# Shell 路径、工具路径、构建产物路径等
+
+[shell]
+# cadroid 项目的路径
+path = "../cadroid"
+
+# Gradle Build 时生成的 classes.dex 文件路径，相对于 shell.path
+dex_path = ".\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex"
+
+# android.jar 的路径，用于导入类
+android_jar_path = "D:\\APPdata\\huangyx\\Local\\Android\\Sdk\\platforms\\android-36\\android.jar"
+
+[shell.tools]
+
+[shell.tools.jarsigner]
+path = "D:\\Program Files\\Java\\jdk-11\\bin\\jarsigner.exe"
+
+[shell.tools.apksigner]
+path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\36.0.0\\apksigner.bat"
+
+[shell.tools.zipalign]
+path = "C:\\Users\\33532\\AppData\\Local\\Android\\Sdk\\build-tools\\30.0.3\\zipalign.exe"
