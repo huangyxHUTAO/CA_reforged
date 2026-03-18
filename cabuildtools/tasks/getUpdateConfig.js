@@ -1,19 +1,18 @@
 const fs = require("fs");
 const path = require("path");
-const readConfig = require("../readconfig");
+const readAllConfigs = require("../readconfig");
 
 module.exports = function(context, args) {
-    // 优先尝试读取 TOML 格式配置
-    const tomlPath = path.resolve("./config/config.toml");
+    // 读取所有配置
+    const configDir = path.resolve("./config");
+    const allConfig = readAllConfigs(configDir);
     
-    if (fs.existsSync(tomlPath)) {
-        const config = readConfig(tomlPath);
-        // TOML 格式中 update 节包含更新配置
-        context.updateConfig = config.update || {};
-    } else {
-        // 回退到旧格式
-        const readLegacyConfig = require("../readconfig").readLegacyConfig;
-        const content = fs.readFileSync("./config/update.txt", "utf-8");
-        context.updateConfig = readLegacyConfig(content);
-    }
+    // 获取 update 配置
+    const update = allConfig.update || {};
+    
+    // 保持向后兼容的 updateConfig 结构
+    context.updateConfig = {
+        downloadSource: update.download_source || [],
+        remoteRoot: update.remote_root || ""
+    };
 };

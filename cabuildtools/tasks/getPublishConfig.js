@@ -7,8 +7,6 @@ module.exports = function(context, args) {
     const configDir = path.resolve("./config");
     const allConfig = readAllConfigs(configDir);
     
-    // 获取 build 配置
-    context.buildConfig = allConfig.build || {};
-    context.buildConfig.variants = args;
-    context.buildConfig.publishTime = Date.now();
+    // 获取 publish 配置
+    context.publishConfig = allConfig.publish || {};
 };
