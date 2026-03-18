@@ -1,5 +1,44 @@
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
+
+/**
+ * 检查是否需要使用 shell 执行
+ * Windows 下 .bat/.cmd 文件需要 shell 解释执行
+ * @param {string} cmd - 命令路径
+ * @returns {boolean}
+ */
+function needShell(cmd) {
+    if (os.platform() !== 'win32') return false;
+    const ext = path.extname(cmd).toLowerCase();
+    return ext === '.bat' || ext === '.cmd';
+}
+
+/**
+ * 构建命令参数
+ * 如果需要 shell，返回合并后的命令字符串
+ * @param {string} cmd - 命令
+ * @param {string[]} args - 参数数组
+ * @returns {Object} { command, args, shell }
+ */
+function buildCommand(cmd, args) {
+    if (needShell(cmd)) {
+        // Windows .bat/.cmd 需要 shell 执行
+        const quotedArgs = args.map(arg => {
+            // 对包含空格的参数加引号
+            if (arg.includes(' ') && !arg.startsWith('"')) {
+                return `"${arg}"`;
+            }
+            return arg;
+        });
+        return {
+            command: "cmd",
+            args: ["/c", `"${cmd}" ${quotedArgs.join(" ")}`],
+            shell: true
+        };
+    }
+    return { command: cmd, args: args, shell: false };
+}
 
 module.exports = function(context, args) {
     var shellConfig = context.shellConfig;
@@ -29,7 +68,7 @@ module.exports = function(context, args) {
     }
     
     // 步骤1: V1 签名 (jarsigner)
-    // 使用 shell: false 让 Node.js 自动处理参数转义，支持跨平台
+    // jarsigner 是原生可执行文件，不需要 shell
     function signV1() {
         console.log("[Sign] Starting V1 signing with jarsigner...");
         return context.execute("execProcess", {
@@ -51,40 +90,43 @@ module.exports = function(context, args) {
     }
     
     // 步骤2: V2 + V3 签名 (apksigner)
+    // apksigner 在 Windows 下是 .bat 文件，需要 shell
     function signV2V3() {
         console.log("[Sign] Starting V2+V3 signing with apksigner...");
+        var cmd = buildCommand(apksignerPath, [
+            "sign",
+            "--ks", keystorePath,
+            "--ks-key-alias", keyAlias,
+            "--ks-pass", "pass:" + storePassword,
+            "--key-pass", "pass:" + keyPassword,
+            "--v2-signing-enabled", "true",
+            "--v3-signing-enabled", "true",
+            "--out", finalPath,
+            v1SignedPath
+        ]);
         return context.execute("execProcess", {
-            command: apksignerPath,
-            args: [
-                "sign",
-                "--ks", keystorePath,
-                "--ks-key-alias", keyAlias,
-                "--ks-pass", "pass:" + storePassword,
-                "--key-pass", "pass:" + keyPassword,
-                "--v2-signing-enabled", "true",
-                "--v3-signing-enabled", "true",
-                "--out", finalPath,
-                v1SignedPath
-            ],
+            command: cmd.command,
+            args: cmd.args,
             cwd: shellPath,
             stdio: "inherit",
-            shell: false
+            shell: cmd.shell
         });
     }
     
     // 步骤3: 验证签名
     function verifySign() {
         console.log("[Sign] Verifying APK signature...");
+        var cmd = buildCommand(apksignerPath, [
+            "verify",
+            "--verbose",
+            finalPath
+        ]);
         return context.execute("execProcess", {
-            command: apksignerPath,
-            args: [
-                "verify",
-                "--verbose",
-                finalPath
-            ],
+            command: cmd.command,
+            args: cmd.args,
             cwd: shellPath,
             stdio: "inherit",
-            shell: false
+            shell: cmd.shell
         });
     }
     
