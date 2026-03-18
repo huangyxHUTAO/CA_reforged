@@ -7231,6 +7231,7 @@ MapScript.loadModule("CA", {
 		G.ui(function () {
 			try {
 				var frame, list, popup, l;
+				if (!actions) return Common.toast("动作列表为空");
 				if (!self.vmaker) {
 					self.vmaker = function (holder) {
 						var view = new G.LinearLayout(ctx);
