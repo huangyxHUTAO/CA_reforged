@@ -384,6 +384,9 @@ function processLoaderComments(source, filePath, parentDef) {
     // 用于在 replace 回调中传递修改后的 source
     let modifiedSource = source;
     
+    // 用于标记是否为测试专用文件
+    let isTestOnly = false;
+    
     const sandbox = {
         source: source,
         replacement: "",
@@ -394,7 +397,10 @@ function processLoaderComments(source, filePath, parentDef) {
         isDefined: function(key) { return false; },
         getDef: function(key) { return undefined; },
         load: function(p) { return load(path.resolve(path.dirname(filePath), p), {}); },
-        require: function(m) { return require(m); }
+        require: function(m) { return require(m); },
+        TestOnly: function() {  // 标记文件为测试专用
+            isTestOnly = true;
+        }
     };
     
     // 处理 LOADER 注释
@@ -415,6 +421,11 @@ function processLoaderComments(source, filePath, parentDef) {
     
     // 使用可能被修改后的 source
     source = modifiedSource;
+    
+    // 如果是测试专用文件，返回空内容（旧版 loader 行为）
+    if (isTestOnly) {
+        return "";
+    }
     
     if (sandbox.postprocessor) {
         source = sandbox.postprocessor(source);
