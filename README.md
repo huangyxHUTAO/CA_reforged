@@ -82,20 +82,32 @@ cd ./ca
 
 ---
 
-### 4️⃣ 生成 Debug 版本的 JS 资源
+### 4️⃣ 编译 Debug 安装包 (APK)
 
+> Debug 版本包含调试信息，不进行代码混淆，适合开发和测试
+
+```bash
+cabuild shellBuildDebug
+```
+
+执行完成后，产物位于：
+
+```
+ca/build/outputs/debugApk/
+└── app-debug.apk
+```
+
+---
+
+### 4.1 仅生成 JS 资源 (不打包 APK)
+
+如果你只想编译 JS 资源（用于 Android Studio 调试或热更新）：
 
 ```bash
 cabuild shellPrepareDebug
 ```
 
-执行完成后，可在以下目录查看产物：
-
-```
-ca/build/debug/
-├── 命令助手(xxxxx).lib
-└── ...其他资源
-```
+JS 文件将输出到 `cadroid/app/src/main/assets/script.js`
 
 ---
 
