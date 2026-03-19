@@ -6,6 +6,13 @@
 	initLibrary: function (callback) {
 		var info, flag = true, t, t2, lib;
 		if (this.loadingStatus) return false;
+		// 确保设置存在（兼容全新安装）
+		if (!CA.settings.enabledLibrarys) {
+			CA.settings.enabledLibrarys = this.recommended || ["default"];
+		}
+		if (!CA.settings.coreLibrarys) {
+			CA.settings.coreLibrarys = [];
+		}
 		this.loadingStatus = "core";
 		var startTime = Date.now();
 		CA.IntelliSense.library = lib = {
@@ -1008,5 +1015,7 @@
 	},
 	versionToString: function (v) {
 		return Array.isArray(v) ? v.join(".") : String(v);
-	}
+	},
+	recommended: ["default"],
+	defaultDisabled: []
 })
