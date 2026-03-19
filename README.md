@@ -82,6 +82,44 @@ cd ./ca
 
 ---
 
+#### 3.1 配置构建环境（首次使用）
+
+在 `ca/config/` 目录下创建 `shell.txt` 和 `sign.txt` 配置文件：
+
+**shell.txt** - Android 构建配置：
+```
+shell {
+    # Android 项目路径（cadroid 目录的绝对路径）
+    path = "F:/CA-Project/cadroid"
+    
+    # Android SDK 工具路径
+    tools {
+        jarsigner {
+            path = "C:/Program Files/Android/Android Studio/jbr/bin/jarsigner.exe"
+        }
+        zipalign {
+            path = "C:/Users/xxx/AppData/Local/Android/Sdk/build-tools/33.0.0/zipalign.exe"
+        }
+    }
+    
+    # Android SDK 路径
+    android_jar_path = "C:/Users/xxx/AppData/Local/Android/Sdk/platforms/android-32/android.jar"
+}
+```
+
+**sign.txt** - 签名配置（Release 构建需要）：
+```
+sign {
+    # 密钥库路径
+    keystore = "F:/CA-Project/keystore.jks"
+    key_alias = "ca"
+    store_password = "your_password"
+    key_password = "your_password"
+}
+```
+
+---
+
 ### 4️⃣ 编译 Debug 安装包 (APK)
 
 > Debug 版本包含调试信息，不进行代码混淆，适合开发和测试
