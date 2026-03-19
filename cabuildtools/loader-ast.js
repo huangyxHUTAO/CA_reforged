@@ -13,6 +13,14 @@ const vfs = {
     contexts: new Map()    // 路径 -> 文件上下文
 };
 
+// 日志配置
+let verbose = false;
+function log(message) {
+    if (verbose) {
+        console.log(`[Loader] ${message}`);
+    }
+}
+
 // 获取当前文件路径（用于相对路径解析）
 function getCurrentPath() {
     return vfs.stack.length > 0 ? vfs.stack[vfs.stack.length - 1] : null;
@@ -134,9 +142,11 @@ function loadFileAsAST(filePath, parentDef) {
     
     // 检查缓存（注意：缓存不考虑 parentDef，因为文件内容应该相同）
     if (vfs.cache.has(realPath)) {
+        log(`[缓存] ${path.basename(realPath)}`);
         return vfs.cache.get(realPath);
     }
     
+    log(`[处理] ${realPath}`);
     enterFile(realPath);
     
     // 保存并设置当前的 parentDef
@@ -440,6 +450,7 @@ function resetVFS() {
     vfs.stack = [];
     vfs.contexts.clear();
     loaderUsages.length = 0;
+    verbose = false;  // 重置日志级别
 }
 
 // 获取构建统计信息
@@ -464,9 +475,15 @@ function printDependencyGraph() {
 
 // 主入口（保持 API 兼容）
 module.exports = {
-    load: function(sourcePath, parentDef, charset) {
+    load: function(sourcePath, parentDef, charset, options) {
         // 重置 VFS 确保干净状态
         resetVFS();
+        
+        // 解析选项
+        if (options && options.verbose) {
+            verbose = true;
+            log(`开始编译: ${sourcePath}`);
+        }
         
         // 设置初始 parentDef
         currentParentDef = parentDef;
@@ -497,6 +514,10 @@ module.exports = {
             sourceMaps: true,
             sourceFileName: path.basename(sourcePath)
         });
+        
+        if (verbose) {
+            log(`编译完成: ${vfs.cache.size} 个文件, 输出 ${output.code.length} 字节`);
+        }
         
         return output.code;
     },
