@@ -302,6 +302,7 @@
 						//重复
 					}
 				}
+				if (parsedParams.length > 0) CA.sendLog.log("parsedParams "+ JSON.stringify(parsedParams));
 			}
 			//如果未找到正确用法
 			if (f) {
@@ -660,6 +661,13 @@
 						recommend: {},
 						input: []
 					}
+					// 方块状态必须以 [开头，且不应该跨越空格
+					// 如果输入不以 [开头，说明没有方块状态
+					if (!ps.startsWith('[')) {
+						r.length = 0;
+						r.canFinish = true;
+						break;
+					}
 					if (ps.length == 0) {
 						recommend["[...] - 插入状态"] = ps + "[";
 					} else if (ps.length > 0) {
@@ -672,7 +680,7 @@
 						let context = parsedParams[parsedParams.length - 1];
 						let input = selResult.currentInput || "";
 						let schema = this.getSchemaByContext(context, cp.subject);
-
+						CA.sendLog.log(JSON.stringify(parsedParams));
 						if (!schema) {
 							schema = {}; // 最差的结果就是没法补全
 							r.description = "无法找到该命令的状态参数信息";
