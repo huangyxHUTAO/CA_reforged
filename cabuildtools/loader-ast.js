@@ -13,8 +13,8 @@ const vfs = {
     contexts: new Map()    // 路径 -> 文件上下文
 };
 
-// 日志配置
-let verbose = false;
+// 日志配置（默认开启）
+let verbose = true;
 function log(message) {
     if (verbose) {
         console.log(`[Loader] ${message}`);
@@ -450,7 +450,7 @@ function resetVFS() {
     vfs.stack = [];
     vfs.contexts.clear();
     loaderUsages.length = 0;
-    verbose = false;  // 重置日志级别
+    verbose = true;  // 重置为默认日志级别
 }
 
 // 获取构建统计信息
@@ -479,11 +479,11 @@ module.exports = {
         // 重置 VFS 确保干净状态
         resetVFS();
         
-        // 解析选项
-        if (options && options.verbose) {
-            verbose = true;
-            log(`开始编译: ${sourcePath}`);
+        // 解析选项（可以通过 options.verbose = false 关闭日志）
+        if (options && options.verbose === false) {
+            verbose = false;
         }
+        log(`开始编译: ${sourcePath}`);
         
         // 设置初始 parentDef
         currentParentDef = parentDef;
