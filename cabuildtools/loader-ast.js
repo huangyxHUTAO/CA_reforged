@@ -358,15 +358,19 @@ function load(sourcePath, parentDef, charset = "utf-8") {
 }
 
 // 兼容性：处理 /*LOADER ... */ 注释（保持与旧版兼容）
-function processLoaderComments(source, filePath) {
+// parentDef 包含 buildConfig 等变量
+function processLoaderComments(source, filePath, parentDef) {
     const vm = require("vm");
     const sandboxSource = source;
-    let sourceUpdated = false;
+    
+    // 构建变量对象，与旧版 loader 兼容
+    const variables = parentDef || {};
     
     const sandbox = {
         source: sandboxSource,
         replacement: "",
         postprocessor: null,
+        variables: variables,  // 注入 variables，供 BuildConfig.js 等使用
         define: function(key, value) {},
         undefine: function(key) {},
         isDefined: function(key) { return false; },
@@ -378,8 +382,13 @@ function processLoaderComments(source, filePath) {
     // 处理 LOADER 注释
     source = source.replace(/\/\*LOADER\s([\s\S]+?)\*\//g, function(match, code, offset) {
         sandbox.replacement = "";
+        sandbox.source = source;  // 更新当前 source
         try {
             vm.runInNewContext(code, sandbox, { filename: filePath });
+            // 如果代码修改了 sandbox.source，使用新值
+            if (sandbox.source !== source) {
+                source = sandbox.source;
+            }
         } catch (e) {
             console.warn(`LOADER comment error in ${filePath}:`, e.message);
         }
@@ -429,7 +438,7 @@ module.exports = {
         
         // 先处理 LOADER 注释（保持兼容）
         let source = fs.readFileSync(sourcePath, charset || "utf-8");
-        source = processLoaderComments(source, sourcePath);
+        source = processLoaderComments(source, sourcePath, parentDef);
         
         // 解析处理后的 source
         const ast = parser.parse(source, {
