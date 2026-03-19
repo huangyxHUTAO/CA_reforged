@@ -257,7 +257,21 @@ function processAST(ast, currentFile) {
                 
                 // 替换策略
                 const replacement = createReplacement(childProgram, fullPath);
-                nodePath.replaceWith(replacement);
+                
+                // replacement 可能是单个节点或数组
+                if (Array.isArray(replacement)) {
+                    if (replacement.length === 1) {
+                        nodePath.replaceWith(replacement[0]);
+                    } else if (replacement.length > 1) {
+                        // 多个语句，替换为块语句
+                        nodePath.replaceWith(t.blockStatement(replacement));
+                    } else {
+                        // 空数组，删除节点
+                        nodePath.remove();
+                    }
+                } else {
+                    nodePath.replaceWith(replacement);
+                }
                 
             } catch (e) {
                 console.error(`[ERROR] Loading "${loadPath}" from "${currentFile}":`, e.message);
@@ -270,22 +284,24 @@ function processAST(ast, currentFile) {
 }
 
 // 创建替换节点
+// 注意：这个函数现在返回语句数组，而不是单个表达式
+// 因为我们需要支持 var 声明等语句直接内联
 function createReplacement(childProgram, filePath) {
     const body = childProgram.body;
     
     // 空文件
     if (body.length === 0) {
-        return t.objectExpression([]);
+        return [t.expressionStatement(t.objectExpression([]))];
     }
     
     // 单个表达式语句，直接取值
     if (body.length === 1 && t.isExpressionStatement(body[0])) {
-        return body[0].expression;
+        return [body[0]];
     }
     
-    // 单个对象表达式
+    // 单个对象表达式（作为表达式语句）
     if (body.length === 1 && t.isObjectExpression(body[0])) {
-        return body[0];
+        return [t.expressionStatement(body[0])];
     }
     
     // 处理 CommonJS 风格：查找 exports.xxx = ...
@@ -322,25 +338,18 @@ function createReplacement(childProgram, filePath) {
                 ...otherStmts,
                 t.returnStatement(t.objectExpression(exportsProps))
             ];
-            return t.callExpression(
+            return [t.expressionStatement(t.callExpression(
                 t.functionExpression(null, [], t.blockStatement(iifeBody)),
                 []
-            );
+            ))];
         } else {
             // 只有 exports，直接返回对象
-            return t.objectExpression(exportsProps);
+            return [t.expressionStatement(t.objectExpression(exportsProps))];
         }
     }
     
-    // 默认：包装为 IIFE
-    return t.callExpression(
-        t.functionExpression(
-            null,
-            [],
-            t.blockStatement(body)
-        ),
-        []
-    );
+    // 默认：直接返回所有语句（不再包装为 IIFE，保持变量在正确作用域）
+    return body;
 }
 
 // 主加载函数
