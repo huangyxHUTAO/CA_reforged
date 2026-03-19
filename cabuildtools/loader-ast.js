@@ -125,16 +125,23 @@ function isLoaderAssignment(node) {
 
 // 加载文件并解析为 AST
 // 对于 JSON 文件，返回特殊的 AST 表示
-function loadFileAsAST(filePath) {
+// 当前处理的 parentDef，用于递归传递
+let currentParentDef = null;
+
+function loadFileAsAST(filePath, parentDef) {
     const realPath = fs.realpathSync(filePath);
     const ext = path.extname(realPath).toLowerCase();
     
-    // 检查缓存
+    // 检查缓存（注意：缓存不考虑 parentDef，因为文件内容应该相同）
     if (vfs.cache.has(realPath)) {
         return vfs.cache.get(realPath);
     }
     
     enterFile(realPath);
+    
+    // 保存并设置当前的 parentDef
+    const prevParentDef = currentParentDef;
+    currentParentDef = parentDef;
     
     try {
         const source = fs.readFileSync(realPath, "utf-8");
@@ -163,8 +170,9 @@ function loadFileAsAST(filePath) {
                 t.expressionStatement(jsonExpr)
             ]));
         } else {
-            // JS 文件：正常解析
-            ast = parser.parse(source, {
+            // JS 文件：先处理 LOADER 注释，再解析
+            let processedSource = processLoaderComments(source, realPath, currentParentDef);
+            ast = parser.parse(processedSource, {
                 sourceType: "script",
                 allowReturnOutsideFunction: true
             });
@@ -191,6 +199,8 @@ function loadFileAsAST(filePath) {
         throw e;
     } finally {
         exitFile();
+        // 恢复 parentDef
+        currentParentDef = prevParentDef;
     }
 }
 
@@ -241,8 +251,8 @@ function processAST(ast, currentFile) {
             });
             
             try {
-                // 递归加载
-                const childAST = loadFileAsAST(fullPath);
+                // 递归加载，传递当前的 parentDef
+                const childAST = loadFileAsAST(fullPath, currentParentDef);
                 const childProgram = childAST.program;
                 
                 // 替换策略
@@ -361,13 +371,15 @@ function load(sourcePath, parentDef, charset = "utf-8") {
 // parentDef 包含 buildConfig 等变量
 function processLoaderComments(source, filePath, parentDef) {
     const vm = require("vm");
-    const sandboxSource = source;
     
     // 构建变量对象，与旧版 loader 兼容
     const variables = parentDef || {};
     
+    // 用于在 replace 回调中传递修改后的 source
+    let modifiedSource = source;
+    
     const sandbox = {
-        source: sandboxSource,
+        source: source,
         replacement: "",
         postprocessor: null,
         variables: variables,  // 注入 variables，供 BuildConfig.js 等使用
@@ -382,18 +394,21 @@ function processLoaderComments(source, filePath, parentDef) {
     // 处理 LOADER 注释
     source = source.replace(/\/\*LOADER\s([\s\S]+?)\*\//g, function(match, code, offset) {
         sandbox.replacement = "";
-        sandbox.source = source;  // 更新当前 source
+        sandbox.source = modifiedSource;  // 使用当前的 modifiedSource
         try {
             vm.runInNewContext(code, sandbox, { filename: filePath });
-            // 如果代码修改了 sandbox.source，使用新值
-            if (sandbox.source !== source) {
-                source = sandbox.source;
+            // 如果代码修改了 sandbox.source，更新 modifiedSource
+            if (sandbox.source !== modifiedSource) {
+                modifiedSource = sandbox.source;
             }
         } catch (e) {
             console.warn(`LOADER comment error in ${filePath}:`, e.message);
         }
         return sandbox.replacement;
     });
+    
+    // 使用可能被修改后的 source
+    source = modifiedSource;
     
     if (sandbox.postprocessor) {
         source = sandbox.postprocessor(source);
@@ -436,6 +451,9 @@ module.exports = {
         // 重置 VFS 确保干净状态
         resetVFS();
         
+        // 设置初始 parentDef
+        currentParentDef = parentDef;
+        
         // 先处理 LOADER 注释（保持兼容）
         let source = fs.readFileSync(sourcePath, charset || "utf-8");
         source = processLoaderComments(source, sourcePath, parentDef);
@@ -452,6 +470,7 @@ module.exports = {
             processAST(ast, realPath);
         } finally {
             exitFile();
+            currentParentDef = null;
         }
         
         // 可选：打印依赖图（调试用）
