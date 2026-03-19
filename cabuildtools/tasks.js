@@ -15,9 +15,30 @@ Tasks.help = function(context, args) {
 		}
 	} else {
 		console.log("CA Build Tools " + PACKAGE.version);
-		console.log("\nTo run a build, run cabuild <task> ...");
-		console.log("\nTo see a list of available tasks, run cabuild tasks");
-		console.log("\nTo see more detail of a task, run cabuild help <task>");
+		console.log("\nUsage: cabuild <task> [args...]");
+		console.log("\nAvailable Tasks:");
+		
+		// 显示所有 CLI 可用的任务
+		var cliTasks = [], otherTasks = [];
+		for (var i in Tasks) {
+			if (Tasks[i].input == "cli") {
+				cliTasks.push(i);
+			} else {
+				otherTasks.push(i);
+			}
+		}
+		
+		cliTasks.sort().forEach(function(name) {
+			var task = Tasks[name];
+			var desc = "";
+			if (typeof task.help == "string") {
+				desc = task.help.split("\n")[0] || "";
+			}
+			console.log("  " + name.padEnd(20) + " " + desc);
+		});
+		
+		console.log("\n" + cliTasks.length + " task(s) available.");
+		console.log("\nRun 'cabuild help <task>' for more detail of a task.");
 	}
 }
 Tasks.help.input = "cli";
