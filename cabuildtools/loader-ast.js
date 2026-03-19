@@ -258,16 +258,13 @@ function processAST(ast, currentFile) {
                 // 替换策略
                 const replacement = createReplacement(childProgram, fullPath);
                 
-                // replacement 可能是单个节点或数组
+                // replacement 是语句数组，使用 replaceWithMultiple 在父级语句列表中展开
                 if (Array.isArray(replacement)) {
-                    if (replacement.length === 1) {
-                        nodePath.replaceWith(replacement[0]);
-                    } else if (replacement.length > 1) {
-                        // 多个语句，替换为块语句
-                        nodePath.replaceWith(t.blockStatement(replacement));
-                    } else {
-                        // 空数组，删除节点
+                    if (replacement.length === 0) {
                         nodePath.remove();
+                    } else {
+                        // 在语句列表中展开替换
+                        nodePath.replaceWithMultiple(replacement);
                     }
                 } else {
                     nodePath.replaceWith(replacement);
