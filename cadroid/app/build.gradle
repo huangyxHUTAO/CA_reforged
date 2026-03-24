@@ -37,7 +37,7 @@ dependencies {
 
     // implementation files('libs/SaaS_TalkingDataSDK_Android_V5.0.9.jar')
     implementation 'com.android.support:support-annotations:28.0.0'
-    // Rhino 1.7.15.1（1.7.x 最新版，修复浮点数性能问题，兼容 Android）
+    // Rhino 1.7.15.1（Android 最新可用版本，1.8+ 因 JPMS 不兼容 Android）
     implementation 'org.mozilla:rhino:1.7.15.1'
     implementation 'net.lingala.zip4j:zip4j:2.11.2'
     implementation 'com.jakewharton.android.repackaged:dalvik-dx:11.0.0_r3'
