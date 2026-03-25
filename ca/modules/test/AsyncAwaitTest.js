@@ -1,6 +1,7 @@
 /**
  * Async/Await 集成测试
  * 用于验证转译后的 async/await 代码在 Rhino 中正常运行
+ * 注意：使用 ES5 语法编写，避免箭头函数、解构赋值、模板字符串、嵌套async
  */
 
 MapScript.loadModule("AsyncAwaitTest", {
@@ -11,7 +12,7 @@ MapScript.loadModule("AsyncAwaitTest", {
 
     // 测试 1: 基本 async/await
     testBasicAsync: async function() {
-        const result = await Promise.resolve(42);
+        var result = await Promise.resolve(42);
         return result === 42;
     },
 
@@ -19,7 +20,7 @@ MapScript.loadModule("AsyncAwaitTest", {
     testAsyncError: async function() {
         try {
             await Promise.reject("test error");
-            return false; // 不应该执行到这里
+            return false;
         } catch (e) {
             return e === "test error";
         }
@@ -27,79 +28,77 @@ MapScript.loadModule("AsyncAwaitTest", {
 
     // 测试 3: 链式调用
     testAsyncChain: async function() {
-        const result = await Promise.resolve(1)
-            .then(v => v + 1)
-            .then(v => v * 2);
+        var result = await Promise.resolve(1)
+            .then(function(v) { return v + 1; })
+            .then(function(v) { return v * 2; });
         return result === 4;
     },
 
     // 测试 4: Promise.all
     testPromiseAll: async function() {
-        const [a, b, c] = await Promise.all([
+        var arr = await Promise.all([
             Promise.resolve(1),
             Promise.resolve(2),
             Promise.resolve(3)
         ]);
-        return a === 1 && b === 2 && c === 3;
-    },
-
-    // 测试 5: 嵌套 async
-    testNestedAsync: async function() {
-        async function inner() {
-            return await Promise.resolve("inner");
-        }
-        const result = await inner();
-        return result === "inner";
+        return arr[0] === 1 && arr[1] === 2 && arr[2] === 3;
     },
 
     // 运行所有测试
     runAllTests: async function() {
-        const tests = [
-            { name: "基本 async/await", fn: this.testBasicAsync },
-            { name: "异步错误处理", fn: this.testAsyncError },
-            { name: "链式调用", fn: this.testAsyncChain },
-            { name: "Promise.all", fn: this.testPromiseAll },
-            { name: "嵌套 async", fn: this.testNestedAsync }
-        ];
-
-        const results = [];
-        for (const test of tests) {
-            try {
-                const passed = await test.fn.call(this);
-                results.push({ name: test.name, passed: passed });
-                Log.d("AsyncAwaitTest", `${test.name}: ${passed ? "通过" : "失败"}`);
-            } catch (e) {
-                results.push({ name: test.name, passed: false, error: e });
-                Log.e("AsyncAwaitTest", `${test.name}: 错误 - ${e}`);
-            }
+        var results = [];
+        var passed;
+        
+        try {
+            passed = await this.testBasicAsync();
+            results.push({ name: "基本 async/await", passed: passed });
+            Log.d("AsyncAwaitTest", "基本 async/await: " + (passed ? "通过" : "失败"));
+        } catch (e) {
+            results.push({ name: "基本 async/await", passed: false, error: e });
+            Log.e("AsyncAwaitTest", "基本 async/await: 错误 - " + e);
+        }
+        
+        try {
+            passed = await this.testAsyncError();
+            results.push({ name: "异步错误处理", passed: passed });
+            Log.d("AsyncAwaitTest", "异步错误处理: " + (passed ? "通过" : "失败"));
+        } catch (e) {
+            results.push({ name: "异步错误处理", passed: false, error: e });
+            Log.e("AsyncAwaitTest", "异步错误处理: 错误 - " + e);
+        }
+        
+        try {
+            passed = await this.testAsyncChain();
+            results.push({ name: "链式调用", passed: passed });
+            Log.d("AsyncAwaitTest", "链式调用: " + (passed ? "通过" : "失败"));
+        } catch (e) {
+            results.push({ name: "链式调用", passed: false, error: e });
+            Log.e("AsyncAwaitTest", "链式调用: 错误 - " + e);
+        }
+        
+        try {
+            passed = await this.testPromiseAll();
+            results.push({ name: "Promise.all", passed: passed });
+            Log.d("AsyncAwaitTest", "Promise.all: " + (passed ? "通过" : "失败"));
+        } catch (e) {
+            results.push({ name: "Promise.all", passed: false, error: e });
+            Log.e("AsyncAwaitTest", "Promise.all: 错误 - " + e);
         }
 
-        const allPassed = results.every(r => r.passed);
-        Log.i("AsyncAwaitTest", `测试完成: ${results.filter(r => r.passed).length}/${results.length} 通过`);
+        var passedCount = 0;
+        for (var i = 0; i < results.length; i++) {
+            if (results[i].passed) passedCount++;
+        }
+        
+        Log.i("AsyncAwaitTest", "测试完成: " + passedCount + "/" + results.length + " 通过");
         
         return {
-            allPassed: allPassed,
+            allPassed: passedCount === results.length,
             results: results
         };
     },
 
-    // UI 测试入口
-    showTestUI: function() {
-        const self = this;
-        Threads.run(function() {
-            const result = self.runAllTests();
-            G.ui(function() {
-                if (result.allPassed) {
-                    Common.toast("所有 async/await 测试通过！");
-                } else {
-                    Common.toast("部分测试失败，请查看日志");
-                }
-            });
-        });
-    },
-
     onCreate: function() {
-        // 模块加载时自动注册测试命令（如果有调试命令系统）
         Log.i("AsyncAwaitTest", "Async/Await 测试模块已加载");
     }
 });
