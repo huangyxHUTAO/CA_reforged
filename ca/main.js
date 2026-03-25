@@ -721,5 +721,5 @@ Loader.load(function () {
 
 	Loader.fromFile("modules/LockClasses.js")
 
-	Loader.fromFile("modules/test/AsyncAwaitTest.js")
+	// Loader.fromFile("modules/test/AsyncAwaitTest.js")
 });
