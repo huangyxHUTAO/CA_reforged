@@ -5,6 +5,7 @@ const traverse = require("@babel/traverse").default;
 const generate = require("@babel/generator").default;
 const t = require("@babel/types");
 const stripJsonComments = require("strip-json-comments").default;
+const babel = require("@babel/core");
 
 // 虚拟文件系统 - 编译时维护
 const vfs = {
@@ -510,10 +511,35 @@ module.exports = {
         // 可选：打印依赖图（调试用）
         // printDependencyGraph();
         
-        const output = generate(ast, {
-            sourceMaps: true,
-            sourceFileName: path.basename(sourcePath)
-        });
+        // Babel transform: async/await -> generators (可选，默认关闭)
+        const enableAsyncTransform = options && options.transformAsync === true;
+        let finalAst = ast;
+        let transformOutput = null;
+        if (enableAsyncTransform) {
+            try {
+                transformOutput = babel.transformFromAstSync(ast, source, {
+                    babelrc: false,
+                    configFile: false,
+                    plugins: ["@babel/plugin-transform-async-to-generator"],
+                    sourceMaps: true
+                });
+                log(`已转译 async/await 语法`);
+            } catch (e) {
+                log(`async/await 转译警告: ${e.message}`);
+                // 转译失败时继续使用原始 AST
+            }
+        }
+        
+        // 如果 transform 成功，使用 transform 后的代码；否则使用原始 AST
+        let output;
+        if (transformOutput) {
+            output = { code: transformOutput.code, map: transformOutput.map };
+        } else {
+            output = generate(ast, {
+                sourceMaps: true,
+                sourceFileName: path.basename(sourcePath)
+            });
+        }
         
         if (verbose) {
             log(`编译完成: ${vfs.cache.size} 个文件, 输出 ${output.code.length} 字节`);
