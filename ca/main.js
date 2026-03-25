@@ -720,4 +720,6 @@ Loader.load(function () {
 	Loader.fromFile("modules/builtinData.js")
 
 	Loader.fromFile("modules/LockClasses.js")
+
+	Loader.fromFile("modules/test/AsyncAwaitTest.js")
 });
