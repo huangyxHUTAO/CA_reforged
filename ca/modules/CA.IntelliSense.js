@@ -17,14 +17,29 @@
         jsonLanguageServices: {},
         callDelay: function self(s, cursor) {
             if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
-            if (!self.pool) {
-                self.pool = java.util.concurrent.Executors.newCachedThreadPool();
-                self.pool.setMaximumPoolSize(1);
-                self.pool.setRejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.DiscardPolicy());
+            if (self.timer) {
+                self.timer.cancel();
+                self.timer = null;
             }
-            self.pool.execute(function () {
+            // 打字不限流，删除限流
+            var isDeleting = self.lastS && s.length < self.lastS.length;
+            self.lastS = s;
+            var runProc = function() {
+                var t1 = Date.now();
                 CA.IntelliSense.proc(s, cursor);
-            });
+                CA.sendLog.log('补全耗时: ' + (Date.now() - t1) + 'ms');
+            };
+            if (!isDeleting) {
+                runProc();
+                return;
+            }
+            self.timer = new java.util.Timer();
+            self.timer.schedule(new java.util.TimerTask({
+                run: function() {
+                    runProc();
+                    self.timer = null;
+                }
+            }), 50);
         },
         apply: function () {
             if (this.ui) this.show.apply(this);
@@ -33,6 +48,14 @@
             try {
                 CA.sendLog.info("光标位置(补全器处): " + cursor);
                 if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
+                // 全局缓存：文本和光标都没变时直接复用
+                if (this._cacheS === s && this._cacheCursor === cursor) {
+                    this.apply();
+                    CA.sendLog.info("命令未变，复用上次结果");
+                    return;
+                }
+                this._cacheS = s;
+                this._cacheCursor = cursor;
                 if (CA.Library.loadingStatus) {
                     // 我这里吐槽一下ProjectXero了，你的变量名怎么起得这么奇怪
                     var pp
@@ -490,9 +513,9 @@
                             var displayLabel = label;
                             var desc = item.detail;
 
-                            // 补全项 label 中文映射（detail 才是 "New object"/"New array"）
-                            if (desc === 'New object') displayLabel = '新建对象';
-                            else if (desc === 'New array') displayLabel = '新建数组';
+                            // 补全项 detail 中文映射（detail 才是 "New object"/"New array"）
+                            if (desc === 'New object') desc = '新建对象';
+                            else if (desc === 'New array') desc = '新建数组';
                             if (!desc && item.documentation) {
                                 if (typeof item.documentation === 'string') {
                                     desc = item.documentation;
