@@ -489,6 +489,10 @@
                             // 获取字段说明（来自 Schema 的 description）
                             var displayLabel = label;
                             var desc = item.detail;
+
+                            // 补全项 label 中文映射（detail 才是 "New object"/"New array"）
+                            if (desc === 'New object') displayLabel = '新建对象';
+                            else if (desc === 'New array') displayLabel = '新建数组';
                             if (!desc && item.documentation) {
                                 if (typeof item.documentation === 'string') {
                                     desc = item.documentation;
@@ -528,75 +532,54 @@
                         });
                     }
 
-                    // 引号/括号自动补全
+                    // 引号/括号扫描 + 闭合检测 + 字段导航（合并为一次扫描）
+                    var unclosed = [];
+                    var stringPositions = [];
+                    var navLabels = [];
                     var inQuote = false, escapeNext = false;
-                    var openBraces = 0, openBrackets = 0;
                     for (var idx = 0; idx < ps.length; idx++) {
                         var ch = ps[idx];
-                        if (escapeNext) {
-                            escapeNext = false;
-                            continue;
-                        }
-                        if (ch === '\\') {
-                            escapeNext = true;
-                            continue;
-                        }
+                        if (escapeNext) { escapeNext = false; continue; }
+                        if (ch === '\\') { escapeNext = true; continue; }
                         if (ch === '"') {
-                            inQuote = !inQuote;
+                            if (!inQuote) {
+                                inQuote = true;
+                                unclosed.push('quote');
+                                stringPositions.push(idx + 1); // 字符串内容起始位置（引号后）
+                            } else {
+                                inQuote = false;
+                                unclosed.pop();
+                            }
                             continue;
                         }
                         if (!inQuote) {
-                            if (ch === '{') openBraces++;
-                            else if (ch === '}') openBraces--;
-                            else if (ch === '[') openBrackets++;
-                            else if (ch === ']') openBrackets--;
-                        }
-                    }
-
-                    var closeLabels = [];
-                    if (inQuote) {
-                        closeLabels.push('" - 闭合引号');
-                        r.output['" - 闭合引号'] = {
-                            text: ps + '"',
-                            cursor: ps.length + 1
-                        };
-                    }
-                    if (openBraces > 0) {
-                        var bracesToClose = openBraces;
-                        var closeStr = '';
-                        for (var b = 0; b < bracesToClose; b++) closeStr += '}';
-                        closeLabels.push('} - 闭合 ' + bracesToClose + ' 个对象');
-                        r.output['} - 闭合 ' + bracesToClose + ' 个对象'] = {
-                            text: ps + closeStr,
-                            cursor: ps.length + closeStr.length
-                        };
-                    }
-                    if (openBrackets > 0) {
-                        var bracketsToClose = openBrackets;
-                        var closeStr = '';
-                        for (var b = 0; b < bracketsToClose; b++) closeStr += ']';
-                        closeLabels.push('] - 闭合 ' + bracketsToClose + ' 个数组');
-                        r.output['] - 闭合 ' + bracketsToClose + ' 个数组'] = {
-                            text: ps + closeStr,
-                            cursor: ps.length + closeStr.length
-                        };
-                    }
-
-                    // 字段导航：上一个/下一个字符串位置
-                    var navLabels = [];
-                    var stringPositions = [];
-                    inQuote = false; escapeNext = false;
-                    for (var si = 0; si < ps.length; si++) {
-                        if (escapeNext) { escapeNext = false; continue; }
-                        if (ps[si] === '\\') { escapeNext = true; continue; }
-                        if (ps[si] === '"') {
-                            if (!inQuote) {
-                                inQuote = true;
-                                stringPositions.push(si + 1); // 字符串内容起始位置（引号后）
-                            } else {
-                                inQuote = false;
+                            if (ch === '{') unclosed.push('brace');
+                            else if (ch === '}') {
+                                for (var j = unclosed.length - 1; j >= 0; j--) {
+                                    if (unclosed[j] === 'brace') { unclosed.splice(j, 1); break; }
+                                }
+                            }
+                            else if (ch === '[') unclosed.push('bracket');
+                            else if (ch === ']') {
+                                for (var j = unclosed.length - 1; j >= 0; j--) {
+                                    if (unclosed[j] === 'bracket') { unclosed.splice(j, 1); break; }
+                                }
                             }
                         }
+                    }
+
+                    // 闭合提示（一次只闭合最内层的一个）
+                    var closeLabels = [];
+                    var lastUnclosed = unclosed.length > 0 ? unclosed[unclosed.length - 1] : null;
+                    if (lastUnclosed === 'quote') {
+                        closeLabels.push('" - 闭合引号');
+                        r.output['" - 闭合引号'] = { text: ps + '"', cursor: ps.length + 1 };
+                    } else if (lastUnclosed === 'brace') {
+                        closeLabels.push('} - 闭合对象');
+                        r.output['} - 闭合对象'] = { text: ps + '}', cursor: ps.length + 1 };
+                    } else if (lastUnclosed === 'bracket') {
+                        closeLabels.push('] - 闭合数组');
+                        r.output['] - 闭合数组'] = { text: ps + ']', cursor: ps.length + 1 };
                     }
                     if (stringPositions.length > 0) {
                         var prevPos = -1, nextPos = -1;
@@ -608,10 +591,10 @@
                         if (prevPos < 0) prevPos = stringPositions[stringPositions.length - 1];
                         if (nextPos < 0) nextPos = stringPositions[0];
 
-                        navLabels.push('▲ 上一个字段');
-                        r.output['▲ 上一个字段'] = { text: ps, cursor: prevPos };
-                        navLabels.push('▼ 下一个字段');
-                        r.output['▼ 下一个字段'] = { text: ps, cursor: nextPos };
+                        navLabels.push('◀ 上一个字段');
+                        r.output['◀ 上一个字段'] = { text: ps, cursor: prevPos };
+                        navLabels.push('▶ 下一个字段');
+                        r.output['▶ 下一个字段'] = { text: ps, cursor: nextPos };
                     }
 
                     // JSON 报错检测
@@ -640,20 +623,46 @@
                     if (diagnostics && diagnostics.length > 0) {
                         diagnostics.forEach(function(d) {
                             if (d.severity === 1) { // Error
-                                allErrors.push({ offset: d.range.start.character, message: d.message });
+                                var errMsg = d.message;
+                                // 这里的错误信息比较长且不友好，做个映射转换一下
+                                switch (errMsg) {
+                                    case 'Expected a JSON object, array or literal.': errMsg = '需要 对象、数组、字面量'; break;
+                                    case 'End of file expected.': errMsg = '需要文件结束符'; break;
+                                    case 'Value expected': errMsg = '需要值'; break;
+                                    case 'Property expected': errMsg = '需要属性名'; break;
+                                    case 'Expected comma': errMsg = '需要 ,'; break;
+                                    case 'Expected comma or closing bracket': errMsg = '需要 , 或 ]'; break;
+                                    case 'Expected comma or closing brace': errMsg = '需要 , 或 }'; break;
+                                    case 'Colon expected': errMsg = '需要 :'; break;
+                                    case 'Trailing comma': errMsg = '多余的 ,'; break;
+                                    case 'Property keys must be doublequoted': errMsg = '属性名必须用" "包裹'; break;
+                                    case 'Invalid number format.': errMsg = '数字格式无效'; break;
+                                    case 'Invalid unicode sequence in string.': errMsg = '字符串中的 Unicode 序列无效'; break;
+                                    case 'Invalid escape character in string.': errMsg = '字符串中的转义字符无效'; break;
+                                    case 'Unexpected end of string.': errMsg = '字符串未闭合'; break;
+                                    case 'Unexpected end of comment.': errMsg = '注释未闭合'; break;
+                                    case 'Unexpected end of number.': errMsg = '数字未结束'; break;
+                                    case 'Invalid characters in string. Control characters must be escaped.': errMsg = '字符串中包含非法字符'; break;
+                                    case 'Duplicate object key': errMsg = '重复的对象键'; break;
+                                }
+                                allErrors.push({ offset: d.range.start.character, message: errMsg });
                             }
                         });
                     }
+                    var errorNavLabel = null;
                     if (allErrors.length > 0) {
                         allErrors.sort(function(a, b) { return a.offset - b.offset; });
                         var firstError = allErrors[0];
                         var pp = new G.SpannableStringBuilder();
-                        appendSSB(pp, "JSON错误：" + firstError.message, new G.ForegroundColorSpan(Common.theme.criticalcolor));
+                        appendSSB(pp, "JSON错误：" + firstError.message + " (位置: " + firstError.offset + ")", new G.ForegroundColorSpan(Common.theme.criticalcolor));
                         r.prompt.push(pp);
+                        errorNavLabel = '跳到报错位置';
+                        r.output[errorNavLabel] = { text: ps, cursor: firstError.offset };
                     }
 
-                    // 组装列表顺序：导航 → 补全 → 闭合
+                    // 组装列表顺序：导航 → 补全 → 闭合 → 报错跳转
                     r.input = navLabels.concat(completionLabels, closeLabels);
+                    if (errorNavLabel) r.input.push(errorNavLabel);
                     break;
 
                 case "plain":
