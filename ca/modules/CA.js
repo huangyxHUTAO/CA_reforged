@@ -73,17 +73,7 @@ MapScript.loadModule("CA", {
 				iconFont = G.Typeface.MONOSPACE || G.Typeface.DEFAULT;
 			}
 
-			// // 初始化json ATS解析器
-			// if (!CA.jsonToAst.pares) {
-			// 	try {
-			// 		CA.jsonToAst.init()
-			// 		if (CA.jsonToAst.pares) {
-			// 			Common.toast("喵呜！json ATS解析器初始化成功！");
-			// 		}
-			// 	} catch {
-			// 		Common.toast("喵呜... json ATS解析器加载失败...");
-			// 	}
-			// }
+			Common.toast("测试！！");
 		} catch (e) { erp(e) }
 	},
 	unload: function () {
@@ -755,9 +745,13 @@ MapScript.loadModule("CA", {
 						self.performClose();
 						if (s.length > 20) UserManager.enqueueExp("copyCommand");
 					}
-					self.activate = function (fl) {
+					self.activate = function (fl, cursor) {
 						CA.cmd.requestFocus();
-						CA.cmd.setSelection(CA.cmd.getText().length());
+						if (cursor !== undefined) {
+							CA.cmd.setSelection(cursor, cursor);
+						} else {
+							CA.cmd.setSelection(CA.cmd.getText().length());
+						}
 						if (fl) ctx.getSystemService(ctx.INPUT_METHOD_SERVICE).showSoftInput(CA.cmd, G.InputMethodManager.SHOW_IMPLICIT);
 					}
 					self.textUpdate = (function () {
@@ -933,7 +927,9 @@ MapScript.loadModule("CA", {
 					CA.cmd.addTextChangedListener(new G.TextWatcher({
 						afterTextChanged: function (s) {
 							try {
-								self.textUpdate(s, CA.cmd.getSelectionStart());
+								CA.cmd.post(function() {
+									self.textUpdate(CA.cmd.getText(), CA.cmd.getSelectionStart());
+								});
 							} catch (e) { erp(e) }
 						}
 						//beforeTextChanged : function(s, start, count, after) {},
@@ -945,6 +941,12 @@ MapScript.loadModule("CA", {
 						new Packages.com.huangyx.ca.OnSelectionChangeListener({
 							onSelectionChanged: function (start, end) {
 								CA.sendLog.log("光标 " + start + " → " + end);
+								try {
+									var s = CA.cmd.getText();
+									if (s && self.textUpdate) {
+										self.textUpdate(s, start);
+									}
+								} catch (e) { erp(e) }
 							}
 						})
 					);

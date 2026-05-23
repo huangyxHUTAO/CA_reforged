@@ -683,6 +683,8 @@ Loader.load(function () {
 
 	Loader.fromFile("modules/sense/ISegment.js")
 
+	Loader.fromFile("modules/JSONLanguageService.js")
+
 	Loader.fromFile("modules/JSONEdit.js")
 
 	Loader.fromFile("modules/utils/SettingsCompat.js")

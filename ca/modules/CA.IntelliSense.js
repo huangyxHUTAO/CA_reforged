@@ -14,6 +14,7 @@
         patterns: [],
         mode: 0,
         last: {},
+        jsonLanguageServices: {},
         callDelay: function self(s, cursor) {
             if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
             if (!self.pool) {
@@ -216,6 +217,9 @@
                     // 记录当前参数的开始位置
                     var paramStart = ci;
 
+                    // 计算光标在当前参数中的偏移（用于 jsonPro 等需要精确光标的类型）
+                    cp._cursorOffset = cursor - (c.source.length - c.strParam.length + paramStart);
+
                     //匹配参数
                     t = this.matchParam(cp, c.strParam.slice(ci), parsedParams, cursor);
                     if (t && t.length >= 0 && ((/^\s?$/).test(c.strParam.slice(ci += t.length, ++ci)))) {
@@ -236,7 +240,16 @@
                             }
                             if (t.length && t.canFinish && pa[j + 1]) nn = true;
                             if (t.input) for (k in t.input) if (c.input.indexOf(t.input[k]) < 0) c.input.push(t.input[k]);
-                            if (t.output) for (k in t.output) if (!(k in c.output)) c.output[k] = u + t.output[k];
+                            if (t.output) for (k in t.output) if (!(k in c.output)) {
+                                if (t.output[k] && typeof t.output[k] === 'object' && t.output[k].text !== undefined) {
+                                    c.output[k] = {
+                                        text: u + t.output[k].text,
+                                        cursor: u.length + t.output[k].cursor
+                                    };
+                                } else {
+                                    c.output[k] = u + t.output[k];
+                                }
+                            }
                             if (t.recommend) for (k in t.recommend) if (!(k in c.output)) c.output[k] = u + t.recommend[k];
                             if (t.assist) for (k in t.assist) if (!(k in c.output)) c.output[k] = c.source + t.assist[k];
                             if (t.menu) for (k in t.menu) if (!(k in c.output)) c.output[k] = t.menu[k];
@@ -250,6 +263,12 @@
                             }
                             if (t.description || cp.description || ps[i].description || cm.description) appendSSB(pp, "\n" + (t.description ? String(t.description) : cp.description ? String(cp.description) : ps[i].description ? String(ps[i].description) : String(cm.description)), new G.ForegroundColorSpan(Common.theme.promptcolor));
                             //详情优先级：匹配函数动态产生 > 当前参数 > 当前用法 > 当前命令 > 不显示
+                            if (t.prompt && t.prompt.length > 0) {
+                                t.prompt.forEach(function(p) {
+                                    pp.append("\n");
+                                    pp.append(p);
+                                });
+                            }
 
                             c.prompt.push(pp);
                             c.patterns.push(cpl);
@@ -380,9 +399,261 @@
                     break;
 
                 case "jsonPro":
-                    var schema = this.library.jsonSchema[cp.schema]
-                    // 暂未实现，目前只能获取到 schema
+                    var schema = this.library.jsonSchema[cp.schema];
+                    if (!schema) {
+                        r = {
+                            length: ps.length,
+                            canFinish: false,
+                            description: "找不到Schema: " + cp.schema
+                        };
+                        break;
+                    }
 
+                    // 获取或创建缓存的 Language Service
+                    var ls = this.jsonLanguageServices[cp.schema];
+                    if (!ls) {
+                        ls = JSONLanguageService.getLanguageService({
+                            schemaRequestService: function (uri) { return null; }
+                        });
+                        ls.configure({
+                            schemas: [{
+                                uri: 'ca://' + cp.schema + '.json',
+                                fileMatch: ['ca://json.json'],
+                                schema: schema
+                            }]
+                        });
+                        this.jsonLanguageServices[cp.schema] = ls;
+                    }
+
+                    // 计算光标位置
+                    var cursorOffset = cp._cursorOffset !== undefined ? cp._cursorOffset : ps.length;
+                    if (cursorOffset < 0) cursorOffset = 0;
+                    if (cursorOffset > ps.length) cursorOffset = ps.length;
+
+                    // 创建 TextDocument 并获取补全
+                    var doc = JSONLanguageService.TextDocument.create('ca://json.json', 'json', 1, ps);
+                    var jsonDoc = ls.parseJSONDocument(doc);
+                    var completionResult = ls.doComplete(doc, { line: 0, character: cursorOffset }, jsonDoc);
+                    var completions = completionResult && completionResult.value ? completionResult.value : completionResult;
+
+                    // 转换结果
+                    r = {
+                        length: ps.length,
+                        canFinish: false,
+                        input: [],
+                        output: {},
+                        prompt: []
+                    };
+                    var completionLabels = [];
+
+                    if (completions && completions.items) {
+                        completions.items.forEach(function (item) {
+                            var label = item.label;
+                            var newText = item.insertText || label;
+                            var start = cursorOffset;
+                            var end = cursorOffset;
+
+                            if (item.textEdit) {
+                                newText = item.textEdit.newText;
+                                start = item.textEdit.range.start.character;
+                                end = item.textEdit.range.end.character;
+                            }
+
+                            // 计算光标位置（基于 Snippet 占位符 $1）
+                            var snippetText = item.textEdit ? item.textEdit.newText : item.insertText;
+                            var cursorInParam = start;
+                            if (snippetText && snippetText.indexOf('$1') >= 0) {
+                                cursorInParam = start + snippetText.indexOf('$1');
+                            } else {
+                                cursorInParam = start + newText.length;
+                            }
+
+                            // 去掉 Snippet 占位符 
+                            newText = newText.replace(/\$\d+/g, '');
+
+                            // 记录是否是对象/数组插入（必须在逗号补全之前记录）
+                            var isObjectOrArray = newText.length > 0 && (newText[0] === '{' || newText[0] === '[');
+
+                            // 计算替换后的完整参数
+                            // 自动补全逗号（当插入对象/数组且前面是 } 或 ] 时）
+                            if (isObjectOrArray && start > 0) {
+                                var prevChar = ps[start - 1];
+                                if (prevChar === "}" || prevChar === "]") {
+                                    newText = "," + newText;
+                                    cursorInParam++;
+                                }
+                            }
+
+                            var replacedParam = ps.substring(0, start) + newText + ps.substring(end);
+
+                            // 获取字段说明（来自 Schema 的 description）
+                            var displayLabel = label;
+                            var desc = item.detail;
+                            if (!desc && item.documentation) {
+                                if (typeof item.documentation === 'string') {
+                                    desc = item.documentation;
+                                } else if (item.documentation.value) {
+                                    desc = item.documentation.value;
+                                }
+                            }
+                            if (desc) {
+                                displayLabel = label + " - " + desc.split('\n')[0];
+                            }
+
+                            // 模拟检测：插入后在光标位置是否还有补全选项
+                            // 如果插入的是对象/数组，但光标位置不合法，则过滤掉
+                            var isValidCompletion = true;
+                            if (isObjectOrArray) {
+                                var simDoc = JSONLanguageService.TextDocument.create('ca://json.json', 'json', 1, replacedParam);
+                                var simJsonDoc = ls.parseJSONDocument(simDoc);
+                                // 如果光标在根节点范围外部，说明这个位置不合法
+                                if (simJsonDoc.root && cursorInParam > simJsonDoc.root.offset + simJsonDoc.root.length) {
+                                    isValidCompletion = false;
+                                } else {
+                                    var simResult = ls.doComplete(simDoc, { line: 0, character: cursorInParam }, simJsonDoc);
+                                    var simCompletions = simResult && simResult.value ? simResult.value : simResult;
+                                    if (!simCompletions || !simCompletions.items || simCompletions.items.length === 0) {
+                                        isValidCompletion = false;
+                                    }
+                                }
+                            }
+
+                            if (isValidCompletion) {
+                                completionLabels.push(displayLabel);
+                                r.output[displayLabel] = {
+                                    text: replacedParam,
+                                    cursor: cursorInParam
+                                };
+                            }
+                        });
+                    }
+
+                    // 引号/括号自动补全
+                    var inQuote = false, escapeNext = false;
+                    var openBraces = 0, openBrackets = 0;
+                    for (var idx = 0; idx < ps.length; idx++) {
+                        var ch = ps[idx];
+                        if (escapeNext) {
+                            escapeNext = false;
+                            continue;
+                        }
+                        if (ch === '\\') {
+                            escapeNext = true;
+                            continue;
+                        }
+                        if (ch === '"') {
+                            inQuote = !inQuote;
+                            continue;
+                        }
+                        if (!inQuote) {
+                            if (ch === '{') openBraces++;
+                            else if (ch === '}') openBraces--;
+                            else if (ch === '[') openBrackets++;
+                            else if (ch === ']') openBrackets--;
+                        }
+                    }
+
+                    var closeLabels = [];
+                    if (inQuote) {
+                        closeLabels.push('" - 闭合引号');
+                        r.output['" - 闭合引号'] = {
+                            text: ps + '"',
+                            cursor: ps.length + 1
+                        };
+                    }
+                    if (openBraces > 0) {
+                        var bracesToClose = openBraces;
+                        var closeStr = '';
+                        for (var b = 0; b < bracesToClose; b++) closeStr += '}';
+                        closeLabels.push('} - 闭合 ' + bracesToClose + ' 个对象');
+                        r.output['} - 闭合 ' + bracesToClose + ' 个对象'] = {
+                            text: ps + closeStr,
+                            cursor: ps.length + closeStr.length
+                        };
+                    }
+                    if (openBrackets > 0) {
+                        var bracketsToClose = openBrackets;
+                        var closeStr = '';
+                        for (var b = 0; b < bracketsToClose; b++) closeStr += ']';
+                        closeLabels.push('] - 闭合 ' + bracketsToClose + ' 个数组');
+                        r.output['] - 闭合 ' + bracketsToClose + ' 个数组'] = {
+                            text: ps + closeStr,
+                            cursor: ps.length + closeStr.length
+                        };
+                    }
+
+                    // 字段导航：上一个/下一个字符串位置
+                    var navLabels = [];
+                    var stringPositions = [];
+                    inQuote = false; escapeNext = false;
+                    for (var si = 0; si < ps.length; si++) {
+                        if (escapeNext) { escapeNext = false; continue; }
+                        if (ps[si] === '\\') { escapeNext = true; continue; }
+                        if (ps[si] === '"') {
+                            if (!inQuote) {
+                                inQuote = true;
+                                stringPositions.push(si + 1); // 字符串内容起始位置（引号后）
+                            } else {
+                                inQuote = false;
+                            }
+                        }
+                    }
+                    if (stringPositions.length > 0) {
+                        var prevPos = -1, nextPos = -1;
+                        for (var si = 0; si < stringPositions.length; si++) {
+                            if (stringPositions[si] < cursorOffset) prevPos = stringPositions[si];
+                            if (stringPositions[si] > cursorOffset && nextPos < 0) nextPos = stringPositions[si];
+                        }
+                        // 边界回退（循环）
+                        if (prevPos < 0) prevPos = stringPositions[stringPositions.length - 1];
+                        if (nextPos < 0) nextPos = stringPositions[0];
+
+                        navLabels.push('▲ 上一个字段');
+                        r.output['▲ 上一个字段'] = { text: ps, cursor: prevPos };
+                        navLabels.push('▼ 下一个字段');
+                        r.output['▼ 下一个字段'] = { text: ps, cursor: nextPos };
+                    }
+
+                    // JSON 报错检测
+                    var errorLabel = null;
+                    var allErrors = [];
+                    // 语法错误（jsonc-parser）
+                    if (jsonDoc.errors && jsonDoc.errors.length > 0) {
+                        jsonDoc.errors.forEach(function(err) {
+                            var errMsg = "JSON语法错误";
+                            switch (err.error) {
+                                case 1: errMsg = "非法符号"; break;
+                                case 3: errMsg = "缺少属性名"; break;
+                                case 4: errMsg = "缺少值"; break;
+                                case 5: errMsg = "缺少冒号"; break;
+                                case 6: errMsg = "缺少逗号"; break;
+                                case 7: errMsg = "缺少右大括号"; break;
+                                case 8: errMsg = "缺少右中括号"; break;
+                                case 12: errMsg = "字符串未闭合"; break;
+                            }
+                            allErrors.push({ offset: err.offset, message: errMsg });
+                        });
+                    }
+                    // Schema 验证错误
+                    var validationResult = ls.doValidation(doc, jsonDoc);
+                    var diagnostics = validationResult && validationResult.value ? validationResult.value : validationResult;
+                    if (diagnostics && diagnostics.length > 0) {
+                        diagnostics.forEach(function(d) {
+                            if (d.severity === 1) { // Error
+                                allErrors.push({ offset: d.range.start.character, message: d.message });
+                            }
+                        });
+                    }
+                    if (allErrors.length > 0) {
+                        allErrors.sort(function(a, b) { return a.offset - b.offset; });
+                        var firstError = allErrors[0];
+                        var pp = new G.SpannableStringBuilder();
+                        appendSSB(pp, "JSON错误：" + firstError.message, new G.ForegroundColorSpan(Common.theme.criticalcolor));
+                        r.prompt.push(pp);
+                    }
+
+                    // 组装列表顺序：导航 → 补全 → 闭合
+                    r.input = navLabels.concat(completionLabels, closeLabels);
                     break;
 
                 case "plain":
@@ -1292,8 +1563,15 @@
                                     if (a instanceof Function) {
                                         a();
                                     } else if (a) {
-                                        CA.cmd.setText(String(a));
-                                        CA.showGen.activate(false);
+                                        if (a && typeof a === 'object' && a.text !== undefined) {
+                                            CA.sendLog.info("补全点击: cursor=" + a.cursor + ", textLen=" + a.text.length);
+                                            CA.cmd.setText(String(a.text));
+                                            CA.showGen.activate(false, a.cursor);
+                                            CA.IntelliSense.proc(String(a.text), a.cursor);
+                                        } else {
+                                            CA.cmd.setText(String(a));
+                                            CA.showGen.activate(false);
+                                        }
                                     }
                                 } catch (e) { erp(e) }
                             }

@@ -17744,8 +17744,9 @@
                             "name": "玩家"
                         },
                         {
-                            "type": "json",
-                            "name": "rawtext"
+                            "type": "jsonPro",
+                            "name": "rawtext",
+                            "schema": "rawtext"
                         }
                     ]
                 }
@@ -18186,8 +18187,9 @@
                             }
                         },
                         {
-                            "type": "json",
-                            "name": "rawtext"
+                            "type": "jsonPro",
+                            "name": "rawtext",
+                            "schema": "rawtext"
                         }
                     ]
                 },
