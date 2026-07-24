@@ -73,7 +73,7 @@ MapScript.loadModule("CA", {
 				iconFont = G.Typeface.MONOSPACE || G.Typeface.DEFAULT;
 			}
 
-			Common.toast("测试！！");
+			// Common.toast("测试！！");
 		} catch (e) { erp(e) }
 	},
 	unload: function () {
