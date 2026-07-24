@@ -647,6 +647,8 @@ Loader.load(function () {
 
 	Loader.fromFile("modules/Intl.js")
 
+	Loader.fromFile("intl/index.js")
+
 	Loader.fromFile("modules/CA.js")
 
 	Loader.fromFile("modules/uiCore/PopupWindow.js")
@@ -716,8 +718,6 @@ Loader.load(function () {
 	Loader.fromFile("modules/utils/SafeFileUtils.js")
 
 	Loader.fromFile("modules/DebugUtils.js")
-
-	Loader.fromFile("intl/index.js")
 
 	Loader.fromFile("modules/builtinData.js")
 

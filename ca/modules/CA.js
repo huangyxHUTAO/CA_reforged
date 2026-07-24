@@ -747,7 +747,7 @@ MapScript.loadModule("CA", {
 					}
 					self.activate = function (fl, cursor) {
 						CA.cmd.requestFocus();
-						if (cursor !== undefined) {
+						if (cursor !== undefined && cursor >= 0 && cursor <= CA.cmd.getText().length()) {
 							CA.cmd.setSelection(cursor, cursor);
 						} else {
 							CA.cmd.setSelection(CA.cmd.getText().length());

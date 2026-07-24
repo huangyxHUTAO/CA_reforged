@@ -78,8 +78,9 @@
                                             "type": "object",
                                             "properties": {
                                                 "name": {
-                                                    "description": "玩家名称",
-                                                    "type": "string"
+                                                    "description": "玩家名称或实体选择器",
+                                                    "type": "string",
+                                                    "ca:parser": "selector"
                                                 },
                                                 "objective": {
                                                     "description": "记分板目标名称",
@@ -102,7 +103,9 @@
                                     "type": "object",
                                     "properties": {
                                         "selector": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "description": "实体选择器",
+                                            "ca:parser": "selector"
                                         }
                                     },
                                     "required": [

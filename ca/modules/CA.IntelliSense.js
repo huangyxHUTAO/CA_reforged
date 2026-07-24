@@ -456,8 +456,82 @@
                     // 创建 TextDocument 并获取补全
                     var doc = JSONLanguageService.TextDocument.create('ca://json.json', 'json', 1, ps);
                     var jsonDoc = ls.parseJSONDocument(doc);
-                    var completionResult = ls.doComplete(doc, { line: 0, character: cursorOffset }, jsonDoc);
-                    var completions = completionResult && completionResult.value ? completionResult.value : completionResult;
+                    var completions = null;
+                    try {
+                        var completionResult = ls.doComplete(doc, { line: 0, character: cursorOffset }, jsonDoc);
+                        completions = completionResult && completionResult.value ? completionResult.value : completionResult;
+                    } catch (e) {
+                        CA.sendLog.log('doComplete 错误: ' + e);
+                    }
+
+                    // 如果光标在 score.name 字段，添加选择器补全
+                    var selectorNode = null;
+                    if (jsonDoc.root && cursorOffset >= 0 && cursorOffset <= ps.length) {
+                        selectorNode = JSONLanguageService.findNodeAtOffset(jsonDoc.root, cursorOffset, true);
+                    }
+                    if (selectorNode && selectorNode.parent && selectorNode.parent.type === 'property' && selectorNode.parent.keyNode && selectorNode.parent.keyNode.value === 'name') {
+                        var prop = selectorNode.parent;
+                        var scoreObj = prop.parent;
+                        if (scoreObj && scoreObj.type === 'object' && scoreObj.parent && scoreObj.parent.type === 'property' && scoreObj.parent.keyNode && scoreObj.parent.keyNode.value === 'score') {
+                            var valueNode = prop.valueNode || selectorNode;
+                            var valueStart = valueNode.offset;
+                            var valueEnd = valueNode.offset + valueNode.length;
+                            var nameValue = ps.substring(valueStart, valueEnd);
+                            if (nameValue.length >= 2 && nameValue[0] === '"' && nameValue[nameValue.length - 1] === '"') {
+                                nameValue = nameValue.substring(1, nameValue.length - 1);
+                            }
+                            var selResult = this.procSelector({}, nameValue);
+                            if (selResult && selResult.recommend) {
+                                if (!completions) completions = { items: [] };
+                                if (!completions.items) completions.items = [];
+                                for (var selKey in selResult.recommend) {
+                                    var selVal = selResult.recommend[selKey];
+                                    var escapedVal = selVal.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                                    var newText = '"' + escapedVal + '"';
+                                    var selCursor = valueStart + 1 + escapedVal.length;
+                                    if (escapedVal.indexOf('=') >= 0) {
+                                        selCursor = valueStart + 1 + escapedVal.indexOf('=') + 1;
+                                    }
+                                    completions.items.push({
+                                        label: selKey,
+                                        insertText: newText,
+                                        textEdit: {
+                                            range: { start: { line: 0, character: valueStart }, end: { line: 0, character: valueEnd } },
+                                            newText: newText
+                                        },
+                                        _selectorCursor: selCursor
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    // 通用 ca:parser 处理：根据 Schema 自定义属性调用项目解析器
+                    try {
+                        var matchingSchemas = jsonDoc.getMatchingSchemas(schema, cursorOffset);
+                        var parserType = null;
+                        var parserNode = null;
+                        for (var mi = 0; mi < matchingSchemas.length; mi++) {
+                            var ms = matchingSchemas[mi];
+                            if (ms.schema && ms.schema['ca:parser']) {
+                                parserType = ms.schema['ca:parser'];
+                                parserNode = ms.node;
+                                break;
+                            }
+                        }
+                        if (parserType) {
+                            var parserItems = this.getParserCompletions(parserType, ps, cursorOffset, parserNode);
+                            if (parserItems && parserItems.length > 0) {
+                                if (!completions) completions = { items: [] };
+                                if (!completions.items) completions.items = [];
+                                for (var pi = 0; pi < parserItems.length; pi++) {
+                                    completions.items.push(parserItems[pi]);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // 解析器补全失败不影响主流程
+                    }
 
                     // 转换结果
                     r = {
@@ -485,7 +559,9 @@
                             // 计算光标位置（基于 Snippet 占位符 $1）
                             var snippetText = item.textEdit ? item.textEdit.newText : item.insertText;
                             var cursorInParam = start;
-                            if (snippetText && snippetText.indexOf('$1') >= 0) {
+                            if (item._selectorCursor !== undefined) {
+                                cursorInParam = item._selectorCursor;
+                            } else if (snippetText && snippetText.indexOf('$1') >= 0) {
                                 cursorInParam = start + snippetText.indexOf('$1');
                             } else {
                                 cursorInParam = start + newText.length;
@@ -1367,6 +1443,84 @@
             }
         },
 
+        /**
+         * 根据解析器类型获取 JSON 补全项。
+         * 支持调用项目内置解析器（如选择器）或枚举库（如方块、物品、实体）。
+         *
+         * @param {string} parserType 解析器类型，如 "selector"、"enum:block"、"block"
+         * @param {string} ps 当前 JSON 参数的完整文本
+         * @param {number} cursorOffset 光标偏移
+         * @param {Object} node 当前匹配的 AST 节点
+         * @returns {Array} JSON Language Service 格式的补全项数组
+         */
+        getParserCompletions: function(parserType, ps, cursorOffset, node) {
+            var valueStart, valueEnd, value;
+            if (node && (node.type === 'string' || node.type === 'number' || node.type === 'boolean' || node.type === 'null')) {
+                valueStart = node.offset;
+                valueEnd = node.offset + node.length;
+                value = ps.substring(valueStart, valueEnd);
+                if (node.type === 'string' && value.length >= 2 && value[0] === '"' && value[value.length - 1] === '"') {
+                    value = value.substring(1, value.length - 1);
+                }
+            } else {
+                valueStart = cursorOffset;
+                valueEnd = cursorOffset;
+                value = '';
+            }
+
+            var result = [];
+            var self = this;
+
+            function addEnumItems(enumName) {
+                var enumData = self.library.enums[enumName];
+                if (!enumData) return;
+                for (var id in enumData) {
+                    if (!enumData.hasOwnProperty(id)) continue;
+                    var displayName = enumData[id];
+                    var newText = '"' + id + '"';
+                    result.push({
+                        label: id + ' - ' + displayName,
+                        insertText: newText,
+                        textEdit: {
+                            range: { start: { line: 0, character: valueStart }, end: { line: 0, character: valueEnd } },
+                            newText: newText
+                        }
+                    });
+                }
+            }
+
+            if (parserType === 'selector') {
+                var selResult = this.procSelector({}, value);
+                if (selResult && selResult.recommend) {
+                    for (var selKey in selResult.recommend) {
+                        if (!selResult.recommend.hasOwnProperty(selKey)) continue;
+                        var selVal = selResult.recommend[selKey];
+                        var escapedVal = selVal.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+                        var newText = '"' + escapedVal + '"';
+                        var selCursor = valueStart + 1 + escapedVal.length;
+                        if (escapedVal.indexOf('=') >= 0) {
+                            selCursor = valueStart + 1 + escapedVal.indexOf('=') + 1;
+                        }
+                        result.push({
+                            label: selKey,
+                            insertText: newText,
+                            textEdit: {
+                                range: { start: { line: 0, character: valueStart }, end: { line: 0, character: valueEnd } },
+                                newText: newText
+                            },
+                            _selectorCursor: selCursor
+                        });
+                    }
+                }
+            } else if (parserType.indexOf('enum:') === 0) {
+                addEnumItems(parserType.substring(5));
+            } else if (this.library.enums[parserType]) {
+                addEnumItems(parserType);
+            }
+
+            return result;
+        },
+
         procPosition: function (cp, ps) {
             var l = ps.split(/\s+/), f = true, uv = false, i, n = Math.min(l.length, 3), t, pp, t2, t3;
             for (i = 0; i < n; i++) {
@@ -1598,8 +1752,12 @@
                                         if (a && typeof a === 'object' && a.text !== undefined) {
                                             CA.sendLog.info("补全点击: cursor=" + a.cursor + ", textLen=" + a.text.length);
                                             CA.cmd.setText(String(a.text));
-                                            CA.showGen.activate(false, a.cursor);
-                                            CA.IntelliSense.proc(String(a.text), a.cursor);
+                                            if (a.cursor >= 0) {
+                                                CA.showGen.activate(false, a.cursor);
+                                                CA.IntelliSense.proc(String(a.text), a.cursor);
+                                            } else {
+                                                CA.showGen.activate(false);
+                                            }
                                         } else {
                                             CA.cmd.setText(String(a));
                                             CA.showGen.activate(false);
