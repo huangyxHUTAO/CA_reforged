@@ -5713,7 +5713,7 @@ MapScript.loadModule("CA", {
 					self.update = function (s) {
 						var i, arr = [];
 						for (i = 0; i < self.texts.length; i++) {
-							if (self.texts[i].indexOf(s) >= 0) {
+							if (self.texts[i] && self.texts[i].indexOf(s) >= 0) {
 								arr.push(i);
 							}
 						}

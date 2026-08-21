@@ -60,13 +60,19 @@ public class RhinoFrameLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        int r = mCallback.dispatchTouchEvent(ev, this);
-        if (r == RETURN_TRUE) {
-            return true;
-        } else if (r == RETURN_FALSE) {
+        try {
+            int r = mCallback.dispatchTouchEvent(ev, this);
+            if (r == RETURN_TRUE) {
+                return true;
+            } else if (r == RETURN_FALSE) {
+                return false;
+            }
+            return super.dispatchTouchEvent(ev);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // 华为 EMUI 系统 bug：Editor$PositionListener.addSubscriber 返回 index=-1
+            // 触发路径: TextView.onTouchEvent -> Editor.onTouchUpEvent -> InsertionHandleView.show
             return false;
         }
-        return super.dispatchTouchEvent(ev);
     }
 
     public void setRoundRectRadius(int radius) {
