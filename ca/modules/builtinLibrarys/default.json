@@ -1237,7 +1237,8 @@
             "wood": "橡木/云杉木/白桦木/丛林木/金合欢木/深色橡木/去皮橡木/去皮云杉木/去皮白桦木/去皮丛林木/去皮金合欢木/去皮深色橡木",
             "wooden_slab": "橡木台阶/云杉木台阶/白桦木台阶/丛林木台阶/金合欢木台阶/深色橡木台阶",
             "wool": "羊毛",
-            "yellow_flower": "蒲公英",
+            "yellow_flower": "蒲公英"
+,
             "acacia_shelf": "金合欢木展示架",
             "bamboo_shelf": "竹展示架",
             "birch_shelf": "白桦木展示架",
@@ -2768,7 +2769,8 @@
             "wood": "",
             "wooden_slab": "",
             "wool": "羊毛",
-            "yellow_flower": "蒲公英",
+            "yellow_flower": "蒲公英"
+,
             "acacia_shelf": "金合欢木展示架",
             "bamboo_shelf": "竹展示架",
             "birch_shelf": "白桦木展示架",
@@ -3153,7 +3155,8 @@
             "mod": "（不可召唤）",
             "moving_block": "移动的方块（不可召唤）",
             "netease:pet": "",
-            "shield": "盾牌（不可召唤）",
+            "shield": "盾牌（不可召唤）"
+,
             "camel_husk": "骆驼尸壳",
             "copper_golem": "铜傀儡",
             "minecraft:camel_husk": "骆驼尸壳",
@@ -3203,7 +3206,8 @@
             "weakness": "虚弱",
             "weaving": "盘丝",
             "wind_charged": "蓄风",
-            "wither": "凋零",
+            "wither": "凋零"
+,
             "breath_of_the_nautilus": "鹦鹉螺之息"
         },
         "enchant": {
@@ -3247,7 +3251,8 @@
             "thorns": "荆棘",
             "unbreaking": "耐久",
             "vanishing": "消失诅咒",
-            "wind_burst": "风爆",
+            "wind_burst": "风爆"
+,
             "lunge": "突进"
         },
         "fog": {
@@ -3327,7 +3332,8 @@
             "minecraft:fog_taiga_mutated": "针叶林山地",
             "minecraft:fog_the_end": "末地",
             "minecraft:fog_warm_ocean": "暖水海洋",
-            "minecraft:fog_warped_forest": "诡异森林",
+            "minecraft:fog_warped_forest": "诡异森林"
+,
             "minecraft:fog_roofed_forest_mutated": "",
             "minecraft:fog_sulfur_caves": ""
         },
@@ -3417,7 +3423,8 @@
             "minecraft:taiga_mutated": "针叶林山地",
             "minecraft:the_end": "末地",
             "minecraft:warm_ocean": "暖水海洋",
-            "minecraft:warped_forest": "诡异森林",
+            "minecraft:warped_forest": "诡异森林"
+,
             "minecraft:sulfur_caves": "硫黄洞穴"
         },
         "location": {
@@ -3874,7 +3881,8 @@
             "spawn_adult_ranged": "（由猪灵使用）",
             "spawn_adult_ranged_no_hunting": "（由猪灵使用）",
             "spawn_adult_unhuntable": "（由疣猪兽使用）",
-            "spawn_zombified_piglin_rider": "（由炽足兽使用）",
+            "spawn_zombified_piglin_rider": "（由炽足兽使用）"
+,
             "be_sheared": "（由沼骸使用）",
             "fed_open_eyeblossom": "（由蜜蜂使用）",
             "fed_wither_rose": "（由蜜蜂使用）",
@@ -4177,7 +4185,8 @@
             "zombie": "僵尸（僵尸、僵尸村民、尸壳、溺尸）",
             "zombie_pigman": "僵尸猪灵",
             "zombie_villager": "僵尸村民",
-            "zombiehorse": "僵尸马",
+            "zombiehorse": "僵尸马"
+,
             "baby_husk": "",
             "baby_piglin": "",
             "baby_undead": "（僵尸、僵尸村民、僵尸猪灵、尸壳、溺尸）",
@@ -6949,7 +6958,8 @@
             "wool_dye_wool_9_5": "",
             "wool_dye_wool_9_6": "",
             "wool_dye_wool_9_7": "",
-            "wool_dye_wool_9_8": "",
+            "wool_dye_wool_9_8": ""
+,
             "minecraft:acacia_shelf_from_stripped_acacia_log": "<工作台>去皮金合欢原木*6->金合欢木展示架*6",
             "minecraft:bamboo_shelf_from_stripped_bamboo_block": "<工作台>去皮竹块*6->竹展示架*6",
             "minecraft:birch_shelf_from_stripped_birch_log": "<工作台>去皮白桦原木*6->白桦木展示架*6",
@@ -7916,7 +7926,8 @@
             "animation.yx_scared": "",
             "animation.yx_sinking": "",
             "animation.yx_sneeze": "",
-            "animation.yx_surrender": "",
+            "animation.yx_surrender": ""
+,
             "animation.armadillo.baby_peek": "",
             "animation.armadillo.baby_roll_up": "",
             "animation.armadillo.baby_rolled_up": "",
@@ -8160,7 +8171,8 @@
             "controller.animation.zombie.attack_bare_hand": "（由僵尸、僵尸村民、僵尸猪灵、尸壳使用）",
             "controller.animation.zombie.swimming": "（由僵尸、僵尸村民、僵尸猪灵、凋灵骷髅、尸壳、沼骸、流浪者、骷髅使用）",
             "controller.animation.default_custom_shield.wield": "",
-            "controller.animation.netease_pet.move": "（由netease:pet使用）",
+            "controller.animation.netease_pet.move": "（由netease:pet使用）"
+,
             "controller.animation.axolotl.move.v2": "",
             "controller.animation.camel_husk.general": "",
             "controller.animation.camel_husk.idle": "",
@@ -8601,7 +8613,8 @@
             "minecraft:warped_fungus_feature": "",
             "minecraft:warped_fungus_scatter_feature": "",
             "minecraft:warped_roots_feature": "",
-            "minecraft:warped_roots_scatter_feature": "",
+            "minecraft:warped_roots_scatter_feature": ""
+,
             "minecraft:potent_sulfur_feature": "",
             "minecraft:potent_sulfur_search_feature": "",
             "minecraft:random_sulfur_spring_with_tuff_feature": "",
@@ -8798,7 +8811,8 @@
             "minecraft:warm_ocean_after_surface_seagrass_feature_rules": "",
             "minecraft:warped_fungus_crimson_feature": "",
             "minecraft:warped_fungus_feature": "",
-            "minecraft:warped_roots_feature": "",
+            "minecraft:warped_roots_feature": ""
+,
             "minecraft:crimson_fungus_warped_feature": "",
             "minecraft:crimson_roots_warped_feature": "",
             "minecraft:sulfur_caves_before_surface_sulfur_spring_trail_to_surface_feature_rules": "",
@@ -10353,7 +10367,8 @@
             "horn.melody.9": "",
             "music.game.lofty_peaks": "尖峭山峰背景音乐",
             "music.game.snowcapped_peaks": "冰封山峰背景音乐",
-            "music.game.soul_sand_valley": "灵魂沙峡谷背景音乐",
+            "music.game.soul_sand_valley": "灵魂沙峡谷背景音乐"
+,
             "ambient.underwater.additions": "",
             "ambient.underwater.loop": "",
             "armor.equip_copper": "",
@@ -12254,7 +12269,8 @@
             "spawners/ominous/trial_chamber/key": "",
             "spawners/trial_chamber/consumables": "",
             "spawners/trial_chamber/items_to_drop_when_ominous": "",
-            "spawners/trial_chamber/key": "",
+            "spawners/trial_chamber/key": ""
+,
             "entities/armor_set_copper": "",
             "entities/camel_husk": "",
             "entities/copper_golem": "",
@@ -12546,12 +12562,68 @@
             }
         },
         "haspermission": {
-            "type": "string",
+            "type": "object",
             "name": "拥有输入权限",
-            "suggestion": "inputPermission"
+            "fields": {
+                "camera": {
+                    "type": "enum",
+                    "name": "转动相机视角",
+                    "suggestion": "inputState"
+                },
+                "dismount": {
+                    "type": "enum",
+                    "name": "停止骑乘",
+                    "suggestion": "inputState"
+                },
+                "jump": {
+                    "type": "enum",
+                    "name": "跳跃和向上飞行",
+                    "suggestion": "inputState"
+                },
+                "lateral_movement": {
+                    "type": "enum",
+                    "name": "移动",
+                    "suggestion": "inputState"
+                },
+                "mount": {
+                    "type": "enum",
+                    "name": "骑乘",
+                    "suggestion": "inputState"
+                },
+                "move_backward": {
+                    "type": "enum",
+                    "name": "向后移动",
+                    "suggestion": "inputState"
+                },
+                "move_forward": {
+                    "type": "enum",
+                    "name": "向前移动",
+                    "suggestion": "inputState"
+                },
+                "move_left": {
+                    "type": "enum",
+                    "name": "向左移动",
+                    "suggestion": "inputState"
+                },
+                "move_right": {
+                    "type": "enum",
+                    "name": "向右移动",
+                    "suggestion": "inputState"
+                },
+                "movement": {
+                    "type": "enum",
+                    "name": "移动、潜行、跳跃和飞行",
+                    "suggestion": "inputState"
+                },
+                "sneak": {
+                    "type": "enum",
+                    "name": "潜行和向下飞行",
+                    "suggestion": "inputState"
+                }
+            }
         },
-        "selectors": {
-            "type": "string",
+        "has_property": {
+            "type": "object",
             "name": "拥有属性"
         }
     },
