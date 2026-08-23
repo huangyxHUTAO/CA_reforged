@@ -8371,7 +8371,13 @@
             "minecraft:wind_charged_emitter": "蓄风生物死亡粒子",
             "minecraft:wind_explosion_emitter": "风弹爆炸狂风",
             "minecraft:witchspell_emitter": "女巫粒子",
-            "minecraft:wither_boss_invulnerable": "凋灵无敌状态粒子"
+            "minecraft:wither_boss_invulnerable": "凋灵无敌状态粒子",
+            "minecraft:geyser_base": "间歇泉底部产生的较为持续的粒子",
+            "minecraft:geyser_poof": "间歇泉底部产生的爆发速度较快的粒子",
+            "minecraft:green_flame_particle": "铜火把产生的粒子",
+            "minecraft:nautilus_bubbles_particle": "鹦鹉螺的气泡粒子",
+            "minecraft:noxious_gas_particle": "烈性硫黄在上方的水源方块表面生成的黄色烟雾粒子",
+            "minecraft:sulfur_cube_goo": "硫方怪着地产生的粒子"
         },
         "feature": {
             "minecraft:amethyst_geode_feature": "",
