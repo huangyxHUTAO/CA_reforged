@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MapScript shim smoke test</title>
+  </head>
+  <body>
+    <h1>MapScript shim smoke</h1>
+    <pre id="out"></pre>
+    <script type="module">
+      import { MapScript } from '/src/sandbox/mapscript.js';
+
+      const out = document.getElementById('out');
+      const lines = [];
+      const log = (k, v) => lines.push(`${k}: ${JSON.stringify(v)}`);
+
+      // 1) init + 拿一个隔离 scope
+      const scope = {};
+      MapScript.init(scope);
+      log('global 绑定到 scope', scope === MapScript.global);
+
+      // 2) loadModule 基本对象
+      MapScript.loadModule('Test', { x: 1, greet: () => 'hi' });
+      log('Test.x', scope.Test.x);
+      log('Test.greet()', scope.Test.greet());
+
+      // 3) loadModule onCreate 钩子
+      let created = false;
+      MapScript.loadModule('C', {
+        onCreate() { created = true; }
+      });
+      log('onCreate 已调用', created);
+
+      // 4) toSource
+      const src = MapScript.toSource({ a: 1, b: 'x\ny', c: [1, 2, 3] });
+      log('toSource 结果', src);
+
+      // 5) 重复 loadModule 返回 false
+      const dup = MapScript.loadModule('Test', { x: 2 });
+      log('重复 loadModule 返回 false', dup === false);
+      log('重复 loadModule 不覆盖', scope.Test.x === 1);
+
+      out.textContent = lines.join('\n') + '\n\n全部通过';
+    </script>
+  </body>
+</html>

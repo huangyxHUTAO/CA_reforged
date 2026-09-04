@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Loader plugin smoke test</title>
+  </head>
+  <body>
+    <h1>Loader shim + Vite plugin smoke</h1>
+    <pre id="out"></pre>
+    <script type="module">
+      import { MapScript, Loader, exposeGlobals } from '/src/sandbox/loader.js';
+      const out = document.getElementById('out');
+      const lines = [];
+      const log = (k, v) => lines.push(`${k}: ${JSON.stringify(v)}`);
+
+      // 1) 暴露 globals
+      exposeGlobals();
+      log('globalThis.MapScript', typeof globalThis.MapScript);
+      log('globalThis.Loader', typeof globalThis.Loader);
+      log('globalThis.Log', typeof globalThis.Log);
+      log('globalThis.ctx', typeof globalThis.ctx);
+
+      // 2) Loader.register
+      Loader.register('test1.js');
+      Loader.register('test1.js'); // 重复
+      log('register 第二次返回 false', Loader.register('test1.js') === false);
+
+      // 3) 模拟加载一个 ca/modules 文件：用一个最小 fixture
+      // （真实 ca/modules 文件会引用 Intl/L/G 等，先验证插件 transform 行为）
+      // 直接读 fixture 源码（已通过 public/__test_Common.js serve，但没经过 transform）
+      // 改成 import 一个会经过 transform 的模块
+      try {
+        await import('/src/tests-fixtures/minimal.js');
+        log('minimal.js 加载成功', true);
+      } catch (e) {
+        log('minimal.js 错误', e.message);
+      }
+
+      out.textContent = lines.join('\n');
+    </script>
+  </body>
+</html>

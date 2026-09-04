@@ -1,0 +1,22 @@
+{
+  "name": "ca-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "命令助手网页版 - 基于 ca/modules 核心引擎的 Web 移植",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "@material/web": "^1.5.0",
+    "lit": "^3.1.4"
+  },
+  "devDependencies": {
+    "acorn": "^8.12.1",
+    "acorn-walk": "^8.3.4",
+    "puppeteer-core": "^25.10.0",
+    "vite": "^5.4.0"
+  }
+}
