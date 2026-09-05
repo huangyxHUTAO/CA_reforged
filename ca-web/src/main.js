@@ -27,7 +27,8 @@ import '../../ca/modules/BuildConfig.js';
 globalThis.BuildConfig = (await import('../../ca/modules/BuildConfig.js')).default || globalThis.BuildConfig;
 import '../../ca/modules/uiCore/G.js';
 import '../../ca/modules/utils/JavaReflect.js';
-import '../../ca/modules/utils/IntColor.js';
+// IntColor Web 端用不到 Paint 真实 API，替换为占位
+import './ca-modules-fake/IntColor.js';
 import '../../ca/modules/core/EventSender.js';
 import '../../ca/modules/uiCore/L.js';
 import '../../ca/modules/uiCore/PWM.js';
@@ -62,6 +63,18 @@ import '../../ca/modules/listAdapter/MultipleListAdapter.js';
 import '../../ca/modules/listAdapter/ExpandableListAdapter.js';
 import '../../ca/modules/listAdapter/MoreListAdapter.js';
 import '../../ca/modules/builtinData.js';
+// builtinData.js 会运行时调 Loader.fromFile 同步加载内置 JSON
+// 必须提前 import
+import './sandbox/builtin-data-preload.js';
+// Updater / WSServer / UserManager 等网络模块 CA.js 引用但我们跳过
+// 给个最小占位避免 ReferenceError
+import './ca-modules-fake/Updater.js';
+import './ca-modules-fake/WSServer.js';
+import './ca-modules-fake/UserManager.js';
+import './ca-modules-fake/IssueService.js';
+import './ca-modules-fake/GiteeFeedback.js';
+import './ca-modules-fake/PushService.js';
+import './ca-modules-fake/NetworkUtils.js';
 import '../../ca/modules/LockClasses.js';
 // 网络/MC/Android 模块阶段 1 跳过：
 // - network/* (Updater/WSServer/UserManager/IssueService/GiteeFeedback/PushService/NetworkUtils)

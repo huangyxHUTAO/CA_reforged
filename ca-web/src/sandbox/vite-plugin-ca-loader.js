@@ -156,12 +156,19 @@ export function caLoaderPlugin(opts = {}) {
       const rel = path.relative(dir, absPath).replace(/\\/g, '/');
 
       // 5) 顶部注入：import + 暴露
-      const header =
+      let header =
         `import { MapScript as __caMS, Loader as __caLoader, exposeGlobals as __caExpose } from ${JSON.stringify(SHIM_LOADER_PATH)};\n` +
         `__caExpose();\n` +
         `__caLoader.register(${JSON.stringify(rel)});\n` +
         `globalThis.MapScript = __caMS;\n` +
         `globalThis.Loader = __caLoader;\n`;
+
+      // 5.5) builtinData.js 特殊：注入 JSON 预加载（在 builtinData.js 顶层代码执行前）
+      if (rel === 'builtinData.js' || rel.endsWith('/builtinData.js')) {
+        const PRELOAD_PATH = path.resolve(__dirname, 'builtin-data-preload.js');
+        header +=
+          `await import(${JSON.stringify(PRELOAD_PATH)});\n`;
+      }
 
       out = header + out;
 

@@ -52,6 +52,14 @@ export function exposeGlobals() {
       MapScript.modules.push('Intl');
     }
 
+    // JavaReflect 占位 shim（android-shim.js 里设的）需要 push 到 modules
+    // 让真正的 JavaReflect.js 加载时能覆盖占位
+    if (globalThis.JavaReflect && typeof globalThis.JavaReflect.forName === 'function') {
+      if (MapScript.modules.indexOf('JavaReflect') < 0) {
+        MapScript.modules.push('JavaReflect');
+      }
+    }
+
     // 注册所有 hook 为空函数（Web 端不会真正触发 MC 事件）
     // 原版 main.js:23-46 定义了一堆全局钩子
     for (const hook of MapScript.hooks) {
@@ -163,9 +171,14 @@ class LoaderImpl {
 
   fromFile(path) {
     if (path.endsWith('.json')) {
+      // Web 端：从 main.js 预加载的 globalThis.__caJsonFiles 查
+      const pre = globalThis.__caJsonFiles;
+      if (pre && path in pre) {
+        return pre[path];
+      }
       throw new Error(
         `Loader.fromFile("${path}"): JSON 同步加载在 Web 端不支持，` +
-        '请改用 await import(...)'
+        '请在 main.js 里 import 这个 JSON'
       );
     }
     if (path.endsWith('.js')) {

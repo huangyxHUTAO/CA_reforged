@@ -51,32 +51,77 @@ function makeAndroidRoot() {
 /**
  * JavaReflect shim —— 给 ca/modules/utils/JavaReflect.js 用
  * 原版是 Rhino 的 reflection，把字符串 "android.graphics.Color" 解析成类对象。
- * Web 端没有真正的类，返回我们的 Proxy 类即可。
+ * Web 端没有真正的类，返回 Proxy 类即可。
+ *
+ * 关键：staticMethod / method / constructor 必须**永不抛错**，否则
+ * IntColor.js 的 try/catch 会中断初始化，导致后续模块缺字段。
  */
 function makeJavaReflectShim() {
   const cache = new Map();
-  return {
-    forName: function (className) {
-      if (cache.has(className)) return cache.get(className);
-      // 把 "android.graphics.Color" 拆成 ["android", "graphics", "Color"]
-      // 顺着 globalThis 的命名空间找
-      const parts = className.split('.');
+  // parseClass 替身：把字符串 className 解析成 Proxy
+  function parseClassSafe(type) {
+    if (type && typeof type === 'string') {
+      if (cache.has(type)) return cache.get(type);
+      // 试着顺着 globalThis 找
+      const parts = type.split('.');
       let cur = globalThis;
       for (const p of parts) {
         if (cur == null) break;
         cur = cur[p];
       }
       if (cur != null) {
-        cache.set(className, cur);
+        cache.set(type, cur);
         return cur;
       }
-      // 找不到：返回代理
-      const placeholder = function () {};
-      placeholder.__className = className;
-      cache.set(className, placeholder);
+      // 找不到：返回 Proxy 类
+      const placeholder = makeAndroidClassProxy(type);
+      cache.set(type, placeholder);
       return placeholder;
     }
+    // 已经是个类对象：直接返回
+    return type || makeAndroidClassProxy('?');
+  }
+
+  return {
+    forName: function (className) {
+      return parseClassSafe(className);
+    },
+    // staticMethod / method / constructor 都返回 noop 函数
+    // 调用时直接返回 undefined（不执行实际逻辑）
+    staticMethod: function () {
+      return function () {};
+    },
+    method: function () {
+      return function () {};
+    },
+    constructor: function () {
+      return function () { return {}; };
+    },
+    declaredMethod: function () { return function () {}; },
+    declaredStaticMethod: function () { return function () {}; },
+    declaredConstructor: function () { return function () { return {}; }; },
+    field: function () { return { get: function () {}, set: function () {} }; },
+    declaredField: function () { return { get: function () {}, set: function () {} }; },
+    parseClass: parseClassSafe
   };
+}
+
+function makeAndroidClassProxy(name) {
+  const target = function () {};
+  target.__path__ = name;
+  target.__isClass = true;
+  // getMethod / getField 等都返回 Proxy
+  return new Proxy(target, {
+    get(t, prop) {
+      if (typeof prop === 'symbol') return t[prop];
+      if (prop === 'name' || prop === 'length' || prop === 'prototype') return t[prop];
+      if (prop === 'isPrimitive' || prop === 'isArray') return () => false;
+      // 链式：返回 new Proxy 作为"方法"
+      const m = function () {};
+      m.__path__ = (t.__path__ || '') + '.' + prop;
+      return m;
+    }
+  });
 }
 
 export function installAndroidShim() {
@@ -91,8 +136,15 @@ export function installAndroidShim() {
   // JavaReflect 是 ca/modules/utils/JavaReflect.js 的全局名
   // 如果原版模块还没加载（占位），给个最小 shim 避免 "Unable to parse X to class"
   // JavaReflect.js 加载后会通过 MapScript.loadModule 覆盖
+  // 注意：占位 shim 必须 push 到 MapScript.modules，否则 loadModule 走 else 分支拒绝覆盖
   if (!globalThis.JavaReflect || typeof globalThis.JavaReflect.forName !== 'function') {
     globalThis.JavaReflect = makeJavaReflectShim();
+    // 同步推 modules（注意：调用 installAndroidShim 时 MapScript 可能未定义）
+    if (typeof globalThis.MapScript !== 'undefined' && globalThis.MapScript.modules) {
+      if (globalThis.MapScript.modules.indexOf('JavaReflect') < 0) {
+        globalThis.MapScript.modules.push('JavaReflect');
+      }
+    }
   }
 
   globalThis.__caAndroidShimInstalled = true;

@@ -85,8 +85,14 @@ function loadModule(name, obj, ignoreHook) {
     return true;
   }
   if (!(name in this.global) || this.modules.indexOf(name) >= 0) {
+    if (name === 'JavaReflect') {
+      console.log('[JR branch] TAKEN: in global:', name in this.global, 'modules idx:', this.modules.indexOf(name), 'this.global is globalThis:', this.global === globalThis, 'this.global.JavaReflect keys:', this.global.JavaReflect && Object.keys(this.global.JavaReflect).length);
+    }
     this.global[name] = obj;
     if (this.modules.indexOf(name) < 0) this.modules.push(name);
+    if (name === 'JavaReflect') {
+      console.log('[JR assign] name in global:', name in this.global, 'globalThis.JR keys:', Object.keys(globalThis.JavaReflect).length, 'expected keys:', obj && Object.keys(obj).length);
+    }
     if (name === 'Intl') {
       console.log('[loadModule Intl] AFTER assign, globalThis.Intl === obj?', globalThis.Intl === obj, 'keys:', Object.keys(globalThis.Intl).length);
     }
