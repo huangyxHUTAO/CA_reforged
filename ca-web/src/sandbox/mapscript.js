@@ -84,7 +84,7 @@ function loadModule(name, obj, ignoreHook) {
     }
     return true;
   }
-  if (!(name in this.global) || this.modules.indexOf(name) >= 0) {
+  if (true) { // Web 端：强制覆盖（main.js 重新注册我们装的占位 shim）
     if (name === 'JavaReflect') {
       console.log('[JR branch] TAKEN: in global:', name in this.global, 'modules idx:', this.modules.indexOf(name), 'this.global is globalThis:', this.global === globalThis, 'this.global.JavaReflect keys:', this.global.JavaReflect && Object.keys(this.global.JavaReflect).length);
     }
