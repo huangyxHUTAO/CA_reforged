@@ -15,7 +15,8 @@
  */
 
 import './sandbox/android-shim.js';
-import { installAndroidShim, setupJavaIORuntime, setupRhinoRuntime } from './sandbox/android-shim.js';
+import { installAndroidShim, setupJavaIORuntime, setupRhinoRuntime, registerAt } from './sandbox/android-shim.js';
+import { registerAndroidViews } from './sandbox/android-view.js';
 import { setupRuntimeGlobals } from './sandbox/runtime-globals.js';
 import './components/ca-app.js';
 
@@ -29,12 +30,32 @@ async function boot() {
   setupRhinoRuntime();
   // 3) 装 ctx / gHandler / Log / erp / MapScript 初始化等
   setupRuntimeGlobals();
+  // 3.5) 装 android.widget.* / android.view.* 真 DOM 实现
+  registerAndroidViews(registerAt);
 
   // 4) 拉 ca-built.js（CA 引擎主体，68K 行 ES5）
   const url = new URL('./ca-built.js', import.meta.url).href;
   const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch ca-built.js: ' + res.status);
   const src = await res.text();
+
+  // 4.5) 建 CA UI 宿主容器（浮窗/弹窗挂这里）
+  let caOverlay = document.getElementById('ca-overlay');
+  if (!caOverlay) {
+    caOverlay = document.createElement('div');
+    caOverlay.id = 'ca-overlay';
+    caOverlay.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:visible;';
+    document.body.appendChild(caOverlay);
+  }
+  // ctx 挂 root/overlay，让 ScriptInterface.createFrameLayout 等能挂 DOM
+  const attachOverlay = (dom) => {
+    if (dom && !dom.isConnected) {
+      dom.style.pointerEvents = 'auto';
+      caOverlay.appendChild(dom);
+    }
+  };
+  globalThis.__caOverlay = caOverlay;
+  globalThis.__caAttachOverlay = attachOverlay;
 
   // 5) eval —— 让所有 MapScript.loadModule 副作用跑
   //    注意：ca-built.js 顶层定义 var MapScript/Loader/Log/erp/ctx，
@@ -48,6 +69,66 @@ async function boot() {
   const script = document.createElement('script');
   script.textContent = src;
   document.head.appendChild(script);
+
+  // 5.2) 拦截 PWM.wm —— WindowManager.addView 把 DOM 挂到 body overlay
+  const domOf = (view) => (view && (view.el || view.dom)) || null;
+  const patchWM = () => {
+    const PWM = globalThis.PWM;
+    if (!PWM || !PWM.wm || PWM.__caPatchedWM) return;
+    PWM.__caPatchedWM = true;
+    const wm = PWM.wm;
+    wm.addView = (view, lp) => {
+      if (globalThis.__caDebugWM) {
+        console.log('[ca-web wm.addView] view ctor:', view?.constructor?.name,
+          'hasEl:', !!(view && (view.el || view.dom)),
+          'lp:', lp && Object.keys(lp).slice(0, 8).join(','),
+          'lpHasSetTitle:', !!(lp && typeof lp.setTitle === 'function'));
+      }
+      const dom = domOf(view);
+      if (dom) {
+        dom.style.position = 'fixed';
+        dom.style.zIndex = '100000';
+        dom.style.pointerEvents = 'auto';
+        attachOverlay(dom);
+      }
+      return true;
+    };
+    wm.removeViewImmediate = (view) => {
+      const dom = domOf(view);
+      if (dom && dom.isConnected) dom.remove();
+      return true;
+    };
+    wm.removeView = wm.removeViewImmediate;
+    wm.updateViewLayout = (view, lp) => {
+      const dom = domOf(view);
+      if (dom && lp) {
+        if (lp.x != null) dom.style.left = lp.x + 'px';
+        if (lp.y != null) dom.style.top = lp.y + 'px';
+        if (lp.width === -1) dom.style.width = '100%';
+        else if (lp.width > 0) dom.style.width = lp.width + 'px';
+        if (lp.height === -1) dom.style.height = '100%';
+        else if (lp.height > 0) dom.style.height = lp.height + 'px';
+        if (lp.gravity === 0x11) {
+          dom.style.left = '50%';
+          dom.style.top = '50%';
+          dom.style.transform = 'translate(-50%, -50%)';
+        }
+      }
+      return true;
+    };
+    console.log('[ca-web] PWM.wm patched');
+  };
+  patchWM();
+  // 轮询等 PWM 出现
+  let wmPolls = 0;
+  const wmTimer = setInterval(() => {
+    if (globalThis.PWM?.wm && globalThis.PWM?.__caPatchedWM) {
+      clearInterval(wmTimer);
+      return;
+    }
+    patchWM();
+    if (++wmPolls > 200) clearInterval(wmTimer);
+  }, 50);
 
   // 5.5) 立刻打补丁：ca-built.js 的 var MapScript = {...} 会覆盖 globalThis.MapScript
   //      我们的 readJSON/saveJSON shim 必须重写一次
@@ -148,6 +229,45 @@ async function boot() {
   console.log('[ca-web] CA engine loaded. CA:', typeof globalThis.CA);
   console.log('[ca-web] Common.theme:', globalThis.Common?.theme);
   console.log('[ca-web] IntelliSense:', typeof globalThis.CA?.IntelliSense);
+
+  // 8) 打开命令生成器并把 UI 根挂到页面（模拟 Android 端 showActivityContent）
+  //    CA.showGen 由引擎自建整棵 View 树；我们从 mainView 向上找根，挂 overlay
+  const mountCAUi = () => {
+    try {
+      const mv = globalThis.CA?.gen?.mainView;
+      if (!mv || !mv.el) return false;
+      let root = mv, hops = 0;
+      while (root.getParent && root.getParent() && hops < 32) { root = root.getParent(); hops++; }
+      if (root.el && !root.el.isConnected) {
+        root.el.style.position = 'fixed';
+        root.el.style.inset = '0';
+        root.el.style.pointerEvents = 'auto';
+        root.el.style.zIndex = '100000';
+        globalThis.__caAttachOverlay(root.el);
+        console.log('[ca-web] CA UI mounted (root:', root.constructor?.name + ')');
+        return true;
+      }
+      return !!root.el?.isConnected;
+    } catch (e) {
+      console.warn('[ca-web] mountCAUi failed:', e?.message || e);
+      return false;
+    }
+  };
+  globalThis.__caMountCAUi = mountCAUi;
+
+  try {
+    globalThis.CA.settings.iiMode = 3;
+    globalThis.CA.showGen(true);
+    if (!mountCAUi()) {
+      // 兜底：等 PopupPage 异步装完再试
+      let tries = 0;
+      const t = setInterval(() => {
+        if (mountCAUi() || ++tries > 100) clearInterval(t);
+      }, 100);
+    }
+  } catch (e) {
+    console.warn('[ca-web] showGen failed:', e?.message || e);
+  }
 }
 
 boot().catch(e => {

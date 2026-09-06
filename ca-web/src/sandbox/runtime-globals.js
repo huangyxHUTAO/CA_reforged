@@ -211,7 +211,10 @@ export function setupRuntimeGlobals() {
   };
 
   // 6) NeteaseAdapter
-  globalThis.NeteaseAdapter = { mcVersion: '1.20.0' };
+  globalThis.NeteaseAdapter = { mcVersion: '1.21.0' };
+  // cadroid 注入的全局：返回 MC 版本。取高版本让 CA.checkFeatures 走完整功能分支
+  globalThis.getMinecraftVersion = function () { return globalThis.NeteaseAdapter.mcVersion; };
+  globalThis.getCurrentMcVersion = globalThis.getMinecraftVersion;
 
   // 7) SettingsCompat
   globalThis.SettingsCompat = {
@@ -231,11 +234,70 @@ export function setupRuntimeGlobals() {
 function makeCtx() {
   return {
     runOnUiThread: (fn) => fn(),
-    getMainLooper: () => ({ getThread: () => ({ currentThread: () => ({}) }) }),
+    getMainLooper: () => globalThis.android?.os?.Looper?.getMainLooper() || ({ getThread: () => ({ currentThread: () => ({}) }) }),
+    getWindow: () => ({
+      getDecorView: () => ({ getWindowToken: () => null, getWidth: () => window.innerWidth, getHeight: () => window.innerHeight }),
+      setSoftInputMode: () => {},
+      getWindowManager: () => ({ getDefaultDisplay: () => ({ getWidth: () => window.innerWidth, getHeight: () => window.innerHeight, getMetrics: (m) => { m.widthPixels = window.innerWidth; m.heightPixels = window.innerHeight; } }) }),
+      getAttributes: () => ({})
+    }),
+    getWindowManager: () => ({
+      getDefaultDisplay: () => ({ getWidth: () => window.innerWidth, getHeight: () => window.innerHeight, getMetrics: (m) => { m.widthPixels = window.innerWidth; m.heightPixels = window.innerHeight; } })
+    }),
     getDir: () => ({ getAbsolutePath: () => '/ca-modules/' }),
     getPackageName: () => 'ca.web',
     getExternalFilesDir: () => '/ca-modules/',
-    getSystemService: () => ({ setText: () => {} }),
+    // Android Context 服务名常量（PWM.wm = ctx.getSystemService(ctx.WINDOW_SERVICE)）
+    WINDOW_SERVICE: 'window',
+    LAYOUT_INFLATER_SERVICE: 'layout_inflater',
+    CLIPBOARD_SERVICE: 'clipboard',
+    CONNECTIVITY_SERVICE: 'connectivity',
+    NOTIFICATION_SERVICE: 'notification',
+    VIBRATOR_SERVICE: 'vibrator',
+    AUDIO_SERVICE: 'audio',
+    POWER_SERVICE: 'power',
+    ALARM_SERVICE: 'alarm',
+    INPUT_METHOD_SERVICE: 'input_method',
+    TELEPHONY_SERVICE: 'telephony',
+    ACCESSIBILITY_SERVICE: 'accessibility',
+    getPkgNameForIcon: () => null,
+    getSystemService: (name) => {
+      if (name === 'window' || name === 'WINDOW_SERVICE') {
+        // PWM.wm 就是这个对象：默认给 wm 协议空实现（boot 后 patchWM 替换为挂 DOM 版）
+        return {
+          addView: () => true,
+          removeView: () => true,
+          removeViewImmediate: () => true,
+          updateViewLayout: () => true,
+          getDefaultDisplay: () => ({
+            getWidth: () => window.innerWidth,
+            getHeight: () => window.innerHeight,
+            getRotation: () => 0,
+            getMetrics: (m) => { if (m) { m.widthPixels = window.innerWidth; m.heightPixels = window.innerHeight; m.density = 1; m.scaledDensity = 1; } },
+            getRealMetrics: (m) => { if (m) { m.widthPixels = window.innerWidth; m.heightPixels = window.innerHeight; } }
+          })
+        };
+      }
+      if (name === 'layout_inflater' || name === 'LAYOUT_INFLATER_SERVICE') {
+        return { inflate: () => new (globalThis.android.widget.FrameLayout)() };
+      }
+      if (name === 'clipboard' || name === 'CLIPBOARD_SERVICE') {
+        return {
+          setText: (t) => navigator.clipboard?.writeText(String(t)).catch(() => {}),
+          getText: () => null,
+          setPrimaryClip: () => {},
+          getPrimaryClip: () => null,
+          hasPrimaryClip: () => false
+        };
+      }
+      if (name === 'connectivity' || name === 'CONNECTIVITY_SERVICE') {
+        return {
+          getActiveNetworkInfo: () => ({ isConnected: () => navigator.onLine, isAvailable: () => navigator.onLine }),
+          getNetworkInfo: () => null
+        };
+      }
+      return { setText: () => {}, getDefaultDisplay: () => ({ getWidth: () => window.innerWidth, getHeight: () => window.innerHeight, getMetrics: (m) => { if (m) { m.widthPixels = window.innerWidth; m.heightPixels = window.innerHeight; } } }) };
+    },
     getResources: () => ({
       getDisplayMetrics: () => ({ density: 1, scaledDensity: 1, widthPixels: 1024, heightPixels: 768 }),
       getConfiguration: () => ({ getLocales: () => ({ size: () => 0, get: () => ({ getLanguage: () => 'en', getCountry: () => 'US' }) }) }),
@@ -266,7 +328,15 @@ function makeCtx() {
 function makeHandler() {
   return {
     post: (fn) => queueMicrotask(fn),
-    postDelayed: (fn, ms) => setTimeout(fn, ms)
+    postDelayed: (fn, ms) => setTimeout(fn, ms),
+    postAtFrontOfQueue: (fn) => queueMicrotask(fn),
+    removeCallbacks: () => {},
+    removeCallbacksAndMessages: () => {},
+    hasMessages: () => false,
+    sendEmptyMessage: () => true,
+    sendMessage: () => true,
+    obtainMessage: () => ({ sendToTarget: () => {}, replyTo: null }),
+    getLooper: () => globalThis.android?.os?.Looper?.getMainLooper?.() || null
   };
 }
 
@@ -299,6 +369,12 @@ function makeLog() {
     s: (o) => { console.log('[ca Tree]', o); return o; },
     t: (msg) => console.log('[ca Toast]', msg),
     r: () => new Error().stack,
+    throwError: function (err) {
+      Error.captureStackTrace && Error.captureStackTrace(err, this.throwError);
+      throw err;
+    },
+    f: (name, args) => { const s = []; for (let i = 0; i < args.length; i++) s.push(args[i]); console.log('[ca Verbose]', name + '(' + s.join(', ') + ')'); },
+    debug: (name, o, depth, objs) => o,
     c: function (f, scope) {
       try { return f.apply(scope, [].slice.call(arguments, 2)); }
       catch (e) { console.error('[ca]', e); }
@@ -321,12 +397,33 @@ function makeErp() {
 }
 
 function makeFrameLayout(opts) {
+  // 优先：返回真 DOM FrameLayout（android-view.js 注册过 android.widget.FrameLayout）
+  try {
+    const FL = globalThis.android?.widget?.FrameLayout;
+    if (FL) {
+      const f = new FL();
+      // FrameLayout 需要能接子 View + dispatchKey/Touch（PopupWindow 装饰）
+      f.dispatchKeyEvent = opts?.dispatchKeyEvent || (() => 0);
+      f.dispatchTouchEvent = opts?.dispatchTouchEvent || (() => 0);
+      f.setContentDescription(String('FrameLayout'));
+      return f;
+    }
+    console.warn('[ca-web] makeFrameLayout: android.widget.FrameLayout 未注册，用 fallback');
+  } catch (e) {
+    console.warn('[ca-web] makeFrameLayout try 失败:', e?.message || e);
+  }
+  // fallback：带全套 WM 兼容方法
+  const lp = {
+    width: -2, height: -2, gravity: 0, x: 0, y: 0, type: 0, flags: 0,
+    setTitle() { return this; },
+    getTitle() { return ''; }
+  };
   return {
     setContentDescription: () => {},
     addView: (v, params) => v,
     removeView: () => {},
     setLayoutParams: () => {},
-    getLayoutParams: () => ({}),
+    getLayoutParams: () => lp,
     setVisibility: () => {},
     getVisibility: () => 0,
     getWidth: () => 0,
