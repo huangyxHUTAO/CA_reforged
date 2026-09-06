@@ -360,12 +360,16 @@ export class AndroidView {
     if (!this.__caInputHooked) {
       this.__caInputHooked = true;
       const target = this.el;
+      this.__caInputHookedEl = target;
       target.addEventListener('input', () => {
+        this.__caInputCount = (this.__caInputCount || 0) + 1;
+        console.log('probe: hook ran, watchers=', (this._textWatchers||[]).length, 'isCmd=', this === globalThis.CA?.cmd);
         const s = target.value !== undefined ? target.value : target.textContent;
         for (const w of (this._textWatchers || [])) {
           try {
             w.beforeTextChanged && w.beforeTextChanged(s, 0, 0, 0);
             w.onTextChanged && w.onTextChanged(s, 0, 0, 0);
+            console.log('probe: calling after on w, has=', typeof w.afterTextChanged);
             w.afterTextChanged && w.afterTextChanged({
               length: () => s.length,
               toString: () => s,

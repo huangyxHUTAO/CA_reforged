@@ -16,6 +16,7 @@ const PATH_CACHE = new Map();
 function makeProxy(path) {
   const target = function () {};
   target.__path__ = path;
+  target.__isCaProxy = true; // 标记：handler.get 缓存的占位节点（非真类）
   return new Proxy(target, handler);
 }
 
@@ -52,6 +53,7 @@ const handler = {
       return target[prop];
     }
     const newPath = target.__path__ ? target.__path__ + '.' + prop : String(prop);
+    if (Object.prototype.hasOwnProperty.call(target, prop)) return target[prop]; // construct 保留的回调等
     if (PATH_CACHE.has(newPath)) return PATH_CACHE.get(newPath);
     const node = makeProxy(newPath);
     PATH_CACHE.set(newPath, node);
@@ -61,7 +63,16 @@ const handler = {
     return PATH_CACHE.get(target.__path__) || makeProxy(target.__path__);
   },
   construct(target, args) {
-    return PATH_CACHE.get(target.__path__) || makeProxy(target.__path__);
+    const cached = PATH_CACHE.get(target.__path__);
+    // 只有"真类"（我们显式 registerAt 的）才直接返回；
+    // get 缓存的占位 Proxy（__isCaProxy）不算——否则 new G.TextWatcher({...}) 会丢属性
+    if (cached && !cached.__isCaProxy) return cached;
+    // 未注册的接口/监听器（G.TextWatcher、Packages.*Listener 等）：
+    // 返回保留 args[0] 属性的可调用 Proxy —— 已知回调不丢，未知属性继续走链
+    const obj = function () {};
+    obj.__path__ = target.__path__;
+    if (args[0] && typeof args[0] === 'object') Object.assign(obj, args[0]);
+    return new Proxy(obj, handler);
   }
 };
 
