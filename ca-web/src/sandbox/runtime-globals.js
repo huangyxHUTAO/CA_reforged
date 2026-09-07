@@ -277,6 +277,18 @@ function makeCtx() {
       if (name === 'layout_inflater' || name === 'LAYOUT_INFLATER_SERVICE') {
         return { inflate: () => new (globalThis.android.widget.FrameLayout)() };
       }
+      if (name === 'input_method' || name === 'INPUT_METHOD_SERVICE') {
+        return {
+          showSoftInput: (view, flags) => { try { view?.el?.focus?.(); } catch (e) {} return true; },
+          hideSoftInputFromWindow: () => true,
+          toggleSoftInput: () => true,
+          isAcceptingText: () => true,
+          isActive: () => true,
+          showStatusIcon: () => {},
+          restartInput: () => {},
+          updateSelection: () => {}
+        };
+      }
       if (name === 'clipboard' || name === 'CLIPBOARD_SERVICE') {
         return {
           setText: (t) => navigator.clipboard?.writeText(String(t)).catch(() => {}),

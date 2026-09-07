@@ -93,7 +93,10 @@ export class CharSequenceWrap {
 /** AndroidView 基类 —— 包装一个 DOM 元素 */
 export class AndroidView {
   constructor(tagName = 'div') {
-    this.el = document.createElement(tagName);
+    // 兼容 new G.View(ctx)：ctx 是 context，不是 tagName
+    const VALID = /^[a-z][a-z0-9-]*$/i;
+    const tag = (typeof tagName === 'string' && VALID.test(tagName)) ? tagName : 'div';
+    this.el = document.createElement(tag);
     // 注意：不默认 position:absolute（会让 flex/block 布局错乱）。
     // 只有 FrameLayout 子（叠放）和 WindowManager 根（fixed）才需要定位。
     this.el.style.boxSizing = 'border-box';
@@ -192,14 +195,16 @@ export class AndroidView {
   // ===== Visibility / Alpha =====
   setVisibility(v) {
     this.visibility = v;
-    // Web 端没有 GONE→ANIM→VISIBLE 流程；只要不是 0/4 就显示
-    if (v === 0 || v === undefined || v === null) {
-      this.el.style.display = '';
+    // 尊重 Android 语义：GONE(8) 完全移除 / INVISIBLE(4) 保留空间 / VISIBLE(0) 显示
+    // （引擎动画结束回调会负责把 GONE 的视图恢复 VISIBLE——见 CAAnimation.start）
+    if (v === 8) {
+      this.el.style.display = 'none';
     } else if (v === 4) {
+      this.el.style.display = '';
       this.el.style.visibility = 'hidden';
     } else {
-      // GONE(8) 等也保持显示，避免引擎动画流不完整时整块消失
       this.el.style.display = '';
+      this.el.style.visibility = '';
     }
     return this;
   }
@@ -394,14 +399,11 @@ export class AndroidView {
       const target = this.el;
       this.__caInputHookedEl = target;
       target.addEventListener('input', () => {
-        this.__caInputCount = (this.__caInputCount || 0) + 1;
-        console.log('probe: hook ran, watchers=', (this._textWatchers||[]).length, 'isCmd=', this === globalThis.CA?.cmd);
         const s = target.value !== undefined ? target.value : target.textContent;
         for (const w of (this._textWatchers || [])) {
           try {
             w.beforeTextChanged && w.beforeTextChanged(s, 0, 0, 0);
             w.onTextChanged && w.onTextChanged(s, 0, 0, 0);
-            console.log('probe: calling after on w, has=', typeof w.afterTextChanged);
             w.afterTextChanged && w.afterTextChanged({
               length: () => s.length,
               toString: () => s,
@@ -485,7 +487,8 @@ export class AndroidView {
   setClipToOutline(b) { return this; }
   setWillNotDraw() { return this; }
   setLayerType() { return this; }
-  startAnimation() { return this; }
+  startAnimation(a) { try { a && typeof a.start === 'function' && a.start(); } catch (e) {} return this; }
+  clearAnimation() { return this; }
   clearAnimation() { return this; }
   animate() { return { setDuration: () => this, setInterpolator: () => this, start: () => this, alpha: () => this, translationY: () => this }; }
   bringToFront() { if (this.el.parentNode) this.el.parentNode.appendChild(this.el); return this; }
@@ -528,6 +531,22 @@ export class AndroidView {
   setRoundRectRadius(r) { this.el.style.borderRadius = (r || 0) + 'px'; return this; }
   setDefaultWindowRoundRectRadius() { return this; }
 }
+
+// ===== AndroidView 静态常量（G.View.VISIBLE/GONE 等直接属性访问，不走 Proxy） =====
+AndroidView.VISIBLE = 0;
+AndroidView.INVISIBLE = 4;
+AndroidView.GONE = 8;
+AndroidView.NO_ID = -1;
+AndroidView.SCROLLBAR_POSITION_LEFT = 1;
+AndroidView.SCROLLBAR_POSITION_RIGHT = 2;
+AndroidView.OVER_SCROLL_ALWAYS = 0;
+AndroidView.OVER_SCROLL_IF_CONTENT_SCROLLS = 1;
+AndroidView.SYSTEM_UI_FLAG_VISIBLE = 0;
+AndroidView.SYSTEM_UI_FLAG_HIDE_NAVIGATION = 2;
+AndroidView.SYSTEM_UI_FLAG_IMMERSIVE = 2048;
+AndroidView.IMPORTANT_FOR_ACCESSIBILITY_AUTO = 0;
+AndroidView.KEEP_SCREEN_ON = 0x4000000;
+AndroidView.TEXT_ALIGNMENT_TEXT_START = 3;
 
 // ===== AndroidView 静态内部类（供 new G.View.OnTouchListener({...}) 等） =====
 AndroidView.OnTouchListener = class {
@@ -835,3 +854,30 @@ export function registerAndroidViews(R) {
 
   registered = true;
 }
+
+// ===== 常用 widget 静态常量（G.LinearLayout.HORIZONTAL 等直接属性访问） =====
+LinearLayout.HORIZONTAL = 0;
+LinearLayout.VERTICAL = 1;
+LinearLayout.SHOW_DIVIDER_NONE = 0;
+LinearLayout.SHOW_DIVIDER_BEGINNING = 1;
+LinearLayout.SHOW_DIVIDER_MIDDLE = 2;
+LinearLayout.SHOW_DIVIDER_END = 4;
+TextView.AUTO_LINK_WEB_URLS = 1;
+TextView.AUTO_LINK_EMAIL_ADDRESSES = 2;
+TextView.AUTO_LINK_PHONE_NUMBERS = 4;
+TextView.AUTO_LINK_MAP_ADDRESSES = 8;
+EditText.TYPE_CLASS_TEXT = 1;
+EditText.TYPE_CLASS_NUMBER = 2;
+EditText.TYPE_TEXT_VARIATION_PASSWORD = 0x80;
+EditText.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD = 0x90;
+EditText.TYPE_TEXT_FLAG_NO_SUGGESTIONS = 0x80000;
+EditText.TYPE_TEXT_FLAG_AUTO_CORRECT = 0x8000;
+EditText.TYPE_TEXT_FLAG_CAP_SENTENCES = 0x4000;
+EditText.IME_ACTION_DONE = 6;
+EditText.IME_ACTION_NEXT = 5;
+EditText.IME_ACTION_SEND = 4;
+EditText.IME_ACTION_SEARCH = 3;
+EditText.IME_ACTION_GO = 2;
+EditText.IME_ACTION_DEFAULT = 0;
+EditText.IME_FLAG_NO_FULLSCREEN = 0x2000000;
+EditText.IME_FLAG_NAVIGATE_NEXT = 0x8000000;

@@ -555,15 +555,57 @@ registerAt('android.view.WindowManager.LayoutParams', WMLayoutParams);
   // Color 常量
   const Color = { BLACK: -16777216, WHITE: -1, TRANSPARENT: 0, RED: -65536, GRAY: -7829368 };
   registerAt('android.graphics.Color', Color);
-  // Animation 常量
-  const Animation = { ABSOLUTE: 0, RELATIVE_TO_SELF: 1, RELATIVE_TO_PARENT: 2 };
-  registerAt('android.view.animation.Animation', Animation);
-  const DecelerateInterpolator = class { constructor() {} };
-  registerAt('android.view.animation.DecelerateInterpolator', DecelerateInterpolator);
-  const AccelerateInterpolator = class { constructor() {} };
-  registerAt('android.view.animation.AccelerateInterpolator', AccelerateInterpolator);
-  const TranslateAnimation = class { constructor() {} };
+  // Animation —— 引擎 new 动画 + setDuration/setInterpolator/startAnimation 链，Web 端 noop 化
+  class CAAnimation {
+    constructor() {
+      this._listeners = {};
+      this._duration = 0;
+    }
+    setDuration(d) { this._duration = d; return this; }
+    setStartOffset(o) { return this; }
+    setFillAfter(b) { return this; }
+    setFillBefore(b) { return this; }
+    setRepeatCount(n) { return this; }
+    setRepeatMode(m) { return this; }
+    setInterpolator(i) { return this; }
+    setAnimationListener(l) { this._listeners.end = l; return this; }
+    start() { this._fire('start'); this._fire('end'); }
+    startNow() { this._fire('start'); this._fire('end'); }
+    cancel() { this._fire('cancel'); }
+    reset() { return this; }
+    _fire(ev) {
+      const l = this._listeners.end;
+      if (!l) return;
+      if (ev === 'end' && typeof l.onAnimationEnd === 'function') {
+        try { l.onAnimationEnd(this); } catch (e) {}
+      } else if (ev === 'start' && typeof l.onAnimationStart === 'function') {
+        try { l.onAnimationStart(this); } catch (e) {}
+      }
+    }
+    isInitialized() { return true; }
+    getDuration() { return this._duration; }
+  }
+  CAAnimation.ABSOLUTE = 0;
+  CAAnimation.RELATIVE_TO_SELF = 1;
+  CAAnimation.RELATIVE_TO_PARENT = 2;
+  CAAnimation.INFINITE = -1;
+  CAAnimation.RESTART = 1;
+  CAAnimation.REVERSE = 2;
+  class TranslateAnimation extends CAAnimation {
+    constructor() { super(); }
+  }
+  registerAt('android.view.animation.Animation', CAAnimation);
+  CAAnimation.AnimationListener = class { constructor(o) { if (o) Object.assign(this, o); } };
+  registerAt('android.view.animation.Animation.AnimationListener', CAAnimation.AnimationListener);
   registerAt('android.view.animation.TranslateAnimation', TranslateAnimation);
+  registerAt('android.view.animation.AlphaAnimation', CAAnimation);
+  registerAt('android.view.animation.ScaleAnimation', CAAnimation);
+  registerAt('android.view.animation.AnimationSet', CAAnimation);
+  registerAt('android.view.animation.DecelerateInterpolator', class { constructor() {} });
+  registerAt('android.view.animation.AccelerateInterpolator', class { constructor() {} });
+  registerAt('android.view.animation.OvershootInterpolator', class { constructor() {} });
+  registerAt('android.view.animation.PathInterpolator', class { constructor() {} });
+  registerAt('android.view.animation.LinearInterpolator', class { constructor() {} });
   // ImageView.ScaleType
   const ScaleType = { CENTER_CROP: 4, FIT_XY: 0, CENTER_INSIDE: 2, FIT_CENTER: 1 };
   registerAt('android.widget.ImageView.ScaleType', ScaleType);
