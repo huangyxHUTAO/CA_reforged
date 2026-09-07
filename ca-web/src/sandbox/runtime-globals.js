@@ -53,17 +53,12 @@ export function setupRuntimeGlobals() {
     }
   }
 
-  // 2.5) Intl 占位 —— main.js 顶层用 `Intl.lookupLang({...})`。
-  //      如果不预设，浏览器原生 Intl（没 lookupLang）会报 not a function
-  //      必须预设 + push 到 modules，让 loadModule 走覆盖分支
-  globalThis.Intl = {
-    get: (k) => k,
-    mapNamespace: () => {},
-    loadLang: () => {},
-    lookupLang: (ranges) => 'zh_CN',
-    defaultLang: {}
-  };
-  if (MapScript.modules.indexOf('Intl') < 0) MapScript.modules.push('Intl');
+  // 2.5) Intl —— 删除浏览器原生 Intl，让 built main.js 的
+  //      MapScript.loadModule("Intl", {...}) 能装上引擎版（loadModule 的
+  //      `name in global` 检查会把原生 Intl 当已注册而拒绝覆盖）。
+  //      引擎版带 lookupLang/loadLang/mapNamespace，Common.onCreate 的
+  //      Intl.mapNamespace(this, "intl", "common") 依赖它挂 Common.intl
+  delete globalThis.Intl;
 
   // 2.6) MapScript.readJSON / saveJSON shim —— 让 built main.js 里的
   //      CA.Library.initLibrary 能从我们预加载的 JSON 读
@@ -103,20 +98,20 @@ export function setupRuntimeGlobals() {
       return true;
     }
   };
-  //      如果不预设，浏览器原生 Intl（没 lookupLang）会报 not a function
-  //      必须预设 + push 到 modules，让 loadModule 走覆盖分支
-  globalThis.Intl = {
-    get: (k) => k,
-    mapNamespace: () => {},
-    loadLang: () => {},
-    lookupLang: (ranges) => 'zh_CN',
-    defaultLang: {}
-  };
-  if (MapScript.modules.indexOf('Intl') < 0) MapScript.modules.push('Intl');
 
   // 3) ScriptInterface 替身
   globalThis.ScriptInterface = {
     createFrameLayout: (opts) => makeFrameLayout(opts),
+    getGiteeClientId: () => '',
+    getGiteeClientSecret: () => '',
+    createWebView: (opts) => {
+      // 用 android-view 的 WebView（iframe 承载）—— onConsoleMessage 等回调忽略
+      try {
+        const WV = globalThis.android?.webkit?.WebView;
+        if (WV) return new WV();
+      } catch (e) {}
+      return null;
+    },
     setLoadingTitle: (s) => console.log('[ca loading]', s),
     setBridge: (b) => { globalThis.__caBridge = b; },
     runOnUiThread: (f) => f(),
@@ -159,6 +154,7 @@ export function setupRuntimeGlobals() {
     permissionRequestData: { start: 0, end: 0 },
     permissionCallback: { length: 0 },
     foregroundTask: {},
+    Tiles: {}, // updateDebugAction 会 AndroidBridge.Tiles["debug.tile"]=...
     callHide: () => {},
     scriptAction: () => {},
     openUriAction: () => {},
@@ -385,10 +381,9 @@ function makeLog() {
 
 function makeErp() {
   return function (error, silent, extra) {
-    // 简单版：log，弹窗省略
     try {
-      if (error && error.message) {
-        console.error('[ca erp]', error.message);
+      if (error instanceof Error) {
+        console.error('[ca erp]', error.message, '\n', (error.stack || '').split('\n').slice(1, 5).join('\n'));
       } else {
         console.error('[ca erp]', error);
       }

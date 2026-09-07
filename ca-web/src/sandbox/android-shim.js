@@ -271,7 +271,15 @@ export function setupJavaIORuntime() {
   registerAt('java.io.FileWriter', JOutputStreamWriter);
   registerAt('java.io.BufferedWriter', JOutputStreamWriter);
 
-  // java.lang.*
+  // java.lang.* —— String 需带 Java 风格 format（Intl.resolve = java.lang.String.format）
+  if (typeof String.format !== 'function') {
+    String.format = function (tpl, ...args) {
+      return String(tpl).replace(/\{(\d+)\}/g, (m, i) => args[Number(i)] != null ? String(args[Number(i)]) : m);
+    };
+  }
+  if (typeof String.prototype.getBytes !== 'function') {
+    String.prototype.getBytes = function () { return new TextEncoder().encode(String(this)); };
+  }
   registerAt('java.lang.String', String);
   registerAt('java.lang.Integer', JInteger);
   registerAt('java.lang.Long', JInteger);

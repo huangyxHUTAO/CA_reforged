@@ -261,7 +261,9 @@ export class AndroidView {
   setX(x) { this.el.style.left = (x || 0) + 'px'; return this; }
   setY(y) { this.el.style.top = (y || 0) + 'px'; return this; }
   setTranslationX(x) { this.el.style.transform = `translateX(${x || 0}px)`; return this; }
-  setTranslationY(y) { this.el.style.transform += ` translateY(${y || 0}px)`; return this; }
+  setTranslationY(y) { this._ty = y || 0; this.el.style.transform = `translate(${this._tx || 0}px, ${this._ty}px)`; return this; }
+  getTranslationX() { return this._tx || 0; }
+  getTranslationY() { return this._ty || 0; }
   getX() { return parseFloat(this.el.style.left) || 0; }
   getY() { return parseFloat(this.el.style.top) || 0; }
   getLeft() { return this.getX(); }
@@ -290,8 +292,20 @@ export class AndroidView {
   }
   setOnTouchListener(listener) {
     this._listeners.touch = listener;
-    // 简化：转发所有 pointer 事件
-    const handler = (e) => listener && listener.onTouch(this, e);
+    // 引擎 listener 期望 Android MotionEvent：getAction/getX/getY/getRawX/getRawY/getEventTime
+    // 真实 DOM PointerEvent 已含 clientX/Y（=raw），需包一层
+    const wrap = (e) => ({
+      getAction: () => 0, // ACTION_DOWN 等我们不区分
+      getActionMasked: () => 0,
+      getX: () => e.clientX,
+      getY: () => e.clientY,
+      getRawX: () => e.clientX,
+      getRawY: () => e.clientY,
+      getEventTime: () => e.timeStamp,
+      getDownTime: () => e.timeStamp,
+      _e: e
+    });
+    const handler = (e) => listener && listener.onTouch(this, wrap(e));
     this.el.onpointerdown = handler;
     this.el.onpointermove = handler;
     this.el.onpointerup = handler;
@@ -720,6 +734,41 @@ export class GridView extends AbsListView {
   }
 }
 
+/** WebView —— 用 iframe 承载，loadUrl/loadData 可用 */
+export class WebView extends AndroidView {
+  constructor() {
+    super('div');
+    this.tagNameForView = 'WebView';
+    this.el.style.cssText += 'display:block;overflow:hidden;';
+    const frame = document.createElement('iframe');
+    frame.style.cssText = 'width:100%;height:100%;border:none;background:#fff;';
+    this.el.appendChild(frame);
+    this._frame = frame;
+  }
+  loadUrl(url) { try { this._frame.src = String(url); } catch (e) {} return this; }
+  loadData(html, mime) {
+    try { this._frame.srcdoc = String(html); } catch (e) {}
+    return this;
+  }
+  loadDataWithBaseURL(base, html) { return this.loadData(html); }
+  getSettings() { return new Proxy({}, { get: () => () => {} }); }
+  setWebViewClient(c) { this._client = c; return this; }
+  setWebChromeClient(c) { this._chrome = c; return this; }
+  addJavascriptInterface() { return this; }
+  clearHistory() { return this; }
+  clearCache() { return this; }
+  destroy() { if (this._frame.parentNode) this._frame.parentNode.removeChild(this._frame); return this; }
+  reload() { try { this._frame.contentWindow?.location?.reload(); } catch (e) {} return this; }
+  stopLoading() { return this; }
+  goBack() { return this; }
+  goForward() { return this; }
+  canGoBack() { return false; }
+  getUrl() { return this._frame.src || ''; }
+  evaluateJavascript(js, cb) {
+    try { const r = this._frame.contentWindow?.eval?.(js); cb && cb(r); } catch (e) {}
+  }
+}
+
 export class AdapterView extends ViewGroup {
   constructor() { super(); this.tagNameForView = 'AdapterView'; }
   setAdapter(a) { this.adapter = a; return this; }
@@ -752,6 +801,7 @@ export function registerAndroidViews(R) {
   R('android.widget.ListView', ListView);
   R('android.widget.GridView', GridView);
   R('android.widget.AdapterView', AdapterView);
+  R('android.webkit.WebView', WebView);
   R('com.huangyx.ca.MyEditText', EditText);
   R('android.view.ViewGroup.LayoutParams', class {
     constructor(w, h) { this.width = w; this.height = h; this.gravity = 0; }
