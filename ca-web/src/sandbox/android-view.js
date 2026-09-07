@@ -94,7 +94,8 @@ export class CharSequenceWrap {
 export class AndroidView {
   constructor(tagName = 'div') {
     this.el = document.createElement(tagName);
-    this.el.style.position = 'absolute';
+    // 注意：不默认 position:absolute（会让 flex/block 布局错乱）。
+    // 只有 FrameLayout 子（叠放）和 WindowManager 根（fixed）才需要定位。
     this.el.style.boxSizing = 'border-box';
     this.children = [];
     this.layoutParams = { width: WRAP_CONTENT, height: WRAP_CONTENT, gravity: 0 };
@@ -627,7 +628,7 @@ export class EditText extends TextView {
     super();
     this.tagNameForView = 'EditText';
     this.el = document.createElement('textarea');
-    this.el.style.position = 'absolute';
+    // textarea 不 absolute，参与 flex 布局
     this.el.style.boxSizing = 'border-box';
     this.el.style.background = 'transparent';
     this.el.style.color = 'inherit';
