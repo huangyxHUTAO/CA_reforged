@@ -733,6 +733,15 @@ export class EditText extends TextView {
     this.el.style.border = 'none';
     this.el.style.outline = 'none';
     this.el.style.resize = 'none';
+    // Android EditText 点击必然聚焦；真机里 pointerdown 默认聚焦被上层引擎
+    // touch 监听链的 preventDefault 取消（表现为点击后无光标、无法输入）。
+    // 这里用 capture 阶段手动聚焦——这是输入控件"可聚焦"语义的正确翻译。
+    const ensureFocus = () => { if (document.activeElement !== this.el) this.el.focus(); };
+    this.el.addEventListener('pointerdown', ensureFocus, true);
+    this.el.addEventListener('mousedown', ensureFocus, true);
+    this.el.addEventListener('touchstart', ensureFocus, true);
+    this.el.addEventListener('click', () => { ensureFocus(); }, true);
+    this.el.tabIndex = 0;
   }
   setText(t) { this.el.value = t == null ? '' : String(t); return this; }
   getText() { return new CharSequenceWrap(this.el.value, this._spans || []); }
