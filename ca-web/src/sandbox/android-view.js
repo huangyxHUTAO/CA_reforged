@@ -113,6 +113,7 @@ export class AndroidView {
   // ===== LayoutParams =====
   setLayoutParams(lp) {
     this.layoutParams = lp || {};
+    this.__lpSet = true;
     // WM 兼容兜底：buildLayoutParams 会对 p 调 setTitle 等
     if (typeof this.layoutParams.setTitle !== 'function') {
       this.layoutParams.setTitle = function () { return this; };
@@ -143,12 +144,56 @@ export class AndroidView {
   _applyLayout() {
     const lp = this.layoutParams;
     if (!lp) return;
-    this.el.style.width = dimToCss(lp.width);
-    this.el.style.height = dimToCss(lp.height);
-    // weight 字段：LinearLayout.LayoutParams(-1, 0, 1) 第三参数
-    // Web flex：flex: weight 1 1 auto
-    if (lp.weight) {
-      this.el.style.flex = `${lp.weight} 1 0%`;
+    const st = this.el.style;
+    const parent = this._parent;
+    const pLinear = parent && parent.tagNameForView === 'LinearLayout';
+    const pFrame = parent && parent.tagNameForView === 'FrameLayout';
+    // 复位此前可能残留的 flex 规则（避免多次 setLayoutParams 累积）
+    st.flexGrow = '';
+    st.flexShrink = '';
+    st.flexBasis = '';
+
+    if (pLinear) {
+      // —— Android LinearLayout 子语义 ——
+      // 主轴：weight>0 → flex-grow=weight,basis 0；height/width==MATCH_PARENT(-1)
+      //   且无 weight → 占剩余（Android 中 MATCH_PARENT 在 LinearLayout 里吃掉
+      //   wrap 兄弟剩下的空间，约等于 grow:1 basis 0）
+      //   否则 wrap(内容)/固定px → grow 0 basis auto
+      const vert = parent.orientation === 1; // 父 LinearLayout 是否垂直
+      const main = vert ? lp.height : lp.width;
+      const cross = vert ? lp.width : lp.height;
+      const wgt = lp.weight || 0;
+      if (wgt > 0) {
+        st.flexGrow = String(wgt);
+        st.flexShrink = '1';
+        st.flexBasis = '0%';
+      } else if (main === MATCH_PARENT) {
+        st.flexGrow = '1';
+        st.flexShrink = '1';
+        st.flexBasis = '0%';
+      } else {
+        st.flexGrow = '0';
+        st.flexShrink = '0';
+        st.flexBasis = 'auto';
+        // 主轴固定值也写尺寸（wrap/px 都行）
+        if (vert) st.height = dimToCss(main);
+        else st.width = dimToCss(main);
+      }
+      // 交叉轴尺寸直译（垂直布局时 width 生效）
+      if (vert) {
+        st.width = dimToCss(cross);
+        // 高度交给 flex（上面已决定）
+        if (wgt > 0 || main === MATCH_PARENT) st.height = '';
+      } else {
+        st.height = dimToCss(cross);
+        if (wgt > 0 || main === MATCH_PARENT) st.width = '';
+      }
+    } else {
+      // —— FrameLayout 子 / 普通父 ——
+      // FrameLayout 子 Android 默认 LP 是 MATCH_PARENT（由 addView 补默认），
+      // 这里 width/height 直译：MATCH → 100%（相对父，父已由 flex/100% 确定）
+      st.width = dimToCss(lp.width);
+      st.height = dimToCss(lp.height);
     }
     if (lp.gravity !== undefined) {
       const g = gravityToCss(lp.gravity);
@@ -165,7 +210,23 @@ export class AndroidView {
     if (!child) return;
     if (child instanceof AndroidView) {
       child._parent = this;
-      if (params) child.setLayoutParams(params);
+      // Android 默认 LP：仅在引擎从未显式 setLayoutParams 时补默认
+      // （FrameLayout 子 → MATCH_PARENT；LinearLayout 子 → wrap_content）
+      let lp = params;
+      if (!lp && !child.__lpSet) {
+        if (this.tagNameForView === 'FrameLayout') {
+          lp = new FrameLayout.LayoutParams(-1, -1);
+        } else if (this.tagNameForView === 'LinearLayout') {
+          lp = new LinearLayout.LayoutParams(-2, -2);
+        }
+      }
+      if (lp) {
+        child.__lpSet = true;
+        child.setLayoutParams(lp);
+      } else if (child._applyLayout) {
+        // LP 已由引擎设过：父类型可能影响布局语义（LinearLayout vs 其他），重算一次
+        child._applyLayout();
+      }
       this.children.push(child);
       const where = (typeof index === 'number' && this.el.children[index])
         ? this.el.children[index]
@@ -602,11 +663,26 @@ export class FrameLayout extends ViewGroup {
     this.tagNameForView = 'FrameLayout';
     this._classDisplay = 'block';
     this.el.style.display = 'block';
+    // Android FrameLayout 语义：子元素按 LP 尺寸在左上(或 gravity)叠放，
+    // 后 addView 的盖在上层。因此容器相对定位、子 absolute。
+    this.el.style.position = 'relative';
+    this.el.style.overflow = 'hidden';
   }
   static get LayoutParams() {
     return class FrameLayoutLayoutParams {
       constructor(w, h, g) { this.width = w; this.height = h; this.gravity = g || 0; }
     };
+  }
+  // 子 addView：强制叠放（absolute + 左上锚定），再由 _applyLayout 按 LP 定尺寸
+  addView(child, index, params) {
+    const r = super.addView(child, index, params);
+    if (child && child.el) {
+      child.el.style.position = 'absolute';
+      if (!child.el.style.left) child.el.style.left = '0px';
+      if (!child.el.style.top) child.el.style.top = '0px';
+      child._applyLayout();
+    }
+    return r;
   }
 }
 

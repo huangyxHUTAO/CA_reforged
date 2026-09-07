@@ -256,31 +256,10 @@ async function boot() {
         } catch (e) {}
         globalThis.__caAttachOverlay(root.el);
 
-        // —— Web 布局补丁：让命令助手全屏窗口撑满且命令栏在底部 ——
-        // 原版 Android 布局：defaultWindow > defaultDecorLinear(垂直) >
-        //   [defaultContainer(weight=1) / mainView] > bar(命令栏) 在底部。
-        // 引擎的 main/container 高度是 auto（靠 measure 撑开），Web 端无 measure，
-        // 导致 flex:1 的内容区高度为 0、命令栏挤在顶部。这里把 main 到 root
-        // 的整条垂直容器链强制 height:100%，让 main 里 flex:1 的内容占满，
-        // bar(命令栏) 自然落到窗口底部。
-        try {
-          let cur = mv; // 从 mainView 往上直到 root
-          while (cur && cur !== root) {
-            if (cur.el) {
-              cur.el.style.height = '100%';
-              if (!cur.el.style.width || cur.el.style.width === 'auto') {
-                cur.el.style.width = '100%';
-              }
-              // 若自身是 flex column 容器且没有显式 flex 子权重分配，保底让子伸展
-            }
-            cur = cur.getParent && cur.getParent ? cur.getParent() : null;
-          }
-          // mainView 自身也是 flex column（命令栏在底部），高度给 100%
-          if (mv.el) mv.el.style.height = '100%';
-          console.log('[ca-web] CA layout patched (fullscreen + bar-bottom)');
-        } catch (e) {
-          console.warn('[ca-web] layout patch failed:', e?.message || e);
-        }
+        // 注：不再做任何 height/flex 样式补丁 —— 布局语义由 android-view 翻译层
+        // 忠实还原（FrameLayout 子默认 MATCH_PARENT、LinearLayout MATCH 子占剩余、
+        // weight 分配），此处只负责“窗口挂载”（等价于 Android WindowManager 全屏窗口）。
+        console.log('[ca-web] CA UI mounted (root:', root.constructor?.name + ')');
         return true;
       }
       return !!root.el?.isConnected;
