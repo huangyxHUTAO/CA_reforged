@@ -100,6 +100,7 @@ export class AndroidView {
     // 注意：不默认 position:absolute（会让 flex/block 布局错乱）。
     // 只有 FrameLayout 子（叠放）和 WindowManager 根（fixed）才需要定位。
     this.el.style.boxSizing = 'border-box';
+    this._classDisplay = 'block'; // 子类覆盖（LinearLayout->flex 等）
     this.children = [];
     this.layoutParams = { width: WRAP_CONTENT, height: WRAP_CONTENT, gravity: 0 };
     this.tagNameForView = 'View';
@@ -200,10 +201,10 @@ export class AndroidView {
     if (v === 8) {
       this.el.style.display = 'none';
     } else if (v === 4) {
-      this.el.style.display = '';
+      this.el.style.display = this._classDisplay || 'block';
       this.el.style.visibility = 'hidden';
     } else {
-      this.el.style.display = '';
+      this.el.style.display = this._classDisplay || 'block';
       this.el.style.visibility = '';
     }
     return this;
@@ -599,6 +600,7 @@ export class FrameLayout extends ViewGroup {
   constructor() {
     super();
     this.tagNameForView = 'FrameLayout';
+    this._classDisplay = 'block';
     this.el.style.display = 'block';
   }
   static get LayoutParams() {
@@ -612,6 +614,7 @@ export class LinearLayout extends ViewGroup {
   constructor() {
     super();
     this.tagNameForView = 'LinearLayout';
+    this._classDisplay = 'flex';
     this.el.style.display = 'flex';
     this.el.style.flexDirection = 'column';
     this.orientation = 1; // 1=VERTICAL
@@ -635,7 +638,7 @@ export class LinearLayout extends ViewGroup {
 }
 
 export class TextView extends AndroidView {
-  constructor() { super('span'); this.tagNameForView = 'TextView'; this.el.style.display = 'inline-block'; }
+  constructor() { super('span'); this.tagNameForView = 'TextView'; this._classDisplay = 'inline-block'; this.el.style.display = 'inline-block'; }
 }
 
 export class Button extends TextView {
@@ -675,7 +678,7 @@ export class ImageView extends AndroidView {
 }
 
 export class AbsListView extends ViewGroup {
-  constructor() { super(); this.tagNameForView = 'AbsListView'; this.adapter = null; }
+  constructor() { super(); this.tagNameForView = 'AbsListView'; this._classDisplay = 'block'; this.adapter = null; }
   static LayoutParams = class {
     constructor(w, h) { this.width = w; this.height = h; this.gravity = 0; }
   };
@@ -757,6 +760,7 @@ export class ListView extends AbsListView {
   constructor() {
     super();
     this.tagNameForView = 'ListView';
+    this._classDisplay = 'block';
     this.el.style.display = 'block';
     this.el.style.overflowY = 'auto';
   }
@@ -766,6 +770,7 @@ export class GridView extends AbsListView {
   constructor() {
     super();
     this.tagNameForView = 'GridView';
+    this._classDisplay = 'grid';
     this.el.style.display = 'grid';
     this.el.style.gridTemplateColumns = 'repeat(auto-fill, minmax(80px, 1fr))';
   }

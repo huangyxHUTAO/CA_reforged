@@ -243,8 +243,44 @@ async function boot() {
         root.el.style.inset = '0';
         root.el.style.pointerEvents = 'auto';
         root.el.style.zIndex = '100000';
+        // 铺满背景：DefaultWindow 本身透明，套上 CA 主题底色看起来像完整应用
+        try {
+          const th = globalThis.Common?.theme;
+          if (th && typeof th.float_bgcolor === 'number') {
+            const v = (th.float_bgcolor >>> 0) & 0xffffff;
+            root.el.style.background = `rgb(${(v>>16)&255},${(v>>8)&255},${v&255})`;
+          } else if (th && typeof th.bgcolor === 'number') {
+            const v = (th.bgcolor >>> 0) & 0xffffff;
+            root.el.style.background = `rgb(${(v>>16)&255},${(v>>8)&255},${v&255})`;
+          }
+        } catch (e) {}
         globalThis.__caAttachOverlay(root.el);
-        console.log('[ca-web] CA UI mounted (root:', root.constructor?.name + ')');
+
+        // —— Web 布局补丁：让命令助手全屏窗口撑满且命令栏在底部 ——
+        // 原版 Android 布局：defaultWindow > defaultDecorLinear(垂直) >
+        //   [defaultContainer(weight=1) / mainView] > bar(命令栏) 在底部。
+        // 引擎的 main/container 高度是 auto（靠 measure 撑开），Web 端无 measure，
+        // 导致 flex:1 的内容区高度为 0、命令栏挤在顶部。这里把 main 到 root
+        // 的整条垂直容器链强制 height:100%，让 main 里 flex:1 的内容占满，
+        // bar(命令栏) 自然落到窗口底部。
+        try {
+          let cur = mv; // 从 mainView 往上直到 root
+          while (cur && cur !== root) {
+            if (cur.el) {
+              cur.el.style.height = '100%';
+              if (!cur.el.style.width || cur.el.style.width === 'auto') {
+                cur.el.style.width = '100%';
+              }
+              // 若自身是 flex column 容器且没有显式 flex 子权重分配，保底让子伸展
+            }
+            cur = cur.getParent && cur.getParent ? cur.getParent() : null;
+          }
+          // mainView 自身也是 flex column（命令栏在底部），高度给 100%
+          if (mv.el) mv.el.style.height = '100%';
+          console.log('[ca-web] CA layout patched (fullscreen + bar-bottom)');
+        } catch (e) {
+          console.warn('[ca-web] layout patch failed:', e?.message || e);
+        }
         return true;
       }
       return !!root.el?.isConnected;
