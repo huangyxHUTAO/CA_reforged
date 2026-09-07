@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CA hosted</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; }
+  #ca-root { position: fixed; inset: 0; }
+</style>
+</head>
+<body>
+  <div id="ca-root"></div>
+  <script src="/ca-built.js"></script>
+  <script>
+    // Host → Worker bridge
+    // Boot 后把 CA 实例通过 postMessage 传给 parent
+    (function () {
+      function postReady() {
+        parent.postMessage({
+          type: 'ca-ready',
+          hasCA: typeof CA === 'object',
+          hasShowGen: typeof CA?.showGen === 'function',
+          hasIntelliSense: typeof CA?.IntelliSense === 'object',
+          hasCmd: !!CA?.cmd
+        }, '*');
+      }
+      // 监听外部指令（showGen、proc 等）通过 postMessage 转发
+      window.addEventListener('message', (ev) => {
+        const msg = ev.data || {};
+        try {
+          if (msg.type === 'eval' && typeof msg.code === 'string') {
+            const result = (0, eval)(msg.code);
+            parent.postMessage({ type: 'eval-result', id: msg.id, value: JSON.stringify(result) }, '*');
+          } else if (msg.type === 'exec' && typeof msg.fn === 'string') {
+            // fn = CA 引擎对象的方法路径，如 "CA.showGen"
+            const parts = msg.fn.split('.');
+            const fn = parts.reduce((o, k) => o && o[k], window);
+            if (typeof fn === 'function') {
+              const result = fn.apply(undefined, msg.args || []);
+              parent.postMessage({ type: 'exec-result', id: msg.id, value: JSON.stringify(result) }, '*');
+            } else {
+              parent.postMessage({ type: 'exec-result', id: msg.id, error: 'fn not found' }, '*');
+            }
+          }
+        } catch (e) {
+          parent.postMessage({ type: msg.type === 'eval' ? 'eval-result' : 'exec-result', id: msg.id, error: String(e) }, '*');
+        }
+      });
+      // 等 8 秒（CA 引擎 loader 链）后通知 parent
+      setTimeout(postReady, 8000);
+      // 如果 domcontentloaded 时 CA 已就绪，提前通知
+      let notified = false;
+      const tryReady = () => {
+        if (notified) return;
+        if (typeof CA === 'object' && typeof CA.showGen === 'function') {
+          notified = true;
+          postReady();
+        }
+      };
+      // 每 500ms 检查
+      const t = setInterval(() => {
+        tryReady();
+        if (notified || (typeof CA === 'object' && typeof CA.showGen === 'function')) {
+          clearInterval(t);
+        }
+      }, 500);
+    })();
+  </script>
+</body>
+</html>

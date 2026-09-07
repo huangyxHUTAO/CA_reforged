@@ -140,6 +140,11 @@ export class AndroidView {
     if (!lp) return;
     this.el.style.width = dimToCss(lp.width);
     this.el.style.height = dimToCss(lp.height);
+    // weight 字段：LinearLayout.LayoutParams(-1, 0, 1) 第三参数
+    // Web flex：flex: weight 1 1 auto
+    if (lp.weight) {
+      this.el.style.flex = `${lp.weight} 1 0%`;
+    }
     if (lp.gravity !== undefined) {
       const g = gravityToCss(lp.gravity);
       if (g) {
@@ -184,7 +189,19 @@ export class AndroidView {
   indexOfChild(child) { return this.children.indexOf(child); }
 
   // ===== Visibility / Alpha =====
-  setVisibility(v) { this.visibility = v; this.el.style.display = (v === 0) ? '' : 'none'; return this; }
+  setVisibility(v) {
+    this.visibility = v;
+    // Web 端没有 GONE→ANIM→VISIBLE 流程；只要不是 0/4 就显示
+    if (v === 0 || v === undefined || v === null) {
+      this.el.style.display = '';
+    } else if (v === 4) {
+      this.el.style.visibility = 'hidden';
+    } else {
+      // GONE(8) 等也保持显示，避免引擎动画流不完整时整块消失
+      this.el.style.display = '';
+    }
+    return this;
+  }
   getVisibility() { return this.visibility; }
   setAlpha(a) { this.el.style.opacity = String(a); return this; }
 

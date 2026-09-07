@@ -522,6 +522,52 @@ registerAt('android.view.WindowManager.LayoutParams', WMLayoutParams);
     SUPPORTED_ABIS: ['x86_64', 'wasm32']
   });
 
+  // android.view.View 可见性常量（jsmin 压缩后 G.View.VISIBLE=0 写给 Proxy 失效）
+  registerAt('android.view.View.VISIBLE', 0);
+  registerAt('android.view.View.INVISIBLE', 4);
+  registerAt('android.view.View.GONE', 8);
+  registerAt('android.view.View.NO_ID', -1);
+  // android.view.Gravity 常量（位标志，setGravity 用）
+  const Gravity = {
+    NO_GRAVITY: 0,
+    TOP: 0x30, BOTTOM: 0x50, LEFT: 0x03, RIGHT: 0x05,
+    CENTER_HORIZONTAL: 0x01, CENTER_VERTICAL: 0x10, CENTER: 0x11,
+    FILL: 0x77, FILL_HORIZONTAL: 0x07, FILL_VERTICAL: 0x70,
+    START: 0x00800003, END: 0x00800005,
+    CLIP_VERTICAL: 0x80, CLIP_HORIZONTAL: 0x08
+  };
+  registerAt('android.view.Gravity', Gravity);
+  // KeyEvent 常量
+  const KeyEvent = {
+    KEYCODE_HOME: 3, KEYCODE_BACK: 4, KEYCODE_MENU: 82,
+    KEYCODE_DPAD_UP: 19, KEYCODE_DPAD_DOWN: 20,
+    KEYCODE_DPAD_LEFT: 21, KEYCODE_DPAD_RIGHT: 22,
+    ACTION_DOWN: 0, ACTION_UP: 1, ACTION_MOVE: 2
+  };
+  registerAt('android.view.KeyEvent', KeyEvent);
+  // InputMethodManager 常量
+  const InputMethodManager = { SHOW_IMPLICIT: 0, SHOW_FORCED: 2, HIDE_IMPLICIT_ONLY: 1 };
+  registerAt('android.view.inputmethod.InputMethodManager', InputMethodManager);
+  // Spanned / G.Spanned 常量
+  const Spanned = { SPAN_PARAGRAPH: 0x33, SPAN_INTERMEDIATE: 0x22, SPAN_INCLUSIVE_EXCLUSIVE: 0x21, SPAN_EXCLUSIVE_EXCLUSIVE: 0x22, SPAN_INCLUSIVE_INCLUSIVE: 0x11, SPAN_EXCLUSIVE_INCLUSIVE: 0x12 };
+  registerAt('android.text.Spanned', Spanned);
+  registerAt('android.text.Spannable.SPAN_INCLUSIVE_EXCLUSIVE', 0x21);
+  // Color 常量
+  const Color = { BLACK: -16777216, WHITE: -1, TRANSPARENT: 0, RED: -65536, GRAY: -7829368 };
+  registerAt('android.graphics.Color', Color);
+  // Animation 常量
+  const Animation = { ABSOLUTE: 0, RELATIVE_TO_SELF: 1, RELATIVE_TO_PARENT: 2 };
+  registerAt('android.view.animation.Animation', Animation);
+  const DecelerateInterpolator = class { constructor() {} };
+  registerAt('android.view.animation.DecelerateInterpolator', DecelerateInterpolator);
+  const AccelerateInterpolator = class { constructor() {} };
+  registerAt('android.view.animation.AccelerateInterpolator', AccelerateInterpolator);
+  const TranslateAnimation = class { constructor() {} };
+  registerAt('android.view.animation.TranslateAnimation', TranslateAnimation);
+  // ImageView.ScaleType
+  const ScaleType = { CENTER_CROP: 4, FIT_XY: 0, CENTER_INSIDE: 2, FIT_CENTER: 1 };
+  registerAt('android.widget.ImageView.ScaleType', ScaleType);
+  // SystemServer 全集
   globalThis.__caJavaIORuntimeInstalled = true;
 }
 
