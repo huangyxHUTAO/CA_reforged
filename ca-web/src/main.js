@@ -256,9 +256,31 @@ async function boot() {
         } catch (e) {}
         globalThis.__caAttachOverlay(root.el);
 
-        // 注：不再做任何 height/flex 样式补丁 —— 布局语义由 android-view 翻译层
-        // 忠实还原（FrameLayout 子默认 MATCH_PARENT、LinearLayout MATCH 子占剩余、
-        // weight 分配），此处只负责“窗口挂载”（等价于 Android WindowManager 全屏窗口）。
+        // —— 像素级布局：用 measure/layout 引擎取代 flex 估算 ——
+        // 控件结构/事件仍由引擎创建；此引擎按 Android 布局语义把每层写到精确 px。
+        // childList 变化（引擎 addView/removeView）触发防抖重排；样式写入不触发。
+        try {
+          const relayoutRootFn = relayoutRoot; // 顶部已 import
+          let rafId = 0;
+          const schedule = () => {
+            if (rafId) return;
+            rafId = requestAnimationFrame(() => {
+              rafId = 0;
+              try { relayoutRootFn(root); } catch (e) { console.warn('[ca-web] relayout:', e?.message || e); }
+            });
+          };
+          // 首次全树布局
+          schedule();
+          const mo = new MutationObserver((muts) => {
+            if (muts.some(m => m.type === 'childList')) schedule();
+          });
+          mo.observe(root.el, { childList: true, subtree: true });
+          globalThis.__caRelayout = schedule;
+          globalThis.__caRelayoutMO = mo;
+          console.log('[ca-web] pixel layout engine active');
+        } catch (e) {
+          console.warn('[ca-web] pixel layout init failed:', e?.message || e);
+        }
         console.log('[ca-web] CA UI mounted (root:', root.constructor?.name + ')');
         return true;
       }
