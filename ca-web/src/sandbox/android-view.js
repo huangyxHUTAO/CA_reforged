@@ -209,6 +209,11 @@ export class AndroidView {
   // ===== Children =====
   addView(child, index, params) {
     if (!child) return;
+    // Android 重载：addView(child, LayoutParams) —— 第二参是 LP 对象而非 index
+    if (index && typeof index === 'object') {
+      params = index;
+      index = undefined;
+    }
     if (child instanceof AndroidView) {
       child._parent = this;
       // Android 默认 LP：仅在引擎从未显式 setLayoutParams 时补默认
