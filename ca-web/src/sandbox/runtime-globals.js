@@ -194,16 +194,27 @@ export function setupRuntimeGlobals() {
     HOTFIX: false
   };
 
-  // 5) MCAdapter
+  // 5) MCAdapter —— Web 端禁用：只提供安全空实现。
+  //    引擎（IntelliSense.procPosition 等）会调 MCAdapter.available() 判断是否有
+  //    Minecraft 适配器可取玩家坐标/朝向；返回 false 即走"无适配器"分支，不崩不误插。
   globalThis.MCAdapter = {
     client: null,
     connInit: false,
     version: 0,
     targetVersion: 0,
     bundle: null,
+    inLevel: false,
+    available: () => false,
+    getInfo: () => null,
     updateInfo: () => {},
     callHook: () => {},
-    listAdapters: () => {}
+    notifyInfoUpdate: () => {},
+    listAdapters: () => {},
+    applySense: () => {},
+    existPackage: () => false,
+    createShortcut: () => {},
+    initWSServer: () => {},
+    onWSPlayerTravelled: () => {}
   };
 
   // 6) NeteaseAdapter

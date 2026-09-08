@@ -456,20 +456,22 @@ export function setupJavaIORuntime() {
     toString() { return this._text; }
     setSpan(span, start, end, flags) { this._spans.push({ span, start, end, flags }); return this; }
   });
-  // android.text.ForegroundColorSpan —— 颜色 span
-  registerAt('android.text.ForegroundColorSpan', class {
-    constructor(color) { this._color = color; }
-  });
-  registerAt('android.text.StyleSpan', class { constructor() {} });
-  registerAt('android.text.AbsoluteSizeSpan', class { constructor() {} });
-  registerAt('android.text.BackgroundColorSpan', class { constructor() {} });
-  registerAt('android.text.AlignmentSpan', class { constructor() {} });
-  registerAt('android.text.BulletSpan', class { constructor() {} });
-  registerAt('android.text.SubscriptSpan', class { constructor() {} });
-  registerAt('android.text.SuperscriptSpan', class { constructor() {} });
-  registerAt('android.text.UnderlineSpan', class { constructor() {} });
-  registerAt('android.text.StrikethroughSpan', class { constructor() {} });
-  registerAt('android.text.URLSpan', class { constructor() {} });
+  // android.text.ForegroundColorSpan 等 —— span 类型标记 + 参数捕获，供渲染层用
+  const textSpanClass = (type) => class {
+    constructor(...args) { this._type = type; this._args = args; }
+  };
+  registerAt('android.text.ForegroundColorSpan', textSpanClass('ForegroundColorSpan'));
+  registerAt('android.text.BackgroundColorSpan', textSpanClass('BackgroundColorSpan'));
+  registerAt('android.text.StyleSpan', textSpanClass('StyleSpan'));
+  registerAt('android.text.AbsoluteSizeSpan', textSpanClass('AbsoluteSizeSpan'));
+  registerAt('android.text.RelativeSizeSpan', textSpanClass('RelativeSizeSpan'));
+  registerAt('android.text.AlignmentSpan', textSpanClass('AlignmentSpan'));
+  registerAt('android.text.BulletSpan', textSpanClass('BulletSpan'));
+  registerAt('android.text.SubscriptSpan', textSpanClass('SubscriptSpan'));
+  registerAt('android.text.SuperscriptSpan', textSpanClass('SuperscriptSpan'));
+  registerAt('android.text.UnderlineSpan', textSpanClass('UnderlineSpan'));
+  registerAt('android.text.StrikethroughSpan', textSpanClass('StrikethroughSpan'));
+  registerAt('android.text.URLSpan', textSpanClass('URLSpan'));
 
   // android.os.*
   registerAt('android.os.Handler', JHandler);

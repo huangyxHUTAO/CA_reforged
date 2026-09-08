@@ -288,7 +288,15 @@ export class AndroidView {
   setPaddingRelative(s, t, e, b) { return this.setPadding(s, t, e, b); }
 
   // ===== Text / TextColor =====
-  setText(text) { this.el.textContent = text == null ? '' : String(text); return this; }
+  setText(text) {
+    if (text != null && typeof text === 'object' && typeof text.toString === 'function') {
+      // Spannable/Spanned：按 _spans 渲染成带色/字体的 HTML，保留 \n
+      this.el.innerHTML = renderSpannable(text);
+    } else {
+      this.el.textContent = text == null ? '' : String(text);
+    }
+    return this;
+  }
   getText() { return this.el.textContent; }
   setTextColor(color) { this.el.style.color = colorToCss(color); return this; }
   setHint(h) { this.el.placeholder = h || ''; return this; }
@@ -298,13 +306,29 @@ export class AndroidView {
     this.el.style.fontSize = (size * 1) + 'px';
     return this;
   }
-  setTypeface(t) { /* 字体——no-op */ return this; }
+  setTypeface(t) {
+    // 传入的是 {bold/italic} 或 G.Typeface 常量（0/1/2/3）或 iconFont 对象
+    if (t && typeof t === 'object') {
+      if (t.bold === 1 || t.bold === true) this.el.style.fontWeight = '700';
+      if (t.italic) this.el.style.fontStyle = 'italic';
+      if (t.name && /icon/i.test(String(t.name))) this.el.style.fontFamily = 'IconFont, sans-serif';
+    } else if (t === 1 || t === 3) {
+      this.el.style.fontWeight = '700';
+    } else if (t === 2 || t === 3) {
+      this.el.style.fontStyle = 'italic';
+    }
+    return this;
+  }
   setMovementMethod() { return this; }
   setTransformationMethod() { return this; }
   setLinkTextColor(c) { this.el.style.color = colorToCss(c); return this; }
   setPaintFlags() { return this; }
   setIncludeFontPadding() { return this; }
-  setLineSpacing() { return this; }
+  setLineSpacing(add, mult) {
+    // Android: lineHeight ≈ fontSize*mult + add(px)
+    this.el.style.lineHeight = `calc(${(mult == null ? 1 : mult)}em + ${(add || 0)}px)`;
+    return this;
+  }
   setHighlightColor() { return this; }
   setVerticalScrollbarPosition() { return this; }
   setScrollbarFadingEnabled() { return this; }
@@ -319,7 +343,8 @@ export class AndroidView {
     return this;
   }
   setSingleLine(b) {
-    this.el.style.whiteSpace = b ? 'nowrap' : 'normal';
+    this.el.style.whiteSpace = b ? 'nowrap' : 'pre-wrap';
+    this.el.style.overflow = b ? 'hidden' : 'visible';
     return this;
   }
 
@@ -362,13 +387,18 @@ export class AndroidView {
   setOnClickListener(listener) {
     this._listeners.click = listener;
     this.el.onclick = (e) => listener && listener.onClick(this);
+    // 可点击语义：挂 click listener 的 view 对鼠标应表现为可点（Android clickable）。
+    // 输入控件例外——EditText/textarea 即使有 click listener 也该是文本光标（I-beam）。
+    this.el.style.cursor = listener ? this._isTextInput() ? 'text' : 'pointer' : '';
     return this;
   }
   setOnLongClickListener(listener) {
     this._listeners.longClick = listener;
     this.el.oncontextmenu = (e) => { e.preventDefault(); listener && listener.onLongClick(this); return false; };
+    if (listener) this.el.style.cursor = this._isTextInput() ? 'text' : 'pointer';
     return this;
   }
+  _isTextInput() { return this.el.tagName === 'TEXTAREA' || this.el.tagName === 'INPUT'; }
   setOnFocusChangeListener(listener) {
     this._listeners.focus = listener;
     this.el.onfocus = (e) => listener && listener.onFocusChange(this, true);
@@ -390,10 +420,18 @@ export class AndroidView {
       getDownTime: () => e.timeStamp,
       _e: e
     });
-    const handler = (e) => listener && listener.onTouch(this, wrap(e));
-    this.el.onpointerdown = handler;
-    this.el.onpointermove = handler;
-    this.el.onpointerup = handler;
+    // 用 addEventListener 而非 on* 属性：on* 属性 handler 返回 false 会被浏览器
+    // 当成 preventDefault，而引擎 onTouch 返回 false 只是 Android 语义的"不消费事件"，
+    // 会误吞掉 pointerdown 默认行为（text 光标点击定位失效）。
+    // addEventListener 忽略返回值，引擎返回 true/false 都不会影响 DOM 默认动作。
+    const handler = (e) => { try { listener && listener.onTouch(this, wrap(e)); } catch (err) { erp(err); } };
+    for (const type of ['pointerdown', 'pointermove', 'pointerup']) {
+      this.el.removeEventListener(type, this._touchHandler);
+    }
+    this._touchHandler = handler;
+    for (const type of ['pointerdown', 'pointermove', 'pointerup']) {
+      this.el.addEventListener(type, handler);
+    }
     return this;
   }
   setOnKeyListener(listener) {
@@ -442,7 +480,7 @@ export class AndroidView {
   setSelected(b) { this.el.classList.toggle('selected', !!b); return this; }
   setActivated(b) { return this.setSelected(b); }
   setLongClickable(b) { return this; }
-  setClickable(b) { this.el.style.cursor = b ? 'pointer' : ''; return this; }
+  setClickable(b) { this.el.style.cursor = b ? (this._isTextInput() ? 'text' : 'pointer') : ''; return this; }
   setFocusableInTouchMode(b) { return this.setFocusable(b); }
   setHint(h) { if ('placeholder' in this.el) this.el.placeholder = h || ''; return this; }
   performClick() { this.el.click(); return true; }
@@ -460,27 +498,33 @@ export class AndroidView {
       this.__caInputHooked = true;
       const target = this.el;
       this.__caInputHookedEl = target;
-      target.addEventListener('input', () => {
-        const s = target.value !== undefined ? target.value : target.textContent;
-        for (const w of (this._textWatchers || [])) {
-          try {
-            w.beforeTextChanged && w.beforeTextChanged(s, 0, 0, 0);
-            w.onTextChanged && w.onTextChanged(s, 0, 0, 0);
-            w.afterTextChanged && w.afterTextChanged({
-              length: () => s.length,
-              toString: () => s,
-              charAt: (i) => s.charAt(i),
-              subSequence: (a, b) => s.slice(a, b)
-            });
-          } catch (e) { console.error('[ca textwatcher]', e); }
-        }
-      });
+      target.addEventListener('input', () => this._notifyTextChanged());
     }
     return this;
   }
   removeTextChangedListener(listener) {
     this._textWatchers = (this._textWatchers || []).filter(w => w !== listener);
     return this;
+  }
+  /**
+   * 触发 TextWatcher 回调（顺序对齐 Android：beforeTextChanged → onTextChanged → afterTextChanged）。
+   * DOM input 事件与编程式 setText 共用此入口。
+   */
+  _notifyTextChanged() {
+    const s = (this.el.value !== undefined ? this.el.value : this.el.textContent) || '';
+    const editable = {
+      length: () => s.length,
+      toString: () => s,
+      charAt: (i) => s.charAt(i),
+      subSequence: (a, b) => s.slice(a, b)
+    };
+    for (const w of (this._textWatchers || [])) {
+      try {
+        w.beforeTextChanged && w.beforeTextChanged(s, 0, 0, 0);
+        w.onTextChanged && w.onTextChanged(s, 0, 0, 0);
+        w.afterTextChanged && w.afterTextChanged(editable);
+      } catch (e) { console.error('[ca textwatcher]', e); }
+    }
   }
   setEllipsize(e) { this.el.style.overflow = 'hidden'; this.el.style.textOverflow = 'ellipsis'; return this; }
   setShadowLayer(r, dx, dy, c) { this.el.style.textShadow = `${dx}px ${dy}px ${r}px ${colorToCss(c)}`; return this; }
@@ -651,6 +695,68 @@ function colorToCss(color) {
   return `rgba(${r},${g},${b},${a / 255})`;
 }
 
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+/**
+ * 把带 _spans 的 Spannable/CharSequence 渲染成 HTML。
+ * span 对象由 android-shim 注册，带 _type/_args；ForegroundColorSpan 额外有 _color。
+ * 处理流程：收集 span 边界 → 按区间取活跃 span → 逐层嵌套包裹。
+ */
+function renderSpannable(text) {
+  const s = typeof text.toString === 'function' ? String(text.toString()) : String(text);
+  const spans = (Array.isArray(text._spans) ? text._spans : [])
+    .filter(sp => sp && typeof sp.start === 'number' && typeof sp.end === 'number');
+  if (!spans.length) return escapeHtml(s);
+  const pts = new Set([0, s.length]);
+  for (const sp of spans) { pts.add(sp.start); pts.add(sp.end); }
+  const points = [...pts].filter(p => p >= 0 && p <= s.length).sort((a, b) => a - b);
+  let out = '';
+  for (let i = 0; i < points.length - 1; i++) {
+    const a = points[i], b = points[i + 1];
+    if (b <= a) continue;
+    let html = escapeHtml(s.slice(a, b));
+    const active = spans.filter(sp => sp.start <= a && sp.end >= b);
+    for (const sp of active) {
+      const span = sp.span;
+      if (!span) continue;
+      const t = span._type || (span.constructor && span.constructor.name) || '';
+      const args = span._args || [];
+      const c = (span._color != null) ? span._color : args[0];
+      switch (t) {
+        case 'ForegroundColorSpan':
+          if (c != null) html = `<span style="color:${colorToCss(c)}">${html}</span>`;
+          break;
+        case 'BackgroundColorSpan':
+          if (c != null) html = `<span style="background-color:${colorToCss(c)}">${html}</span>`;
+          break;
+        case 'AbsoluteSizeSpan':
+          if (c != null) html = `<span style="font-size:${Number(c)}px">${html}</span>`;
+          break;
+        case 'RelativeSizeSpan':
+          if (c != null) html = `<span style="font-size:${Number(c)}em">${html}</span>`;
+          break;
+        case 'StyleSpan': {
+          const st = Number(args[0]);
+          if (st === 1 || st === 3) html = `<b>${html}</b>`;
+          if (st === 2 || st === 3) html = `<i>${html}</i>`;
+          break;
+        }
+        case 'UnderlineSpan': html = `<u>${html}</u>`; break;
+        case 'StrikethroughSpan': html = `<s>${html}</s>`; break;
+        case 'SubscriptSpan': html = `<sub>${html}</sub>`; break;
+        case 'SuperscriptSpan': html = `<sup>${html}</sup>`; break;
+        default: break;
+      }
+    }
+    out += html;
+  }
+  return out;
+}
+
 /** ==================== 子类 ==================== */
 
 export class ViewGroup extends AndroidView {
@@ -714,7 +820,15 @@ export class LinearLayout extends ViewGroup {
 }
 
 export class TextView extends AndroidView {
-  constructor() { super('span'); this.tagNameForView = 'TextView'; this._classDisplay = 'inline-block'; this.el.style.display = 'inline-block'; }
+  constructor() {
+    super('span');
+    this.tagNameForView = 'TextView';
+    this._classDisplay = 'inline-block';
+    this.el.style.display = 'inline-block';
+    // Android TextView 默认按词/字符换行，且保留显式 \n
+    this.el.style.whiteSpace = 'pre-wrap';
+    this.el.style.wordBreak = 'break-word';
+  }
 }
 
 export class Button extends TextView {
@@ -733,6 +847,10 @@ export class EditText extends TextView {
     this.el.style.border = 'none';
     this.el.style.outline = 'none';
     this.el.style.resize = 'none';
+    this.el.style.whiteSpace = 'pre-wrap';
+    this.el.style.overflowWrap = 'break-word';
+    this.el.style.fontFamily = 'inherit';
+    this.el.style.fontSize = 'inherit';
     // Android EditText 点击必然聚焦；真机里 pointerdown 默认聚焦被上层引擎
     // touch 监听链的 preventDefault 取消（表现为点击后无光标、无法输入）。
     // 这里用 capture 阶段手动聚焦——这是输入控件"可聚焦"语义的正确翻译。
@@ -742,13 +860,21 @@ export class EditText extends TextView {
     this.el.addEventListener('touchstart', ensureFocus, true);
     this.el.addEventListener('click', () => { ensureFocus(); }, true);
     this.el.tabIndex = 0;
+    // 输入控件的光标必须是文本 I-beam，不被 click listener / clickable 的 pointer 覆盖
+    this.el.style.cursor = 'text';
   }
-  setText(t) { this.el.value = t == null ? '' : String(t); return this; }
+  setText(t) {
+    const s = t == null ? '' : String(t);
+    const changed = this.el.value !== s;
+    this.el.value = s;
+    // Android：setText 编程式改文本同样触发 TextWatcher（补全/粘贴等走 setText 的路径靠它驱动刷新）
+    if (changed) this._notifyTextChanged();
+    return this;
+  }
   getText() { return new CharSequenceWrap(this.el.value, this._spans || []); }
   getRawText() { return this.el.value; }
   setSingleLine(b) {
-    this.el.style.whiteSpace = b ? 'nowrap' : 'normal';
-    this.el.style.overflow = b ? 'hidden' : 'auto';
+    this.el.style.whiteSpace = b ? 'nowrap' : 'pre-wrap';
     if (b) this.el.setAttribute('rows', '1');
     return this;
   }
@@ -763,28 +889,106 @@ export class ImageView extends AndroidView {
 }
 
 export class AbsListView extends ViewGroup {
-  constructor() { super(); this.tagNameForView = 'AbsListView'; this._classDisplay = 'block'; this.adapter = null; }
+  constructor() {
+    super();
+    this.tagNameForView = 'AbsListView';
+    this._classDisplay = 'block';
+    this.el.style.display = 'block';
+    this.adapter = null;
+    this._headers = [];
+    this._footers = [];
+  }
   static LayoutParams = class {
     constructor(w, h) { this.width = w; this.height = h; this.gravity = 0; }
   };
   setAdapter(adapter) {
+    // 忠实 Android：AbsListView.setAdapter 会向旧 adapter 注销、向新 adapter 注册
+    // 一个 DataSetObserver。引擎改数据走 controller.setArray/notifyChange →
+    // dso.forEach(onChanged)，翻译层靠它触发重建（否则列表永远停在首次渲染）。
+    this._unregisterObserver();
     this.adapter = adapter;
+    if (adapter && typeof adapter.registerDataSetObserver === 'function') {
+      this._dso = {
+        onChanged: () => this._rebuild(),
+        onInvalidated: () => this._rebuild()
+      };
+      try { adapter.registerDataSetObserver(this._dso); } catch (e) { erp(e); }
+    }
     this._rebuild();
     return this;
   }
+  _unregisterObserver() {
+    if (this.adapter && this._dso && typeof this.adapter.unregisterDataSetObserver === 'function') {
+      try { this.adapter.unregisterDataSetObserver(this._dso); } catch (e) { /* 引擎实现有 if(p>=0) 的 bug，忽略 */ }
+    }
+    this._dso = null;
+  }
+  /**
+   * 完整重建行视图。Android 语义：header 与 footer 不属于 adapter，
+   * setAdapter / notifyDataSetChanged 都会保留它们；列表位置 = header + adapter 行 + footer。
+   * 每个可见子节点（含 header/footer）按最终位置打 data-idx。
+   */
   _rebuild() {
     while (this.el.firstChild) this.el.removeChild(this.el.firstChild);
-    if (!this.adapter || typeof this.adapter.getCount !== 'function') return;
-    const n = this.adapter.getCount();
-    for (let i = 0; i < n; i++) {
-      const item = this.adapter.getView(i, null, this);
-      if (item && item.el) this.el.appendChild(item.el);
+    let pos = 0;
+    const place = (view) => {
+      if (view && view.el) {
+        view.el.style.display = 'block';
+        view.el.setAttribute('data-idx', String(pos));
+        this.el.appendChild(view.el);
+        pos++;
+      }
+    };
+    this._headers.forEach(place);
+    if (this.adapter && typeof this.adapter.getCount === 'function') {
+      const n = this.adapter.getCount();
+      for (let i = 0; i < n; i++) {
+        let item;
+        try { item = this.adapter.getView(i, null, this); } catch (e) { erp(e); }
+        place(item);
+      }
     }
+    this._footers.forEach(place);
+  }
+  addHeaderView(v) {
+    if (!v || !v.el) return this;
+    if (!this._headers.includes(v)) {
+      if (v.el.parentNode && v.el.parentNode !== this.el) v.el.remove();
+      this._headers.push(v);
+      this._rebuild();
+    }
+    return this;
+  }
+  removeHeaderView(v) {
+    const i = this._headers.indexOf(v);
+    if (i >= 0) { this._headers.splice(i, 1); this._rebuild(); }
+    return this;
+  }
+  addFooterView(v) {
+    if (!v || !v.el) return this;
+    if (!this._footers.includes(v)) {
+      if (v.el.parentNode && v.el.parentNode !== this.el) v.el.remove();
+      this._footers.push(v);
+      this._rebuild();
+    }
+    return this;
+  }
+  removeFooterView(v) {
+    const i = this._footers.indexOf(v);
+    if (i >= 0) { this._footers.splice(i, 1); this._rebuild(); }
+    return this;
+  }
+  getHeaderViewsCount() { return this._headers.length; }
+  getFooterViewsCount() { return this._footers.length; }
+  _hitIndex(e) {
+    const node = e.target.closest('[data-idx]');
+    if (!node || node.parentNode !== this.el) return -1;
+    return [...this.el.children].indexOf(node);
   }
   setOnItemClickListener(listener) {
     this._itemClick = listener;
     this.el.onclick = (e) => {
-      const idx = [...this.el.children].indexOf(e.target.closest('[data-idx]'));
+      const idx = this._hitIndex(e);
       if (idx >= 0) listener && listener.onItemClick(this, null, idx, idx);
     };
     return this;
@@ -793,7 +997,7 @@ export class AbsListView extends ViewGroup {
     this._itemLongClick = listener;
     this.el.oncontextmenu = (e) => {
       e.preventDefault();
-      const idx = [...this.el.children].indexOf(e.target.closest('[data-idx]'));
+      const idx = this._hitIndex(e);
       if (idx >= 0) listener && listener.onItemLongClick(this, null, idx, idx);
       return false;
     };
@@ -809,21 +1013,6 @@ export class AbsListView extends ViewGroup {
   setCacheColorHint() { return this; }
   setStackFromBottom(b) { if (b) this.el.style.display = 'flex', this.el.style.flexDirection = 'column-reverse'; return this; }
   setTranscriptMode() { return this; }
-  addFooterView(v) {
-    if (v && v.el) {
-      v.el.classList.add('ca-footer');
-      this.el.appendChild(v.el);
-    }
-    return this;
-  }
-  removeFooterView(v) {
-    if (v && v.el && v.el.parentNode === this.el) this.el.removeChild(v.el);
-    return this;
-  }
-  addHeaderView(v) { return this.addFooterView(v); }
-  removeHeaderView(v) { return this.removeFooterView(v); }
-  getHeaderViewsCount() { return this.el.querySelectorAll('.ca-footer').length; }
-  getFooterViewsCount() { return this.getHeaderViewsCount(); }
   getItemAtPosition(i) { return this.adapter && this.adapter.getItem ? this.adapter.getItem(i) : null; }
   getItemIdAtPosition(i) { return this.adapter && this.adapter.getItemId ? this.adapter.getItemId(i) : i; }
   getPositionForView() { return -1; }
