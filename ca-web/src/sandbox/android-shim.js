@@ -571,8 +571,10 @@ registerAt('android.view.WindowManager.LayoutParams', WMLayoutParams);
     setRepeatMode(m) { return this; }
     setInterpolator(i) { return this; }
     setAnimationListener(l) { this._listeners.end = l; return this; }
-    start() { this._fire('start'); this._fire('end'); }
-    startNow() { this._fire('start'); this._fire('end'); }
+    // AnimationSet 语义：收藏子动画；start 时一并触发（子动画的 listener 也回调）
+    addAnimation(a) { (this._children = this._children || []).push(a); return this; }
+    start() { (this._children || []).forEach(c => { try { c && c.start && c.start(); } catch (e) {} }); this._fire('start'); this._fire('end'); }
+    startNow() { (this._children || []).forEach(c => { try { c && c.start && c.start(); } catch (e) {} }); this._fire('start'); this._fire('end'); }
     cancel() { this._fire('cancel'); }
     reset() { return this; }
     _fire(ev) {

@@ -97,6 +97,7 @@ export class AndroidView {
     const VALID = /^[a-z][a-z0-9-]*$/i;
     const tag = (typeof tagName === 'string' && VALID.test(tagName)) ? tagName : 'div';
     this.el = document.createElement(tag);
+    this.el.__caView = this; // DOM → AndroidView 反向引用（弹窗布局器用）
     // 注意：不默认 position:absolute（会让 flex/block 布局错乱）。
     // 只有 FrameLayout 子（叠放）和 WindowManager 根（fixed）才需要定位。
     this.el.style.boxSizing = 'border-box';
@@ -235,6 +236,51 @@ export class AndroidView {
       else this.el.appendChild(child.el);
     }
     return this;
+  }
+  /**
+   * FrameLayout 的 Android measure/layout 语义补齐：
+   * - 自身 LP 高度为 wrap_content 时，父高 = 最高子 + 自身 padding（CSS absolute 子
+   *   不参与 fit-content 高度，会塌成 padding，弹窗内容容器即此症状）；
+   * - 子按 LP.gravity 在容器内容盒内对齐（CENTER/RIGHT/BOTTOM...，gravity 0 保持 0,0）。
+   * 递归先子后父；gravity 0 的子位置不变，match 全屏容器布局不受影响。
+   */
+  static layoutWrapFrames(view) {
+    if (!view || !view.el) return;
+    for (const c of view.children || []) AndroidView.layoutWrapFrames(c);
+    if (view.tagNameForView !== 'FrameLayout') return;
+    const lp = view.layoutParams || {};
+    const el = view.el;
+    if (!el.isConnected) return;
+    const cs = getComputedStyle(el);
+    const padT = parseFloat(cs.paddingTop) || 0;
+    const padB = parseFloat(cs.paddingBottom) || 0;
+    const padL = parseFloat(cs.paddingLeft) || 0;
+    const padR = parseFloat(cs.paddingRight) || 0;
+    // wrap 高：量子（子 absolute，offsetHeight 是其自身内容高）
+    if (lp.height === WRAP_CONTENT) {
+      let maxH = 0;
+      for (const c of view.children || []) {
+        if (!c.el || !c.el.isConnected) continue;
+        maxH = Math.max(maxH, c.el.offsetHeight);
+      }
+      if (maxH > 0) el.style.height = (maxH + padT + padB) + 'px';
+    }
+    // gravity 定位子（absolute 子相对 padding box，需加上 padding 起点）
+    const contentW = el.clientWidth - padL - padR;
+    const contentH = el.clientHeight - padT - padB;
+    for (const c of view.children || []) {
+      if (!c.el || !c.el.isConnected) continue;
+      const g = (c.layoutParams && c.layoutParams.gravity) || 0;
+      if (!g) continue; // gravity 0 保持 addView 的 0,0 叠放
+      const cw = c.el.offsetWidth, ch = c.el.offsetHeight;
+      let x = padL, y = padT;
+      if (g & 0x01) x = padL + Math.round((contentW - cw) / 2);            // CENTER_HORIZONTAL
+      else if ((g & 0x05) || (g & 0x00800005)) x = padL + (contentW - cw); // RIGHT/END
+      if (g & 0x10) y = padT + Math.round((contentH - ch) / 2);            // CENTER_VERTICAL
+      else if (g & 0x50) y = padT + (contentH - ch);                       // BOTTOM
+      c.el.style.left = x + 'px';
+      c.el.style.top = y + 'px';
+    }
   }
   addView2(child, params) { return this.addView(child); }
   removeView(child) {
@@ -888,6 +934,11 @@ export class ImageView extends AndroidView {
   setScaleType(t) { return this; }
 }
 
+/** android.widget.Space —— 空白占位控件（设置页分区间距用），高度由 LP 决定 */
+export class Space extends AndroidView {
+  constructor() { super('div'); this.tagNameForView = 'Space'; }
+}
+
 export class AbsListView extends ViewGroup {
   constructor() {
     super();
@@ -1113,6 +1164,7 @@ export function registerAndroidViews(R) {
   R('android.widget.Button', Button);
   R('android.widget.EditText', EditText);
   R('android.widget.ImageView', ImageView);
+  R('android.widget.Space', Space);
   R('android.widget.AbsListView', AbsListView);
   R('android.widget.ListView', ListView);
   R('android.widget.GridView', GridView);

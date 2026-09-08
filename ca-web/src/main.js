@@ -16,7 +16,7 @@
 
 import './sandbox/android-shim.js';
 import { installAndroidShim, setupJavaIORuntime, setupRhinoRuntime, registerAt } from './sandbox/android-shim.js';
-import { registerAndroidViews } from './sandbox/android-view.js';
+import { registerAndroidViews, AndroidView } from './sandbox/android-view.js';
 import { setupRuntimeGlobals } from './sandbox/runtime-globals.js';
 import './components/ca-app.js';
 
@@ -54,8 +54,25 @@ async function boot() {
       caOverlay.appendChild(dom);
     }
   };
+  // 弹窗/浮层布局器：FrameLayout wrap 高度 + gravity 是 CSS absolute 做不到的，
+  // 挂载后与内容变化时用 Android measure/layout 语义重算（只介入 wrap 高的 FrameLayout）。
+  const scheduleFrameLayout = () => {
+    if (scheduleFrameLayout._raf) return;
+    scheduleFrameLayout._raf = requestAnimationFrame(() => {
+      scheduleFrameLayout._raf = 0;
+      try {
+        for (const child of caOverlay.children) {
+          const v = child.__caView;
+          if (v) AndroidView.layoutWrapFrames(v);
+        }
+      } catch (e) { console.warn('[ca-web] layoutWrapFrames:', e?.message || e); }
+    });
+  };
+  globalThis.__caScheduleFrameLayout = scheduleFrameLayout;
   globalThis.__caOverlay = caOverlay;
   globalThis.__caAttachOverlay = attachOverlay;
+  // overlay 子树内容变化（弹窗 addView/setAdapter/行增删）后重算 wrap FrameLayout
+  new MutationObserver(scheduleFrameLayout).observe(caOverlay, { childList: true, subtree: true });
 
   // 5) eval —— 让所有 MapScript.loadModule 副作用跑
   //    注意：ca-built.js 顶层定义 var MapScript/Loader/Log/erp/ctx，
