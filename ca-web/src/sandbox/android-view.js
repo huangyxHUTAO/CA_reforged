@@ -454,28 +454,35 @@ export class AndroidView {
   setOnTouchListener(listener) {
     this._listeners.touch = listener;
     // 引擎 listener 期望 Android MotionEvent：getAction/getX/getY/getRawX/getRawY/getEventTime
-    // 真实 DOM PointerEvent 已含 clientX/Y（=raw），需包一层
+    // 真实 DOM PointerEvent 已含 clientX/Y（=raw），需包一层。
+    // ACTION_* 常量与 getAction 必须真实映射——引擎手势全靠
+    // `e.getAction() == e.ACTION_DOWN` / `case e.ACTION_MOVE:` 分支，缺了会全部静默失效。
+    const ACTIONS = { ACTION_DOWN: 0, ACTION_UP: 1, ACTION_MOVE: 2, ACTION_CANCEL: 3, ACTION_OUTSIDE: 4 };
+    const TYPE_TO_ACTION = { pointerdown: 0, pointermove: 2, pointerup: 1, pointercancel: 3 };
     const wrap = (e) => ({
-      getAction: () => 0, // ACTION_DOWN 等我们不区分
-      getActionMasked: () => 0,
+      ...ACTIONS,
+      getAction: () => TYPE_TO_ACTION[e.type] ?? 0,
+      getActionMasked: () => TYPE_TO_ACTION[e.type] ?? 0,
       getX: () => e.clientX,
       getY: () => e.clientY,
       getRawX: () => e.clientX,
       getRawY: () => e.clientY,
       getEventTime: () => e.timeStamp,
       getDownTime: () => e.timeStamp,
+      setAction: () => {},
       _e: e
     });
     // 用 addEventListener 而非 on* 属性：on* 属性 handler 返回 false 会被浏览器
     // 当成 preventDefault，而引擎 onTouch 返回 false 只是 Android 语义的"不消费事件"，
     // 会误吞掉 pointerdown 默认行为（text 光标点击定位失效）。
     // addEventListener 忽略返回值，引擎返回 true/false 都不会影响 DOM 默认动作。
+    const types = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel'];
     const handler = (e) => { try { listener && listener.onTouch(this, wrap(e)); } catch (err) { erp(err); } };
-    for (const type of ['pointerdown', 'pointermove', 'pointerup']) {
+    for (const type of types) {
       this.el.removeEventListener(type, this._touchHandler);
     }
     this._touchHandler = handler;
-    for (const type of ['pointerdown', 'pointermove', 'pointerup']) {
+    for (const type of types) {
       this.el.addEventListener(type, handler);
     }
     return this;
