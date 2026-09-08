@@ -256,28 +256,37 @@ export class AndroidView {
     const padB = parseFloat(cs.paddingBottom) || 0;
     const padL = parseFloat(cs.paddingLeft) || 0;
     const padR = parseFloat(cs.paddingRight) || 0;
-    // wrap 高：量子（子 absolute，offsetHeight 是其自身内容高）
+    // wrap 高：量子（子 absolute，offsetHeight 是其自身内容高，含子上下 margin）
     if (lp.height === WRAP_CONTENT) {
       let maxH = 0;
       for (const c of view.children || []) {
         if (!c.el || !c.el.isConnected) continue;
-        maxH = Math.max(maxH, c.el.offsetHeight);
+        const clp = c.layoutParams || {};
+        maxH = Math.max(maxH, c.el.offsetHeight + (clp.topMargin || 0) + (clp.bottomMargin || 0));
       }
       if (maxH > 0) el.style.height = (maxH + padT + padB) + 'px';
     }
-    // gravity 定位子（absolute 子相对 padding box，需加上 padding 起点）
+    // gravity 定位子（absolute 子相对 padding box，需加上 padding 起点）。
+    // margin 是 Android 语义里子与父的额外间距（如 dialog 卡片 20dp 边距），
+    // 引擎 resize 时 setMargins 写进 LP，这里消费：match 子宽 = 内容宽 - 左右 margin。
     const contentW = el.clientWidth - padL - padR;
     const contentH = el.clientHeight - padT - padB;
     for (const c of view.children || []) {
       if (!c.el || !c.el.isConnected) continue;
-      const g = (c.layoutParams && c.layoutParams.gravity) || 0;
-      if (!g) continue; // gravity 0 保持 addView 的 0,0 叠放
+      const clp = c.layoutParams || {};
+      const g = clp.gravity || 0;
+      const lm = clp.leftMargin || 0, tm = clp.topMargin || 0;
+      const rm = clp.rightMargin || 0, bm = clp.bottomMargin || 0;
+      // match 宽的子按减去 margin 后的内容宽显式定宽（CSS 100% 吃不到 margin）
+      if (clp.width === MATCH_PARENT) {
+        c.el.style.width = Math.max(0, contentW - lm - rm) + 'px';
+      }
       const cw = c.el.offsetWidth, ch = c.el.offsetHeight;
-      let x = padL, y = padT;
-      if (g & 0x01) x = padL + Math.round((contentW - cw) / 2);            // CENTER_HORIZONTAL
-      else if ((g & 0x05) || (g & 0x00800005)) x = padL + (contentW - cw); // RIGHT/END
-      if (g & 0x10) y = padT + Math.round((contentH - ch) / 2);            // CENTER_VERTICAL
-      else if (g & 0x50) y = padT + (contentH - ch);                       // BOTTOM
+      let x = padL + lm, y = padT + tm;
+      if (g & 0x01) x = padL + lm + Math.round((contentW - lm - rm - cw) / 2);   // CENTER_HORIZONTAL
+      else if ((g & 0x05) || (g & 0x00800005)) x = padL + lm + (contentW - lm - rm - cw); // RIGHT/END
+      if (g & 0x10) y = padT + tm + Math.round((contentH - tm - bm - ch) / 2);   // CENTER_VERTICAL
+      else if (g & 0x50) y = padT + tm + (contentH - tm - bm - ch);              // BOTTOM
       c.el.style.left = x + 'px';
       c.el.style.top = y + 'px';
     }
