@@ -221,7 +221,28 @@ export function setupRuntimeGlobals() {
   };
 
   // 6) NeteaseAdapter
-  globalThis.NeteaseAdapter = { mcVersion: '1.21.0' };
+  globalThis.NeteaseAdapter = {
+    mcVersion: '1.21.0',
+    getMinecraftVersion: function () { return this.mcVersion; },
+    getCoreVersion: function () { return this.mcVersion; },
+    compareVersion: function (a, b) {
+      // 简单版本比较：a > b 返回 1, a < b 返回 -1, 相等返回 0
+      const pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
+      for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const va = pa[i] || 0, vb = pb[i] || 0;
+        if (va > vb) return 1;
+        if (va < vb) return -1;
+      }
+      return 0;
+    },
+    switchVersion: function (cb) { if (cb) cb(); },
+    packNames: [],
+    autoSelect: false,
+    mcPackage: '',
+    mcPublisher: '',
+    askCustomVersion: function (cb) { if (cb) cb(null); },
+    askPublisher: function (cb) { if (cb) cb(''); }
+  };
   // cadroid 注入的全局：返回 MC 版本。取高版本让 CA.checkFeatures 走完整功能分支
   globalThis.getMinecraftVersion = function () { return globalThis.NeteaseAdapter.mcVersion; };
   globalThis.getCurrentMcVersion = globalThis.getMinecraftVersion;
