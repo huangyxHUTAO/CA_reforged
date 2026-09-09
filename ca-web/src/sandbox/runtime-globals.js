@@ -238,6 +238,73 @@ export function setupRuntimeGlobals() {
     toUri: (f) => ({ getPath: () => '/' })
   };
 
+  // 9) R 资源映射（供 ImageView.setImageResource 等使用）
+  // 引擎使用 com.huangyx.ca.R.drawable.icon, com.huangyx.ca.R.mipmap.icon_small 等整数 ID
+  // Web 端用占位符映射
+  const __caDrawableMap = new Map();
+  const __caMipmapMap = new Map();
+  let __caNextResId = 0x7f010000; // 模拟 Android 资源 ID 起始值
+
+  function __caRegisterDrawable(name, placeholderSvg) {
+    const id = __caNextResId++;
+    __caDrawableMap.set(name, { id, svg: placeholderSvg });
+    return id;
+  }
+  function __caRegisterMipmap(name, placeholderSvg) {
+    const id = __caNextResId++;
+    __caMipmapMap.set(name, { id, svg: placeholderSvg });
+    return id;
+  }
+
+  // 预置图标资源（用简单的 SVG 占位符，仅 ASCII 字符）
+  const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#ECDFE5"/><text x="50" y="58" text-anchor="middle" font-size="48" fill="#C32454">CA</text></svg>`;
+  const iconDataUrl = 'data:image/svg+xml;base64,' + btoa(iconSvg);
+
+  globalThis.__caResMap = {
+    drawable: __caDrawableMap,
+    mipmap: __caMipmapMap,
+    registerDrawable: __caRegisterDrawable,
+    registerMipmap: __caRegisterMipmap,
+    getDrawableUrl: (id) => {
+      const entry = [...__caDrawableMap.values()].find(e => e.id === id);
+      return entry ? entry.svgDataUrl : iconDataUrl;
+    },
+    getMipmapUrl: (id) => {
+      const entry = [...__caMipmapMap.values()].find(e => e.id === id);
+      return entry ? entry.svgDataUrl : iconDataUrl;
+    }
+  };
+
+  // 注册默认图标
+  const iconId = __caRegisterDrawable('icon', iconSvg);
+  __caDrawableMap.get('icon').svgDataUrl = iconDataUrl;
+  const iconSmallId = __caRegisterMipmap('icon_small', iconSvg);
+  __caMipmapMap.get('icon_small').svgDataUrl = iconDataUrl;
+  const icMenuEditId = __caRegisterDrawable('ic_menu_edit', iconSvg);
+  __caDrawableMap.get('ic_menu_edit').svgDataUrl = iconDataUrl;
+  const icDeleteId = __caRegisterDrawable('ic_delete', iconSvg);
+  __caDrawableMap.get('ic_delete').svgDataUrl = iconDataUrl;
+
+  // 暴露 com.huangyx.ca.R 兼容对象
+  globalThis.com = globalThis.com || {};
+  globalThis.com.huangyx = globalThis.com.huangyx || {};
+  globalThis.com.huangyx.ca = globalThis.com.huangyx.ca || {};
+  globalThis.com.huangyx.ca.R = {
+    drawable: { icon: globalThis.__caResMap.drawable.get('icon').id, ic_menu_edit: globalThis.__caResMap.drawable.get('ic_menu_edit').id, ic_delete: globalThis.__caResMap.drawable.get('ic_delete').id },
+    mipmap: { icon_small: globalThis.__caResMap.mipmap.get('icon_small').id },
+    style: {
+      Theme_Material_Light: 0x1030010,
+      Theme_Holo_Light: 0x1030011,
+      Theme_Light: 0x103000c
+    },
+    id: {},
+    layout: {},
+    string: {}
+  };
+  // 兼容 android.R
+  globalThis.android = globalThis.android || {};
+  globalThis.android.R = globalThis.com.huangyx.ca.R;
+
   globalThis.__caRuntimeGlobalsInstalled = true;
 }
 

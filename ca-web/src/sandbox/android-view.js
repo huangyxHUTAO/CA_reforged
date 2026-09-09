@@ -950,7 +950,18 @@ export class EditText extends TextView {
 export class ImageView extends AndroidView {
   constructor() { super('img'); this.tagNameForView = 'ImageView'; }
   setImageBitmap(bmp) { /* no-op */ return this; }
-  setImageResource(id) { return this; }
+  setImageResource(id) {
+    // 支持 Android R.drawable.* / R.mipmap.* 整数 ID
+    // 从全局资源映射查找对应的 Data URL
+    if (typeof id === 'number' && globalThis.__caResMap) {
+      const url = globalThis.__caResMap.getDrawableUrl(id) || globalThis.__caResMap.getMipmapUrl(id);
+      if (url) this.el.src = url;
+    } else if (typeof id === 'string') {
+      // 字符串 URL 直接用
+      this.el.src = id;
+    }
+    return this;
+  }
   setImageDrawable(d) { return this; }
   setScaleType(t) { return this; }
 }
