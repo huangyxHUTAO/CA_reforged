@@ -145,7 +145,10 @@ export function setupRuntimeGlobals() {
     verifyContext: () => {},
     verifyDex: () => {},
     doCreateShortcut: () => {},
-    exitLoading: () => {}
+    exitLoading: () => {},
+      // Web 端默认离线（无 MC 服务器连接），避免隐藏函数 / 检测逻辑报错
+      isOnlineMode: () => false,
+      getGameType: () => 0
   };
 
   // 4) AndroidBridge 替身
