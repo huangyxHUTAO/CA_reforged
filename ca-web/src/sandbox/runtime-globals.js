@@ -318,6 +318,7 @@ export function setupRuntimeGlobals() {
       Theme_Holo_Light: 0x1030011,
       Theme_Light: 0x103000c
     },
+    interpolator: { fast_out_slow_in: 0x10c0001, linear_out_slow_in: 0x10c0002, accelerate: 0x10c0003, decelerate: 0x10c0004 },
     id: {},
     layout: {},
     string: {}
