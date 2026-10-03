@@ -454,9 +454,59 @@ export class AndroidView {
   }
   setOnLongClickListener(listener) {
     this._listeners.longClick = listener;
-    this.el.oncontextmenu = (e) => { e.preventDefault(); listener && listener.onLongClick(this); return false; };
+    this._armLongPress(() => listener && listener.onLongClick(this));
     if (listener) this.el.style.cursor = this._isTextInput() ? 'text' : 'pointer';
     return this;
+  }
+  /**
+   * Android 长按语义：按住 longPressTimeout（500ms，与 ViewConfiguration
+   * 一致）才触发；期间松开=普通点击、移出 touchSlop=取消。
+   * 不用 contextmenu 冒充——那是右键菜单语义，会让每次点击都被判长按。
+   */
+  _armLongPress(fire) {
+    const el = this.el;
+    if (this.__lpArmed) { this._disarmLongPress(); }
+    this.__lpArmed = true;
+    const LONG_PRESS_TIMEOUT = 500;   // ViewConfiguration.getLongPressTimeout()
+    const TOUCH_SLOP = 12;            // 移动超过则取消长按
+    let sx = 0, sy = 0, fired = false;
+    const down = (e) => {
+      if (e.button != null && e.button !== 0) return; // 只响应左键
+      sx = e.clientX; sy = e.clientY; fired = false;
+      clearTimeout(this.__lpTimer);
+      this.__lpTimer = setTimeout(() => {
+        this.__lpTimer = null;
+        if (this.__lpArmed && !fired) { fired = true; try { fire(); } catch (err) { erp(err); } }
+      }, LONG_PRESS_TIMEOUT);
+    };
+    const move = (e) => {
+      if (!this.__lpTimer) return;
+      if (Math.abs(e.clientX - sx) > TOUCH_SLOP || Math.abs(e.clientY - sy) > TOUCH_SLOP) this._disarmLongPress();
+    };
+    const up = () => { clearTimeout(this.__lpTimer); this.__lpTimer = null; };
+    const cancel = () => this._disarmLongPress();
+    this.__lpTeardown = () => {
+      clearTimeout(this.__lpTimer); this.__lpTimer = null;
+      el.removeEventListener('pointerdown', down, true);
+      el.removeEventListener('pointermove', move, true);
+      el.removeEventListener('pointerup', up, true);
+      el.removeEventListener('pointercancel', cancel, true);
+      el.removeEventListener('pointerleave', cancel, true);
+      el.removeEventListener('contextmenu', this.__lpCtx || (() => {}), true);
+    };
+    el.addEventListener('pointerdown', down, true);
+    el.addEventListener('pointermove', move, true);
+    el.addEventListener('pointerup', up, true);
+    el.addEventListener('pointercancel', cancel, true);
+    el.addEventListener('pointerleave', cancel, true);
+    // 长按后浏览器可能弹原生菜单：屏蔽之（Android 无此行为）
+    this.__lpCtx = (e) => e.preventDefault();
+    el.addEventListener('contextmenu', this.__lpCtx, true);
+  }
+  _disarmLongPress() {
+    if (this.__lpTeardown) this.__lpTeardown();
+    this.__lpTeardown = null;
+    this.__lpArmed = false;
   }
   _isTextInput() { return this.el.tagName === 'TEXTAREA' || this.el.tagName === 'INPUT'; }
   setOnFocusChangeListener(listener) {
@@ -918,6 +968,12 @@ export class EditText extends TextView {
     this.el.style.overflowWrap = 'break-word';
     this.el.style.fontFamily = 'inherit';
     this.el.style.fontSize = 'inherit';
+    // textarea 的 UA 默认 rows=2（双行约 62px），会把 wrap 高的父 LinearLayout
+    // （命令栏 bar）撑成双行高度。Android EditText 是单行输入、靠 flex 拉伸
+    // 跟随父高——这里固定 rows=1 且高度交给 flex。
+    this.el.rows = 1;
+    this.el.style.height = 'auto';
+    this.el.style.minHeight = '0';
     // Android EditText 点击必然聚焦；真机里 pointerdown 默认聚焦被上层引擎
     // touch 监听链的 preventDefault 取消（表现为点击后无光标、无法输入）。
     // 这里用 capture 阶段手动聚焦——这是输入控件"可聚焦"语义的正确翻译。
@@ -1078,12 +1134,16 @@ export class AbsListView extends ViewGroup {
   }
   setOnItemLongClickListener(listener) {
     this._itemLongClick = listener;
-    this.el.oncontextmenu = (e) => {
-      e.preventDefault();
-      const idx = this._hitIndex(e);
-      if (idx >= 0) listener && listener.onItemLongClick(this, null, idx, idx);
-      return false;
-    };
+    // 复用基类长按检测（按住 500ms 触发），触发时按命中行取位置参数
+    this._armLongPress(() => {
+      if (!listener) return;
+      const idx = this._lastHitIndex != null ? this._lastHitIndex : -1;
+      if (idx >= 0) listener.onItemClick ? listener.onLongClick(this, null, idx, idx) : null;
+    });
+    // 记录长按位置的命中行（pointerdown 时算一次）
+    this.el.addEventListener('pointerdown', (e) => {
+      this._lastHitIndex = this._hitIndex(e);
+    }, true);
     return this;
   }
   setSelection(i) { return this; }
