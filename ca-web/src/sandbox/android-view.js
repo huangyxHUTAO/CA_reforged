@@ -452,61 +452,16 @@ export class AndroidView {
     this.el.style.cursor = listener ? this._isTextInput() ? 'text' : 'pointer' : '';
     return this;
   }
+  /**
+   * 长按由引擎自己的 touch 链处理：ACTION_DOWN 时 postDelayed(300ms) 起
+   * 计时器、ACTION_UP 时 removeCallbacks 取消（见 CA.js 的 touch listener）。
+   * 翻译层只负责把鼠标映射成 ACTION_DOWN/MOVE/UP——左键按下=手指按下、
+   * 抬起=手指离开、拖动=ACTION_MOVE。这里只记录 listener，不额外造长按
+   * 计时器（否则和引擎的计时器重复触发，且抬起取消不掉=粘住）。
+   */
   setOnLongClickListener(listener) {
     this._listeners.longClick = listener;
-    this._armLongPress(() => listener && listener.onLongClick(this));
-    if (listener) this.el.style.cursor = this._isTextInput() ? 'text' : 'pointer';
     return this;
-  }
-  /**
-   * Android 长按语义：按住 longPressTimeout（500ms，与 ViewConfiguration
-   * 一致）才触发；期间松开=普通点击、移出 touchSlop=取消。
-   * 不用 contextmenu 冒充——那是右键菜单语义，会让每次点击都被判长按。
-   */
-  _armLongPress(fire) {
-    const el = this.el;
-    if (this.__lpArmed) { this._disarmLongPress(); }
-    this.__lpArmed = true;
-    const LONG_PRESS_TIMEOUT = 500;   // ViewConfiguration.getLongPressTimeout()
-    const TOUCH_SLOP = 12;            // 移动超过则取消长按
-    let sx = 0, sy = 0, fired = false;
-    const down = (e) => {
-      if (e.button != null && e.button !== 0) return; // 只响应左键
-      sx = e.clientX; sy = e.clientY; fired = false;
-      clearTimeout(this.__lpTimer);
-      this.__lpTimer = setTimeout(() => {
-        this.__lpTimer = null;
-        if (this.__lpArmed && !fired) { fired = true; try { fire(); } catch (err) { erp(err); } }
-      }, LONG_PRESS_TIMEOUT);
-    };
-    const move = (e) => {
-      if (!this.__lpTimer) return;
-      if (Math.abs(e.clientX - sx) > TOUCH_SLOP || Math.abs(e.clientY - sy) > TOUCH_SLOP) this._disarmLongPress();
-    };
-    const up = () => { clearTimeout(this.__lpTimer); this.__lpTimer = null; };
-    const cancel = () => this._disarmLongPress();
-    this.__lpTeardown = () => {
-      clearTimeout(this.__lpTimer); this.__lpTimer = null;
-      el.removeEventListener('pointerdown', down, true);
-      el.removeEventListener('pointermove', move, true);
-      el.removeEventListener('pointerup', up, true);
-      el.removeEventListener('pointercancel', cancel, true);
-      el.removeEventListener('pointerleave', cancel, true);
-      el.removeEventListener('contextmenu', this.__lpCtx || (() => {}), true);
-    };
-    el.addEventListener('pointerdown', down, true);
-    el.addEventListener('pointermove', move, true);
-    el.addEventListener('pointerup', up, true);
-    el.addEventListener('pointercancel', cancel, true);
-    el.addEventListener('pointerleave', cancel, true);
-    // 长按后浏览器可能弹原生菜单：屏蔽之（Android 无此行为）
-    this.__lpCtx = (e) => e.preventDefault();
-    el.addEventListener('contextmenu', this.__lpCtx, true);
-  }
-  _disarmLongPress() {
-    if (this.__lpTeardown) this.__lpTeardown();
-    this.__lpTeardown = null;
-    this.__lpArmed = false;
   }
   _isTextInput() { return this.el.tagName === 'TEXTAREA' || this.el.tagName === 'INPUT'; }
   setOnFocusChangeListener(listener) {
@@ -590,8 +545,25 @@ export class AndroidView {
   invalidate() { /* DOM 自动重绘 */ return this; }
   postInvalidate() { return this.invalidate(); }
   post(action) { queueMicrotask(action); return this; }
-  postDelayed(action, ms) { setTimeout(action, ms); return this; }
-  removeCallbacks() {}
+  postDelayed(action, ms) {
+    // 记住定时器句柄，让 removeCallbacks 能真正取消——引擎的鼠标点击
+    // (ACTION_DOWN 起 postDelayed / ACTION_UP 取消) 依赖这个，否则"点击"
+    // 会退化成"长按"（定时器取消不掉，300ms 后照样弹菜单）
+    const h = setTimeout(() => {
+      if (this.__pending) this.__pending.delete(h);
+      try { action.run ? action.run() : action(); } catch (e) { erp(e); }
+    }, ms);
+    (this.__pending = this.__pending || new Set()).add(h);
+    return this;
+  }
+  removeCallbacks(action) {
+    if (!this.__pending) return;
+    if (action == null) { for (const h of this.__pending) clearTimeout(h); this.__pending.clear(); return; }
+    // action 可传具体 Runnable 或 undefined（全清）
+    for (const h of this.__pending) clearTimeout(h);
+    this.__pending.clear();
+  }
+  removeCallbacksAndMessages() { this.removeCallbacks(); }
   setEnabled(b) { this.el.style.pointerEvents = b ? 'auto' : 'none'; this.el.disabled = !b; return this; }
   isEnabled() { return this.el.style.pointerEvents !== 'none'; }
   setSelected(b) { this.el.classList.toggle('selected', !!b); return this; }
@@ -1132,18 +1104,13 @@ export class AbsListView extends ViewGroup {
     };
     return this;
   }
+  /**
+   * 列表项长按：Android ListView 的长按由引擎 touch 链 + postDelayed 计时
+   * 处理（CA.js 在 ACTION_DOWN 起计时、ACTION_UP 取消）。翻译层只记录
+   * listener，不做 contextmenu / 独立计时器——那是重复实现且取消不掉。
+   */
   setOnItemLongClickListener(listener) {
     this._itemLongClick = listener;
-    // 复用基类长按检测（按住 500ms 触发），触发时按命中行取位置参数
-    this._armLongPress(() => {
-      if (!listener) return;
-      const idx = this._lastHitIndex != null ? this._lastHitIndex : -1;
-      if (idx >= 0) listener.onItemClick ? listener.onLongClick(this, null, idx, idx) : null;
-    });
-    // 记录长按位置的命中行（pointerdown 时算一次）
-    this.el.addEventListener('pointerdown', (e) => {
-      this._lastHitIndex = this._hitIndex(e);
-    }, true);
     return this;
   }
   setSelection(i) { return this; }
