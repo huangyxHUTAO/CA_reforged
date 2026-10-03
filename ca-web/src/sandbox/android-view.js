@@ -495,8 +495,30 @@ export class AndroidView {
     // 当成 preventDefault，而引擎 onTouch 返回 false 只是 Android 语义的"不消费事件"，
     // 会误吞掉 pointerdown 默认行为（text 光标点击定位失效）。
     // addEventListener 忽略返回值，引擎返回 true/false 都不会影响 DOM 默认动作。
+    //
+    // 鼠标→触摸映射：Android 的 ACTION_MOVE 是"手指按住后的移动"，鼠标悬停
+    // 移动（未按键）不算 touch。浏览器在 focus 切换/元素插入时还会补发 pointermove，
+    // 引擎 MOVE 分支据此把命令栏 setTranslationY 拖走——这里只在有按键按下
+    // （e.buttons & 1）时才把 move 映射为 ACTION_MOVE。
+    //
+    // 另外引擎的 MOVE 分支一旦认为不是 stead 就直接 setTranslationY（无 slop
+    // 保护），点击时的 1~2px 抖动会把输入框拖走。这里按 Android touchSlop
+    // 语义过滤：按下后的微小位移算抖动，不送进引擎。
+    const TOUCH_SLOP = 8;
+    let downX = 0, downY = 0, dragging = false;
     const types = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel'];
-    const handler = (e) => { try { listener && listener.onTouch(this, wrap(e)); } catch (err) { erp(err); } };
+    const handler = (e) => {
+      if (e.type === 'pointerdown') {
+        downX = e.clientX; downY = e.clientY; dragging = false;
+      } else if (e.type === 'pointermove') {
+        if (!(e.buttons & 1)) return;           // 悬停移动不是 touch
+        if (!dragging) {
+          if (Math.abs(e.clientX - downX) < TOUCH_SLOP && Math.abs(e.clientY - downY) < TOUCH_SLOP) return; // 抖动
+          dragging = true;                        // 超过 slop 才是真拖动
+        }
+      }
+      try { listener && listener.onTouch(this, wrap(e)); } catch (err) { erp(err); }
+    };
     for (const type of types) {
       this.el.removeEventListener(type, this._touchHandler);
     }
