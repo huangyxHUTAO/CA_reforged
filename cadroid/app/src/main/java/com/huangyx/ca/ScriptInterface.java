@@ -151,6 +151,20 @@ public class ScriptInterface {
         }
     }
 
+    public String probeCHelper(String pack, String command) {
+        if (mContext == null) return "CHelper: context is null";
+        return CHelperBridge.probe(mContext.getAssets(), pack, command);
+    }
+
+    public String chelperStructure(String pack, String command) {
+        if (mContext == null) return "CHelper: context is null";
+        return CHelperBridge.structure(mContext.getAssets(), pack, command);
+    }
+
+    public boolean isCHelperAvailable() {
+        return mContext != null && CHelperBridge.isAvailable(mContext.getAssets());
+    }
+
     public void runOnUiThread(Runnable action) {
         if (Thread.currentThread() != mUiThread) {
             mUiHandler.post(action);

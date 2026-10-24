@@ -3285,6 +3285,41 @@ MapScript.loadModule("CA", {
 						set: self.setsettingbool
 					}];
 					self.intellisense = [{
+						name: "命令引擎",
+						description: "选择解析、补全、高亮所使用的命令引擎。",
+						type: "custom",
+						get: function () {
+							return CA.settings.commandEngine === "chelper" ? "CHelper（实验）" : "内置解析器";
+						},
+						onclick: function () {
+							Common.showOperateDialog([{
+								text: "内置解析器",
+								onclick: function () {
+									CA.settings.commandEngine = "builtin";
+									CA.trySave();
+									Common.toast("已切换为内置解析器");
+								}
+							}, {
+								text: "CHelper（Alpha）",
+								onclick: function () {
+									try {
+										if (!ScriptInterface.isCHelperAvailable()) {
+											Common.toast("CHelper 内核资源缺失（.so 或 cpack），请按文档重新构建");
+											return;
+										}
+										var pack = "release-vanilla-1.21.132.1.cpack";
+										var cmd = "execute @a ~ ~ ~ say hi";
+										var structure = ScriptInterface.chelperStructure(pack, cmd);
+										var parsed = ScriptInterface.probeCHelper(pack, cmd);
+										Common.toast("结构: " + structure + "\n命令: " + parsed);
+									} catch (e) {
+										erp(e);
+										Common.toast("CHelper 调用失败：" + e);
+									}
+								}
+							}]);
+						}
+					}, {
 						name: "智能模式",
 						type: "custom",
 						get: function () {

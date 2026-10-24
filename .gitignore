@@ -22,6 +22,12 @@
 /cadroid/project_*.bat
 /cadroid/app/src/main/assets/script.js
 
+# CHelper 内核资源：.so 和 cpack 不入库，构建时缺失会直接报错
+/cadroid/app/src/main/jniLibs/
+/cadroid/app/src/main/assets/cpack/
+/cadroid/app/src/main/assets/old2new/
+/cadroid/app/src/main/assets/rawtext/
+
 # 忽略./tool 目录
 /tool
 

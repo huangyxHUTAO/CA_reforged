@@ -55,3 +55,6 @@
 -keep public class com.huangyx.ca.ViewUtils {
     public *;
 }
+# CHelper 内核 JNI 绑定：类名/包名参与 JNI 符号，不能被混淆
+-keep class yancey.chelper.core.** { *; }
+-keep class com.huangyx.ca.CHelperBridge { public *; }
