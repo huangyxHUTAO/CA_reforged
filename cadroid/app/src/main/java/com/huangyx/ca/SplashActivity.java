@@ -13,23 +13,19 @@ import android.widget.TextView;
 public class SplashActivity extends Activity {
     private TextView mLoadingTitleView;
     private FrameLayout mAdContainer;
-    private TextView mAdSkipView;
-    private TextView mAdSecondsView;
     private AdProvider mProvider;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         mLoadingTitleView = findViewById(R.id.loadingTitle);
         mAdContainer = findViewById(R.id.adContainer);
-        mAdSkipView = findViewById(R.id.skipView);
-        mAdSecondsView = findViewById(R.id.secondsLeft);
-        super.onCreate(savedInstanceState);
         if (!ScriptInterface.onSplashActivityCreate(this)) {
             finish();
         }
         mProvider = AdProvider.getInstance();
-        mProvider.prepare(this, mAdContainer, mAdSkipView, new AdListener());
+        mProvider.prepare(this, mAdContainer, null, new AdListener());
     }
 
     @Override
@@ -84,21 +80,15 @@ public class SplashActivity extends Activity {
     class AdListener implements AdProvider.Listener {
         @Override
         public void onPresent() {
-            mAdSecondsView.setVisibility(View.VISIBLE);
-            mAdSkipView.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onTick(int secondsLeft) {
-            String text = getText(R.string.ad_seconds_left).toString();
-            mAdSecondsView.setText(String.format(text, secondsLeft));
         }
 
         @Override
         public void onComplete() {
             mAdContainer.setVisibility(View.GONE);
-            mAdSecondsView.setVisibility(View.GONE);
-            mAdSkipView.setVisibility(View.GONE);
         }
     }
 }

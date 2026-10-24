@@ -50,3 +50,8 @@
 -keep public class com.huangyx.ca.MyEditText {
     public *;
 }
+
+# ColorOS 16 颜色兼容层：只被 JS 通过反射调用，R8 看不到引用会直接删掉
+-keep public class com.huangyx.ca.ViewUtils {
+    public *;
+}

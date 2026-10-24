@@ -16,17 +16,6 @@
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/secondsLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
-            android:alpha="0.7"
-            android:background="#80000000"
-            android:padding="5dp"
-            android:textColor="#ffffffff"
-            android:visibility="gone" />
-
     </FrameLayout>
 
     <FrameLayout
@@ -70,20 +59,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:text="@string/default_loading_tip" />
+                android:text="@string/default_loading_tip"
+                android:textColor="#FF000000" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/skipView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/skip_ad_text"
-            android:textColor="#ff0000ff"
-            android:visibility="gone" />
 
     </FrameLayout>
 

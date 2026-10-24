@@ -11,8 +11,8 @@ MapScript.loadModule("CA", {
 	fcs: null,
 	paste: null,
 
-	his: null,
-	fav: null,
+	his: [],
+	fav: {},
 	cmdstr: "",
 	settings: {},
 	fine: false,
@@ -112,7 +112,9 @@ MapScript.loadModule("CA", {
 			if (t.isFile()) f = SafeFileUtils.readJSON(t, null);
 			t.delete();
 		}
-		if (f && Array.isArray(f.history) && (f.favorite instanceof Object) && (f.settings instanceof Object)) {
+		if (f && (f.settings instanceof Object)) {
+			if (!Array.isArray(f.history)) f.history = [];
+			if (!(f.favorite instanceof Object)) f.favorite = {};
 			this.his = f.history;
 			this.fav = f.favorite;
 			this.cmdstr = f.cmd ? String(f.cmd) : "";
@@ -861,6 +863,12 @@ MapScript.loadModule("CA", {
 					self.main = new G.LinearLayout(ctx);
 					self.main.setOrientation(G.LinearLayout.VERTICAL);
 
+					// CA.con 必须在这里就建好：self.main 一旦赋值，后面任何异常都会让
+					// 再次 showGen 跳过整个构建分支，导致 CA.con 永远为 null
+					CA.con = new G.FrameLayout(ctx);
+					CA.con.setLayoutParams(new G.LinearLayout.LayoutParams(-1, 0, 1));
+					Common.applyStyle(CA.con, "container_default");
+
 					self.bar = new G.LinearLayout(ctx);
 					self.bar.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 					self.bar.setOrientation(G.LinearLayout.HORIZONTAL);
@@ -1107,10 +1115,6 @@ MapScript.loadModule("CA", {
 						}
 					}));
 					self.bar.addView(self.copy);
-
-					CA.con = new G.FrameLayout(ctx);
-					CA.con.setLayoutParams(new G.LinearLayout.LayoutParams(-1, 0, 1));
-					Common.applyStyle(CA.con, "container_default");
 
 					if (android.os.Build.VERSION.SDK_INT >= 16 && (self.bgImg = self.getBgImage())) {
 						self.bgAlpha = parseFloat(CA.settings.bgAlpha);
@@ -1582,6 +1586,7 @@ MapScript.loadModule("CA", {
 					self.hisAdapter = SimpleListAdapter.getController(new SimpleListAdapter(CA.his, self.hismaker, self.hisbinder));
 					self.favAdapter = ExpandableListAdapter.control(new ExpandableListAdapter(self.favList = [], self.getFavChildren, self.favimaker, self.favibinder, self.favgmaker, self.favgbinder));
 
+					if (!(self.screenWidth > 0)) self.screenWidth = ctx.getResources().getDisplayMetrics().widthPixels;
 					self.linear = new G.LinearLayout(ctx);
 					self.linear.setOrientation(G.LinearLayout.HORIZONTAL);
 					self.tag1 = new G.TextView(ctx);
@@ -1669,7 +1674,7 @@ MapScript.loadModule("CA", {
 						}
 					});
 					self.linear.addView(self.favorite);
-					CA.con.addOnLayoutChangeListener(self.layoutListener = new G.View.OnLayoutChangeListener({
+					if (CA.con) CA.con.addOnLayoutChangeListener(self.layoutListener = new G.View.OnLayoutChangeListener({
 						onLayoutChange: function (v, l, t, r, b, ol, ot, or, ob) {
 							try {
 								if (r - l == or - ol) return;
@@ -1985,6 +1990,7 @@ MapScript.loadModule("CA", {
 							v.setOnTouchListener(self.scroller);
 						}
 					}
+					if (!(self.screenWidth > 0)) self.screenWidth = ctx.getResources().getDisplayMetrics().widthPixels;
 					self.linear = new G.LinearLayout(ctx);
 					self.linear.setOrientation(G.LinearLayout.HORIZONTAL);
 					self.con = new G.FrameLayout(ctx);
@@ -1993,7 +1999,7 @@ MapScript.loadModule("CA", {
 						self.wvAvailable = true;
 					}, self.help);
 					self.linear.addView(self.help);
-					CA.con.addOnLayoutChangeListener(self.layoutListener = new G.View.OnLayoutChangeListener({
+					if (CA.con) CA.con.addOnLayoutChangeListener(self.layoutListener = new G.View.OnLayoutChangeListener({
 						onLayoutChange: function (v, l, t, r, b, ol, ot, or, ob) {
 							try {
 								if (r - l == or - ol) return;
@@ -3725,7 +3731,7 @@ MapScript.loadModule("CA", {
 
 					self.hide = new G.TextView(ctx);
 					self.hide.setText("..");
-					self.hide.setTextColor(frcolor);
+					Common.setTextColor(self.hide, frcolor);
 					self.hide.setTextSize(Common.theme.textsize[2]);
 					self.hide.setGravity(G.Gravity.CENTER);
 					self.hide.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
@@ -3759,7 +3765,7 @@ MapScript.loadModule("CA", {
 
 					self.prompt = new G.TextView(ctx);
 					self.prompt.setLayoutParams(lp1 = new G.LinearLayout.LayoutParams(-1, -2));
-					self.prompt.setTextColor(frcolor);
+					Common.setTextColor(self.prompt, frcolor);
 					self.prompt.setSingleLine(true);
 					self.prompt.setEllipsize(G.TextUtils.TruncateAt.START);
 					self.prompt.setTextSize(Common.theme.textsize[2]);
@@ -3791,7 +3797,7 @@ MapScript.loadModule("CA", {
 						self.tableview.push([]);
 						for (j = 0; j < data[i].length; j++) {
 							self.tableview[i].push(b = new G.TextView(ctx));
-							b.setTextColor(frcolor);
+							Common.setTextColor(b, frcolor);
 							b.setTextSize(Common.theme.textsize[2]);
 							b.setGravity(G.Gravity.CENTER);
 							b.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
@@ -3803,7 +3809,7 @@ MapScript.loadModule("CA", {
 						self.line.addView(l, lp1);
 					}
 					self.tableview[0].push(b = new G.TextView(ctx));
-					b.setTextColor(frcolor);
+					Common.setTextColor(b, frcolor);
 					b.setTextSize(Common.theme.textsize[2]);
 					b.setGravity(G.Gravity.CENTER);
 					b.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
@@ -3823,7 +3829,7 @@ MapScript.loadModule("CA", {
 					self.exit.setText("关闭");
 					self.exit.setTextSize(Common.theme.textsize[2]);
 					self.exit.setGravity(G.Gravity.CENTER);
-					self.exit.setTextColor(frcolor);
+					Common.setTextColor(self.exit, frcolor);
 					self.exit.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 20 * G.dp);
 					self.exit.setOnClickListener(new G.View.OnClickListener({
 						onClick: function (v) {
@@ -5562,19 +5568,19 @@ MapScript.loadModule("CA", {
 			view.setPadding(5 * zp, 5 * zp, 5 * zp, 5 * zp);
 			view.setTextSize(18 * size);
 			view.setBackgroundColor(Common.theme.go_bgcolor);
-			view.setTextColor(Common.theme.go_textcolor);
+			Common.setTextColor(view, Common.theme.go_textcolor);
 			view.setOnTouchListener(new G.View.OnTouchListener({
 				onTouch: function (v, e) {
 					try {
 						switch (e.getAction()) {
 							case e.ACTION_DOWN:
 								v.setBackgroundColor(Common.theme.go_touchbgcolor);
-								v.setTextColor(Common.theme.go_touchtextcolor);
+								Common.setTextColor(v, Common.theme.go_touchtextcolor);
 								break;
 							case e.ACTION_UP:
 							case e.ACTION_CANCEL:
 								v.setBackgroundColor(Common.theme.go_bgcolor);
-								v.setTextColor(Common.theme.go_textcolor);
+								Common.setTextColor(v, Common.theme.go_textcolor);
 						}
 						return false;
 					} catch (e) { return erp(e), false }
@@ -7577,6 +7583,8 @@ MapScript.loadModule("CA", {
 								children: [
 									agree = L.CheckBox({
 										layout: { width: -2, height: -2 },
+										style: "textview_default",
+										fontSize: 2,
 										checked: Boolean(CA.settings.readAgreement > Date.parse(BuildConfig.licenceUpdate))
 									}),
 									L.TextView({

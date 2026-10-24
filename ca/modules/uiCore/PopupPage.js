@@ -69,6 +69,9 @@ MapScript.loadModule("PopupPage", (function() {
 			r.titleView.setText("CA");
 			r.titleView.setPadding(5 * G.dp, 5 * G.dp, 5 * G.dp, 5 * G.dp);
 			r.titleView.setSingleLine(true);
+			// 这里执行时 Common.theme 可能还没加载，applyStyle 会被跳过，
+			// 所以直接给安全色，避免落入 ColorOS 默认颜色链路
+			Common.setTextColor(r.titleView, Common.theme ? Common.theme.textcolor : Common.argbInt(0xff, 0, 0, 0));
 			r.titleView.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2, 1));
 			r.titleView.setOnTouchListener(new G.View.OnTouchListener({onTouch : function touch(v, e) {try {
 				switch (e.getAction()) {
@@ -99,6 +102,7 @@ MapScript.loadModule("PopupPage", (function() {
 			r.resizeView.setPadding(5 * G.dp, 5 * G.dp, 5 * G.dp, 5 * G.dp);
 			r.resizeView.setSingleLine(true);
 			r.resizeView.setGravity(G.Gravity.RIGHT);
+			Common.setTextColor(r.resizeView, Common.theme ? Common.theme.textcolor : Common.argbInt(0xff, 0, 0, 0));
 			r.resizeView.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 			r.resizeView.setOnTouchListener(new G.View.OnTouchListener({onTouch : function touch(v, e) {try {
 				switch (e.getAction()) {
@@ -159,6 +163,7 @@ MapScript.loadModule("PopupPage", (function() {
 			r.defaultStub.setGravity(G.Gravity.CENTER);
 			r.defaultStub.setPadding(20 * G.dp, 20 * G.dp, 20 * G.dp, 20 * G.dp);
 			r.defaultStub.setText("拖动右上角方块调整大小\n长按右上角方块隐藏顶栏");
+			Common.setTextColor(r.defaultStub, Common.theme ? Common.theme.promptcolor : Common.argbInt(0xff, 0, 0, 0));
 			r.defaultDecorLinear.addView(r.defaultStub);
 			r.defaultWindow.addView(r.defaultDecorLinear);
 			r.floatWindow = r.floatContainer = ScriptInterface.createFrameLayout({

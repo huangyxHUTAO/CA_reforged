@@ -51,9 +51,30 @@ MapScript.loadModule("Common", {
 			"go_touchbgcolor": "#FF85A2",	// 按下按钮：水蜜桃粉
 			"go_touchtextcolor": "#FFFFFF"	// 按下文字：纯白
 		};
-		var convert = function (v, d) {
+		// 文字色字段：只有这些会走到 TextView 的绘制路径
+		var textColorKeys = {
+			textcolor: 1, promptcolor: 1, highlightcolor: 1, criticalcolor: 1,
+			go_textcolor: 1, go_touchtextcolor: 1
+		};
+		var convert = function (v, d, isText) {
 			var n = Number("0x" + String(v).slice(1));
 			if (isNaN(n)) n = Number("0x" + d.slice(1));
+			// 已把所有 setTextColor 收口到 ViewUtils（Java 编译期绑定）后，
+			// ColorOS 不再误读颜色值，这里暂时关闭低 6 位钳制，恢复原始配色。
+			// 若重新出现 Invalid ID，把下面的 isText 分支恢复即可。
+			// if (isText) {
+			// 	var b = n & 0xff, best = b, bestDiff = 256;
+			// 	for (var base = 0; base < 256; base += 64) {
+			// 		for (var low = 0; low <= 16 && base + low < 256; low++) {
+			// 			var cand = base + low, diff = cand > b ? cand - b : b - cand;
+			// 			if (diff < bestDiff) {
+			// 				bestDiff = diff;
+			// 				best = cand;
+			// 			}
+			// 		}
+			// 	}
+			// 	n = (n & 0xffff00) | best;
+			// }
 			return Common.argbInt(0xff, (n >>> 16) & 0xff, (n >>> 8) & 0xff, n & 0xff);
 		}
 		// 优先使用 Common.themelist（可能由 builtinData.js 定义），否则用模块内的 themelist
@@ -61,7 +82,7 @@ MapScript.loadModule("Common", {
 		var r = { id: (id in themelist ? String(id) : "pink_theme") }, k, i, t;
 		k = r.id in themelist ? themelist[r.id] : pink_theme;
 		for (i in pink_theme) {
-			r[i] = convert(k[i], pink_theme[i]);
+			r[i] = convert(k[i], pink_theme[i], !!textColorKeys[i]);
 		}
 		r.name = String(k === pink_theme ? themelist.pink_theme.name : k.name);
 		i = Math.floor(CA.settings.alpha * 255);
@@ -81,7 +102,33 @@ MapScript.loadModule("Common", {
 		G.dp = t.density * i;
 		this.theme = r;
 	},
+	// Rhino 的运行时重载解析可能选中 ColorOS 新增的宽类型重载（long），
+	// 绕过 Color.pack() 后，未打包的颜色值进入 ColorSpace.get(color & 0x3F)
+	// 就会抛 IllegalArgumentException: Invalid ID。
+	// 这里统一走 Java 编译期绑定，确保最终执行的是 setTextColor(int)。
+	textViewSetColor: function (v, color) {
+		var m = Common._textColorMethod;
+		if (m === undefined) {
+			try {
+				m = JavaReflect.staticMethod("com.huangyx.ca.ViewUtils", "setTextColor", ["android.widget.TextView", "int"]);
+			} catch (e) {
+				m = null;
+			}
+			Common._textColorMethod = m;
+		}
+		if (m) m(v, color);
+		else v.setTextColor(color);
+	},
+	setTextColor: function (v, color) {
+		try {
+			Common.textViewSetColor(v, color);
+		} catch (e) {
+			android.util.Log.e("CA", "setTextColor failed: " + e);
+		}
+	},
 	applyStyle: function (v, style, size) {
+		if (!Common.theme) return;
+		var ts = Common.theme.textsize || [10, 12, 14, 16, 18];
 		switch (style) {
 			case "bar_float":
 				v.setBackgroundColor(this.theme.float_bgcolor);
@@ -100,36 +147,36 @@ MapScript.loadModule("Common", {
 			case "textview_default":
 			case "button_default":
 			case "item_default":
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.textcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.textcolor);
 				break;
 			case "textview_prompt":
 			case "button_secondary":
 			case "item_disabled":
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.promptcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.promptcolor);
 				break;
 			case "textview_critial":
 			case "button_critical":
 			case "item_critical":
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.criticalcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.criticalcolor);
 				break;
 			case "textview_highlight":
 			case "button_highlight":
 			case "item_highlight":
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.highlightcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.highlightcolor);
 				break;
 			case "button_reactive":
 				v.setBackgroundColor(Common.theme.go_bgcolor);
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.go_textcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.go_textcolor);
 				break;
 			case "button_reactive_pressed":
 				v.setBackgroundColor(Common.theme.go_touchbgcolor);
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.go_touchtextcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.go_touchtextcolor);
 				break;
 			case "button_reactive_auto":
 				Common.applyStyle(v, "button_reactive", size);
@@ -151,9 +198,11 @@ MapScript.loadModule("Common", {
 				break;
 			case "edittext_default":
 				v.setBackgroundColor(G.Color.TRANSPARENT);
-				v.setTextSize(Common.theme.textsize[size]);
-				v.setTextColor(Common.theme.textcolor);
-				v.setHintTextColor(Common.theme.promptcolor);
+				v.setTextSize(ts[size]);
+				Common.setTextColor(v, Common.theme.textcolor);
+				// ColorOS 16 的 setHintTextColor 会造出 mColors 为 null 的 ColorStateList，
+				// updateTextColors 里直接 NPE，这里兜住，失败就用系统默认 hint 色
+				try { v.setHintTextColor(Common.theme.promptcolor); } catch (e) { erp(e, true); }
 				break;
 		}
 	},
@@ -180,7 +229,7 @@ MapScript.loadModule("Common", {
 						view.setBackgroundColor(Common.theme.bgcolor);
 						view.setText(self.current == e ? self.intl.resolve("currentTheme", Common.theme.name) : Common.theme.name);
 						view.setTextSize(Common.theme.textsize[3]);
-						view.setTextColor(Common.theme.textcolor);
+						Common.setTextColor(view, Common.theme.textcolor);
 						Common.loadTheme(self.current);
 						view.setGravity(G.Gravity.CENTER);
 						return view;
@@ -192,18 +241,18 @@ MapScript.loadModule("Common", {
 						self.linear.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 0);
 						self.title.setPadding(0, 0, 0, 10 * G.dp);
 						self.title.setTextSize(Common.theme.textsize[4]);
-						self.title.setTextColor(Common.theme.textcolor);
+						Common.setTextColor(self.title, Common.theme.textcolor);
 						self.alpha.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 						self.alpha.setText(self.intl.resolve("alphaField", isFinite(CA.settings.alpha) ? parseInt(CA.settings.alpha * 100) : 100));
 						self.alpha.setTextSize(Common.theme.textsize[2]);
-						self.alpha.setTextColor(Common.theme.highlightcolor);
+						Common.setTextColor(self.alpha, Common.theme.highlightcolor);
 						self.tsz.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 						self.tsz.setText(self.intl.resolve("textsizeField", isFinite(CA.settings.textSize) ? parseInt(CA.settings.textSize * 100) : 100));
 						self.tsz.setTextSize(Common.theme.textsize[2]);
-						self.tsz.setTextColor(Common.theme.highlightcolor);
+						Common.setTextColor(self.tsz, Common.theme.highlightcolor);
 						self.exit.setPadding(10 * G.dp, 20 * G.dp, 10 * G.dp, 20 * G.dp);
 						self.exit.setTextSize(Common.theme.textsize[3]);
-						self.exit.setTextColor(Common.theme.criticalcolor);
+						Common.setTextColor(self.exit, Common.theme.criticalcolor);
 					}
 					self.alphaSetting = function () {
 						Common.showSlider({
@@ -1641,7 +1690,7 @@ MapScript.loadModule("Common", {
 					}));
 					self.text = new G.TextView(ctx);
 					self.text.setBackgroundColor(Common.argbInt(0x80, 0, 0, 0));
-					self.text.setTextColor(G.Color.WHITE);
+					Common.setTextColor(self.text, G.Color.WHITE);
 					self.text.setTextSize(16);
 					self.text.setGravity(G.Gravity.CENTER);
 					self.text.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 15 * G.dp);
@@ -1732,7 +1781,7 @@ MapScript.loadModule("Common", {
 					self.frame = new G.FrameLayout(ctx);
 					self.text = new G.TextView(ctx);
 					self.text.setBackgroundColor(Common.argbInt(0xc0, 0, 0, 0));
-					self.text.setTextColor(G.Color.WHITE);
+					Common.setTextColor(self.text, G.Color.WHITE);
 					self.text.setTextSize(14);
 					self.text.setGravity(G.Gravity.CENTER);
 					self.text.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
@@ -1852,7 +1901,7 @@ MapScript.loadModule("Common", {
 		}
 		result = new G.TextView(ctx);
 		result.setBackgroundColor(G.Color.WHITE);
-		result.setTextColor(G.Color.BLACK);
+		Common.setTextColor(result, G.Color.BLACK);
 		result.setGravity(G.Gravity.CENTER);
 		result.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 		result.setText(Common.intl.resolve("webviewUnavailable", error));

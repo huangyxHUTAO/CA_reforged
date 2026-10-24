@@ -1,8 +1,10 @@
 package com.huangyx.ca;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
@@ -14,6 +16,8 @@ import java.util.Date;
 
 public class XApplication extends Application {
     public static final String TAG = "CA";
+
+    private static String sCurrentActivity = "unknown";
 
     public static String getPackageVersion(Context ctx) {
         try {
@@ -28,6 +32,7 @@ public class XApplication extends Application {
         Log.e(TAG, t.toString(), e);
         StringWriter s = new StringWriter();
         s.append("Version ").append(getPackageVersion(ctx)).append("\n");
+        s.append("Activity: ").append(sCurrentActivity).append("\n");
         e.printStackTrace(new PrintWriter(s));
         try {
             PrintWriter fs = new PrintWriter(new FileOutputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.huangyx.ca.error.log", true));
@@ -43,6 +48,36 @@ public class XApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                sCurrentActivity = activity.getClass().getName();
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+            }
+        });
         Thread.setDefaultUncaughtExceptionHandler(new ErrorCatcher());
     }
 

@@ -63,22 +63,26 @@ public class RhinoWebView extends WebView {
 
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-            return delegee.onJsAlert(view, url, message, result);
+            if (delegee.onJsAlert(view, url, message, result)) return true;
+            return JsDialog.show(view, message, false, result);
         }
 
         @Override
         public boolean onJsBeforeUnload(WebView view, String url, String message, JsResult result) {
-            return delegee.onJsBeforeUnload(view, url, message, result);
+            if (delegee.onJsBeforeUnload(view, url, message, result)) return true;
+            return JsDialog.show(view, message, true, result);
         }
 
         @Override
         public boolean onJsConfirm(WebView view, String url, String message, JsResult result) {
-            return delegee.onJsConfirm(view, url, message, result);
+            if (delegee.onJsConfirm(view, url, message, result)) return true;
+            return JsDialog.show(view, message, true, result);
         }
 
         @Override
         public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, JsPromptResult result) {
-            return delegee.onJsPrompt(view, url, message, defaultValue, result);
+            if (delegee.onJsPrompt(view, url, message, defaultValue, result)) return true;
+            return JsDialog.showPrompt(view, message, defaultValue, result);
         }
 
         @Override

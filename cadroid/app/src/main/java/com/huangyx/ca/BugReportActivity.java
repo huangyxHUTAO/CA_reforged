@@ -1,43 +1,47 @@
 package com.huangyx.ca;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 public class BugReportActivity extends Activity {
+    private String mException = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActionBar() != null) {
-            getActionBar().setTitle("BugReport");
-        }
+        setContentView(R.layout.bug_report);
+
         Bundle ex = getIntent().getExtras();
-        if (ex != null) {
-            final String em = ex.getString("exception", "");
-            final int epid = ex.getInt("pid", 0);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle("错误")
-                    .setCancelable(false)
-                    .setMessage("您好，命令助手出现了一个错误。您可以将这个错误反馈给我们，来推动命令助手社区版的更新。您也可以选择忽略。" +
-                            "社区版作者联系方式：QQ-3353255023;Email-huangyxnycx@gmail.com\n\n" +
-                            "错误信息：\n" + em)
-                    .setPositiveButton("复制并关闭", (dia, w) -> {
-                        setClipText(em);
-                        finish();
-                    })
-                    .setNegativeButton("忽略", (dia, w) -> finish());
-            if (epid != 0) {
-                builder.setNeutralButton("立即停止", (dia, w) -> {
-                    finish();
-                    android.os.Process.killProcess(epid);
-                    System.exit(0);
-                });
-            }
-            builder.show();
+        if (ex == null) {
+            finish();
+            return;
+        }
+        mException = ex.getString("exception", "");
+        final int epid = ex.getInt("pid", 0);
+
+        ((TextView) findViewById(R.id.bug_message))
+                .setText(getString(R.string.bug_report_message) + mException);
+
+        findViewById(R.id.bug_copy).setOnClickListener(v -> {
+            setClipText(mException);
+            finish();
+        });
+        findViewById(R.id.bug_ignore).setOnClickListener(v -> finish());
+
+        View kill = findViewById(R.id.bug_kill);
+        if (epid != 0) {
+            kill.setVisibility(View.VISIBLE);
+            kill.setOnClickListener(v -> {
+                finish();
+                android.os.Process.killProcess(epid);
+                System.exit(0);
+            });
         }
     }
 
