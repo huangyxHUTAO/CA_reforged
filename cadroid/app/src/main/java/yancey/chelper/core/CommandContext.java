@@ -25,6 +25,22 @@ public final class CommandContext {
         return p == 0L ? null : getStructure0(p);
     }
 
+    /**
+     * 指定光标位置上的补全候选数量
+     */
+    public int getSuggestionsSize(int index) {
+        long p = pointer;
+        return p == 0L ? 0 : getSuggestionsSize0(p, index);
+    }
+
+    /**
+     * 取第 which 个补全候选（index 是光标位置）
+     */
+    public Suggestion getSuggestion(int index, int which) {
+        long p = pointer;
+        return p == 0L ? null : getSuggestion0(p, index, which);
+    }
+
     public void close() {
         long p = pointer;
         pointer = 0L;
@@ -34,6 +50,10 @@ public final class CommandContext {
     private static native String command0(long pointer);
 
     private static native String getStructure0(long pointer);
+
+    private static native int getSuggestionsSize0(long pointer, int index);
+
+    private static native Suggestion getSuggestion0(long pointer, int index, int which);
 
     private static native void release0(long pointer);
 }

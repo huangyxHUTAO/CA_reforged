@@ -1810,6 +1810,13 @@
                         CA.showAssist.initContent(self.list);
                         PWM.registerResetFlag(CA.IntelliSense, "ui");
                         PWM.registerResetFlag(self, "prompt");
+                        // 这些状态原本挂在 show 函数对象上，外部按模块对象访问时拿不到，
+                        // 这里同步一份（apply 改名，避免覆盖 proc 里无参的 this.apply()）
+                        CA.IntelliSense.applyWithData = self.apply;
+                        CA.IntelliSense.vmaker = self.vmaker;
+                        CA.IntelliSense.vbinder = self.vbinder;
+                        CA.IntelliSense.prompt = self.prompt;
+                        CA.IntelliSense.list = self.list;
                     }
                     CA.showAssist.con.addView(CA.IntelliSense.ui = self.list);
                 } catch (e) { erp(e) }

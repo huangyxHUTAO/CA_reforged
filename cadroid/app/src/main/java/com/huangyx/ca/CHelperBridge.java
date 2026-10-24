@@ -4,6 +4,7 @@ import android.content.res.AssetManager;
 
 import yancey.chelper.core.CHelperCore;
 import yancey.chelper.core.CommandContext;
+import yancey.chelper.core.Suggestion;
 
 /**
  * 命令引擎桥接层：给 JS 侧调用的静态入口。
@@ -79,6 +80,42 @@ public final class CHelperBridge {
             }
         } catch (Throwable t) {
             return "CHelper error: " + t;
+        }
+    }
+
+    /**
+     * 返回指定光标位置的补全建议，每项格式为 "名称\t说明"。
+     * 失败时返回单元素数组，内容为错误说明。
+     */
+    public static synchronized String[] suggestions(AssetManager assets, String pack, String command, int cursor) {
+        try {
+            if (sCore == null || !pack.equals(sPack)) {
+                if (sCore != null) {
+                    sCore.close();
+                }
+                sCore = CHelperCore.fromAssets(assets, "cpack/" + pack);
+                sPack = pack;
+            }
+            CommandContext context = new CommandContext(sCore.createContextPointer(command));
+            try {
+                int size = context.getSuggestionsSize(cursor);
+                if (size <= 0) return new String[0];
+                if (size > 200) size = 200;
+                String[] out = new String[size];
+                for (int i = 0; i < size; i++) {
+                    Suggestion s = context.getSuggestion(cursor, i);
+                    if (s == null) {
+                        out[i] = "";
+                    } else {
+                        out[i] = (s.name == null ? "" : s.name) + "\t" + (s.description == null ? "" : s.description);
+                    }
+                }
+                return out;
+            } finally {
+                context.close();
+            }
+        } catch (Throwable t) {
+            return new String[]{"CHelper error: " + t};
         }
     }
 }

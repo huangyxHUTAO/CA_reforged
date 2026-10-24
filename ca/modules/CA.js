@@ -771,7 +771,7 @@ MapScript.loadModule("CA", {
 						}
 						var gostate1 = function () { //输入了命令
 							state = 1;
-							if (CA.settings.iiMode == 2 || CA.settings.iiMode == 3) {
+							if (CA.settings.commandEngine === "chelper" || CA.settings.iiMode == 2 || CA.settings.iiMode == 3) {
 								CA.hideHistory(); CA.showAssist();
 								CA.Assist.hide(); CA.IntelliSense.show();
 								// Common.toast("补全被显示")
@@ -813,6 +813,11 @@ MapScript.loadModule("CA", {
 							}
 							if (CA.fcs) CA.showFCS(s);
 							if (CA.settings.autoFormatCmd) rep(s);
+							if (CA.settings.commandEngine === "chelper") {
+								if (state != 1) return;
+								CA.updateCHelperSuggest(String(s), cursor);
+								return;
+							}
 							if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3 || state != 1) return;
 							if (CA.settings.senseDelay) {
 								CA.IntelliSense.callDelay(String(s), cursor);
@@ -2752,6 +2757,34 @@ MapScript.loadModule("CA", {
 		})
 	},
 
+	/**
+	 * 用 CHelper 内核提供补全：结构串放提示行，候选列表喂给 IntelliSense。
+	 */
+		updateCHelperSuggest: function (cmd, cursor) {
+			var attempt = 0;
+			var run = function () {
+				try {
+					if (!ScriptInterface.isCHelperAvailable()) return;
+					var pack = "release-vanilla-1.21.132.1.cpack";
+					var structure = ScriptInterface.chelperStructure(pack, cmd);
+					var list = ScriptInterface.chelperSuggestions(pack, cmd, cursor);
+					var input = [];
+					for (var i = 0; i < list.length; i++) {
+						input.push(String(list[i]).replace("\t", "    "));
+					}
+					// 先把数据链路的证据打出来，不依赖 UI 是否就绪
+					android.util.Log.e("CA", "CHelper suggest: size=" + input.length + " cursor=" + cursor);
+					Common.toast("CHelper: " + input.length + " 个候选, cursor=" + cursor
+						+ (structure ? "\n" + structure : ""));
+					// UI 渲染暂缓：CA.IntelliSense 的内部状态（prompt/list/apply）
+					// 挂在 show 函数对象上，直接复用会踩到它的历史坑，
+					// 后续单独做一个独立列表再接管
+					return;
+				} catch (e) { erp(e) }
+			};
+			run();
+		},
+
 	showSettings: function self() {
 		G.ui(function () {
 			try {
@@ -3311,7 +3344,9 @@ MapScript.loadModule("CA", {
 										var cmd = "execute @a ~ ~ ~ say hi";
 										var structure = ScriptInterface.chelperStructure(pack, cmd);
 										var parsed = ScriptInterface.probeCHelper(pack, cmd);
-										Common.toast("结构: " + structure + "\n命令: " + parsed);
+										CA.settings.commandEngine = "chelper";
+										CA.trySave();
+										Common.toast("已切换为 CHelper（Alpha）\n结构: " + structure + "\n命令: " + parsed);
 									} catch (e) {
 										erp(e);
 										Common.toast("CHelper 调用失败：" + e);
@@ -3321,6 +3356,9 @@ MapScript.loadModule("CA", {
 						}
 					}, {
 						name: "智能模式",
+						hidden: function () {
+							return CA.settings.commandEngine === "chelper";
+						},
 						type: "custom",
 						get: function () {
 							var t = CA.settings.iiMode;
@@ -3335,6 +3373,9 @@ MapScript.loadModule("CA", {
 						id: "senseDelay",
 						name: "启用多线程",
 						description: "IntelliSense将不会即时输出结果以避免卡顿。",
+						hidden: function () {
+							return CA.settings.commandEngine === "chelper";
+						},
 						type: "boolean",
 						get: self.getsettingbool,
 						set: self.setsettingbool

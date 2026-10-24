@@ -165,6 +165,11 @@ public class ScriptInterface {
         return mContext != null && CHelperBridge.isAvailable(mContext.getAssets());
     }
 
+    public String[] chelperSuggestions(String pack, String command, int cursor) {
+        if (mContext == null) return new String[0];
+        return CHelperBridge.suggestions(mContext.getAssets(), pack, command, cursor);
+    }
+
     public void runOnUiThread(Runnable action) {
         if (Thread.currentThread() != mUiThread) {
             mUiHandler.post(action);
