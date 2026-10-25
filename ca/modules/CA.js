@@ -2760,6 +2760,28 @@ MapScript.loadModule("CA", {
 		})
 	},
 
+	// CHelper 内核资源包：渠道 × 是否实验性。包名里带资源版本号，
+	// 更新 assets/cpack 时要同步改这里
+	chelperPacks: {
+		release: { vanilla: "release-vanilla-1.21.132.1.cpack", experiment: "release-experiment-1.21.132.1.cpack" },
+		beta: { vanilla: "beta-vanilla-1.26.0.29.cpack", experiment: "beta-experiment-1.26.0.29.cpack" },
+		netease: { vanilla: "netease-vanilla-1.21.50.07.cpack", experiment: "netease-experiment-1.21.50.07.cpack" }
+	},
+
+	chelperPackName: function () {
+		var p = this.chelperPacks[CA.settings.chelperChannel] || this.chelperPacks.release;
+		return CA.settings.chelperExperiment ? p.experiment : p.vanilla;
+	},
+
+	// 换内核资源包：解析缓存和已渲染的候选都作废，
+	// 下次 query 时 CHelperBridge.ensureCore 会按新包名重建内核
+	reloadCHelperPack: function () {
+		CA._chelperKey = null;
+		CA.chelperPack = null;
+		CA.trySave();
+		CA.IntelliSense.hide();
+	},
+
 	/**
 	 * 用 CHelper 内核提供补全：结构串放提示行，候选列表喂给 IntelliSense。
 	 */
@@ -2772,7 +2794,7 @@ MapScript.loadModule("CA", {
 				var key = cursor + ":" + cmd;
 				if (CA._chelperKey === key) { CA.sendLog.debug("[CH] 复用解析结果 " + key); CA.IntelliSense.apply(); return; }
 				CA._chelperKey = key;
-				var pack = "release-vanilla-1.21.132.1.cpack";
+				var pack = CA.chelperPackName();
 				CA.chelperPack = pack;
 				// 一次解析取回结构/参数提示/错误/候选，避免同一条命令解析四遍
 				var raw = String(ScriptInterface.chelperQuery(pack, cmd, cursor));
@@ -3374,7 +3396,7 @@ MapScript.loadModule("CA", {
 											Common.toast("CHelper 内核资源缺失（.so 或 cpack），请按文档重新构建");
 											return;
 										}
-										var pack = "release-vanilla-1.21.132.1.cpack";
+										var pack = CA.chelperPackName();
 										var cmd = "execute @a ~ ~ ~ say hi";
 										var structure = ScriptInterface.chelperStructure(pack, cmd);
 										var parsed = ScriptInterface.probeCHelper(pack, cmd);
@@ -3389,6 +3411,55 @@ MapScript.loadModule("CA", {
 									}
 								}
 							}]);
+						}
+					}, {
+						name: "内核版本",
+						description: "CHelper 内核使用的命令库版本，与拓展包互不影响",
+						hidden: function () {
+							return CA.settings.commandEngine !== "chelper";
+						},
+						type: "custom",
+						get: function () {
+							var c = CA.settings.chelperChannel;
+							return c == "beta" ? "测试版 1.26.0.29" : c == "netease" ? "网易版 1.21.50.07" : "正式版 1.21.132.1";
+						},
+						onclick: function () {
+							Common.showOperateDialog([{
+								text: "正式版 1.21.132.1",
+								onclick: function () {
+									CA.settings.chelperChannel = "release";
+									CA.reloadCHelperPack();
+									Common.reloadSettings();
+								}
+							}, {
+								text: "测试版 1.26.0.29",
+								onclick: function () {
+									CA.settings.chelperChannel = "beta";
+									CA.reloadCHelperPack();
+									Common.reloadSettings();
+								}
+							}, {
+								text: "网易版 1.21.50.07",
+								onclick: function () {
+									CA.settings.chelperChannel = "netease";
+									CA.reloadCHelperPack();
+									Common.reloadSettings();
+								}
+							}]);
+						}
+					}, {
+						name: "实验性玩法",
+						description: "使用带实验性内容的命令库",
+						hidden: function () {
+							return CA.settings.commandEngine !== "chelper";
+						},
+						type: "boolean",
+						get: function () {
+							return Boolean(CA.settings.chelperExperiment);
+						},
+						set: function (v) {
+							CA.settings.chelperExperiment = Boolean(v);
+							CA.reloadCHelperPack();
 						}
 					}, {
 						name: "智能模式",
