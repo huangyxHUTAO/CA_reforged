@@ -2760,17 +2760,38 @@ MapScript.loadModule("CA", {
 		})
 	},
 
-	// CHelper 内核资源包：渠道 × 是否实验性。包名里带资源版本号，
-	// 更新 assets/cpack 时要同步改这里
-	chelperPacks: {
-		release: { vanilla: "release-vanilla-1.21.132.1.cpack", experiment: "release-experiment-1.21.132.1.cpack" },
-		beta: { vanilla: "beta-vanilla-1.26.0.29.cpack", experiment: "beta-experiment-1.26.0.29.cpack" },
-		netease: { vanilla: "netease-vanilla-1.21.50.07.cpack", experiment: "netease-experiment-1.21.50.07.cpack" }
+	// CHelper 内核资源包。包名里带资源版本号，更新 assets/cpack 时要同步改这里
+	chelperPacks: [{
+		name: "正式版 1.21.132.1",
+		pack: "release-vanilla-1.21.132.1.cpack"
+	}, {
+		name: "正式版 1.21.132.1 实验性玩法",
+		pack: "release-experiment-1.21.132.1.cpack"
+	}, {
+		name: "测试版 1.26.0.29",
+		pack: "beta-vanilla-1.26.0.29.cpack"
+	}, {
+		name: "测试版 1.26.0.29 实验性玩法",
+		pack: "beta-experiment-1.26.0.29.cpack"
+	}, {
+		name: "网易版 1.21.50.07",
+		pack: "netease-vanilla-1.21.50.07.cpack"
+	}, {
+		name: "网易版 1.21.50.07 实验性玩法",
+		pack: "netease-experiment-1.21.50.07.cpack"
+	}],
+
+	// 找不到时回落到第一项，避免设置里的旧值失效后整个补全不可用
+	chelperPackInfo: function () {
+		var packs = this.chelperPacks, i;
+		for (i = 0; i < packs.length; i++) {
+			if (packs[i].pack === CA.settings.chelperPack) return packs[i];
+		}
+		return packs[0];
 	},
 
 	chelperPackName: function () {
-		var p = this.chelperPacks[CA.settings.chelperChannel] || this.chelperPacks.release;
-		return CA.settings.chelperExperiment ? p.experiment : p.vanilla;
+		return this.chelperPackInfo().pack;
 	},
 
 	// 换内核资源包：解析缓存和已渲染的候选都作废，
@@ -3420,46 +3441,20 @@ MapScript.loadModule("CA", {
 						},
 						type: "custom",
 						get: function () {
-							var c = CA.settings.chelperChannel;
-							return c == "beta" ? "测试版 1.26.0.29" : c == "netease" ? "网易版 1.21.50.07" : "正式版 1.21.132.1";
+							return CA.chelperPackInfo().name;
 						},
 						onclick: function () {
-							Common.showOperateDialog([{
-								text: "正式版 1.21.132.1",
-								onclick: function () {
-									CA.settings.chelperChannel = "release";
-									CA.reloadCHelperPack();
-									Common.reloadSettings();
-								}
-							}, {
-								text: "测试版 1.26.0.29",
-								onclick: function () {
-									CA.settings.chelperChannel = "beta";
-									CA.reloadCHelperPack();
-									Common.reloadSettings();
-								}
-							}, {
-								text: "网易版 1.21.50.07",
-								onclick: function () {
-									CA.settings.chelperChannel = "netease";
-									CA.reloadCHelperPack();
-									Common.reloadSettings();
-								}
-							}]);
-						}
-					}, {
-						name: "实验性玩法",
-						description: "使用带实验性内容的命令库",
-						hidden: function () {
-							return CA.settings.commandEngine !== "chelper";
-						},
-						type: "boolean",
-						get: function () {
-							return Boolean(CA.settings.chelperExperiment);
-						},
-						set: function (v) {
-							CA.settings.chelperExperiment = Boolean(v);
-							CA.reloadCHelperPack();
+							Common.showOperateDialog(CA.chelperPacks.map(function (e) {
+								return {
+									text: e.name,
+									description: e.pack,
+									onclick: function () {
+										CA.settings.chelperPack = e.pack;
+										CA.reloadCHelperPack();
+										Common.reloadSettings();
+									}
+								};
+							}));
 						}
 					}, {
 						name: "智能模式",
