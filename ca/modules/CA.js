@@ -929,13 +929,7 @@ MapScript.loadModule("CA", {
 
 					CA.cmd = new G.EditText(ctx);
 					CA.cmd.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -1, 1.0));
-					// hint 是中文，iconFont 没有这些字形会 fallback 到系统字体，
-					// 行高比输入的命令小几像素，空输入时整个 bar 会矮一截。
-					// 末尾挂一个透明的 iconFont 字符，同一行取最大行高就对齐了
-					var hint = new G.SpannableStringBuilder("输入命令喵~M");
-					hint.setSpan(new G.ForegroundColorSpan(0x00000000),
-						hint.length() - 1, hint.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-					CA.cmd.setHint(hint);
+					CA.cmd.setHint("输入命令喵~");
 					Common.applyStyle(CA.cmd, "edittext_default", 3);
 					CA.cmd.setInputType(G.InputType.TYPE_CLASS_TEXT | G.InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
 					CA.cmd.setFilters([new G.InputFilter.LengthFilter(32768)])
