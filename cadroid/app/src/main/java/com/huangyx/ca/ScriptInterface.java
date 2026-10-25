@@ -170,6 +170,26 @@ public class ScriptInterface {
         return CHelperBridge.suggestions(mContext.getAssets(), pack, command, cursor);
     }
 
+    public String[] chelperApplySuggestion(String pack, String command, int cursor, int which) {
+        if (mContext == null) return new String[]{null, "0"};
+        return CHelperBridge.applySuggestion(mContext.getAssets(), pack, command, cursor, which);
+    }
+
+    public String chelperParamHint(String pack, String command, int cursor) {
+        if (mContext == null) return null;
+        return CHelperBridge.paramHint(mContext.getAssets(), pack, command, cursor);
+    }
+
+    public String chelperQuery(String pack, String command, int cursor) {
+        if (mContext == null) return null;
+        return CHelperBridge.query(mContext.getAssets(), pack, command, cursor);
+    }
+
+    public String[] chelperErrorReasons(String pack, String command) {
+        if (mContext == null) return new String[0];
+        return CHelperBridge.errorReasons(mContext.getAssets(), pack, command);
+    }
+
     public void runOnUiThread(Runnable action) {
         if (Thread.currentThread() != mUiThread) {
             mUiHandler.post(action);

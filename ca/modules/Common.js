@@ -124,6 +124,7 @@ MapScript.loadModule("Common", {
 			Common.textViewSetColor(v, color);
 		} catch (e) {
 			android.util.Log.e("CA", "setTextColor failed: " + e);
+			try { CA.sendLog.warn("setTextColor failed: " + e); } catch (ignore) {}
 		}
 	},
 	applyStyle: function (v, style, size) {

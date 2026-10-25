@@ -1683,15 +1683,24 @@
             this.patterns = [];
             return this.apply();
         },
-        show: function self() {
+        show: function self(data) {
             G.ui(function () {
                 try {
-                    if (CA.IntelliSense.ui) return;
+                    if (CA.IntelliSense.ui) {
+                        if (data) self.apply(data);
+                        return;
+                    }
                     if (!self.prompt) {
                         self.adptcon = null;
                         self.apply = function (z) {
                             G.ui(function () {
                                 try {
+                                    // PWM.resetUICache() 会把 prompt 置空（切换引擎/刷新设置时触发），
+                                    // 这里重建一次 UI，否则后续渲染全部失效
+                                    if (!self.prompt) {
+                                        CA.IntelliSense.show(z);
+                                        return;
+                                    }
                                     self.prompt.setText(z.prompt[0] || "");
                                     try {
                                         new java.net.URL(z.help);
@@ -1741,6 +1750,24 @@
                         self.list.setOnItemClickListener(new G.AdapterView.OnItemClickListener({
                             onItemClick: function (parent, view, pos, id) {
                                 try {
+                                    if (CA.settings.commandEngine === "chelper") {
+                                        var hc = parent.getHeaderViewsCount();
+                                        var which = pos - hc;
+                                        if (which < 0) return;
+                                        var r = ScriptInterface.chelperApplySuggestion(
+                                            CA.chelperPack,
+                                            CA.cmd.getText().toString(),
+                                            CA.cmd.getSelectionStart(),
+                                            which
+                                        );
+                                        if (r && r[0]) {
+                                            CA._chelperApplying = true;
+                                            CA.cmd.setText(String(r[0]));
+                                            CA.cmd.setSelection(parseInt(String(r[1]), 10) || 0);
+                                            CA._chelperApplying = false;
+                                        }
+                                        return;
+                                    }
                                     if (pos == 0) {
                                         CA.IntelliSense.showMoreUsage();
                                         return;
@@ -1810,15 +1837,14 @@
                         CA.showAssist.initContent(self.list);
                         PWM.registerResetFlag(CA.IntelliSense, "ui");
                         PWM.registerResetFlag(self, "prompt");
-                        // 这些状态原本挂在 show 函数对象上，外部按模块对象访问时拿不到，
-                        // 这里同步一份（apply 改名，避免覆盖 proc 里无参的 this.apply()）
+                        // 只同步函数引用，不要同步 prompt/list（它们是 View，
+                        // 同步到模块上会污染 this.prompt，导致 apply(z) 收到 TextView）
                         CA.IntelliSense.applyWithData = self.apply;
                         CA.IntelliSense.vmaker = self.vmaker;
                         CA.IntelliSense.vbinder = self.vbinder;
-                        CA.IntelliSense.prompt = self.prompt;
-                        CA.IntelliSense.list = self.list;
                     }
                     CA.showAssist.con.addView(CA.IntelliSense.ui = self.list);
+                    if (data) self.apply(data);
                 } catch (e) { erp(e) }
             })
         },

@@ -337,6 +337,14 @@ MapScript.loadModule("erp", function self(error, silent, extra) {
 	}
 	if (extra) tech += "\n" + Log.debug("额外数据", extra, 0).join("\n");
 	android.util.Log.e("CA", tech);
+	// 同步推送到日志服务器（如果启用了），方便开发时实时查看
+	try {
+		if (typeof CA !== "undefined" && CA.sendLog) {
+			if (silent) CA.sendLog.warn(tech);
+			else CA.sendLog.error(tech);
+		}
+	} catch (ignore) {
+	}
 	try {
 		var fs = new java.io.PrintWriter(new java.io.FileOutputStream(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.huangyx.ca.error.log", true));
 		fs.println("* " + (silent ? "Warning" : "Error") + ": " + new Date().toLocaleString());

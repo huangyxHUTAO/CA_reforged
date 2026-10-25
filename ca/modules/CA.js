@@ -27,15 +27,9 @@ MapScript.loadModule("CA", {
 	tips: [],
 	initialize: function () {
 		try {
-			if (!CA.settings.LogServer) {
-				CA.settings.LogServer = {
-					enabled: false,
-					address: "http://192.168.1.145:2333/logserver"
-				}
-			}
-
 			this.plugin = Plugins.inject(this);
 			this.load();
+			this.sendLog._initConfig();
 			// 判断此时是否应该显示 许可协议
 			// 如果没同意过，或者同意时间早于协议更新时间
 			if (!CA.settings.readAgreement ||
@@ -785,8 +779,14 @@ MapScript.loadModule("CA", {
 						var gostate2 = function () { //输入了/help
 							state = 2;
 							CA.hideHistory(); CA.showAssist();
-							CA.Assist.hide(); CA.IntelliSense.show();
-							CA.IntelliSense.showHelp();
+							CA.Assist.hide();
+							// CHelper 引擎不接管 /help，交给自己处理
+							if (CA.settings.commandEngine === "chelper") {
+								CA.updateCHelperSuggest("/help", 5);
+							} else {
+								CA.IntelliSense.show();
+								CA.IntelliSense.showHelp();
+							}
 							self.copy.setText("关闭");
 							self.add.setVisibility(G.View.GONE);
 							self.clear.setVisibility(G.View.VISIBLE);
@@ -2761,28 +2761,52 @@ MapScript.loadModule("CA", {
 	 * 用 CHelper 内核提供补全：结构串放提示行，候选列表喂给 IntelliSense。
 	 */
 		updateCHelperSuggest: function (cmd, cursor) {
-			var attempt = 0;
-			var run = function () {
-				try {
-					if (!ScriptInterface.isCHelperAvailable()) return;
-					var pack = "release-vanilla-1.21.132.1.cpack";
-					var structure = ScriptInterface.chelperStructure(pack, cmd);
-					var list = ScriptInterface.chelperSuggestions(pack, cmd, cursor);
-					var input = [];
-					for (var i = 0; i < list.length; i++) {
-						input.push(String(list[i]).replace("\t", "    "));
-					}
-					// 先把数据链路的证据打出来，不依赖 UI 是否就绪
-					android.util.Log.e("CA", "CHelper suggest: size=" + input.length + " cursor=" + cursor);
-					Common.toast("CHelper: " + input.length + " 个候选, cursor=" + cursor
-						+ (structure ? "\n" + structure : ""));
-					// UI 渲染暂缓：CA.IntelliSense 的内部状态（prompt/list/apply）
-					// 挂在 show 函数对象上，直接复用会踩到它的历史坑，
-					// 后续单独做一个独立列表再接管
-					return;
-				} catch (e) { erp(e) }
-			};
-			run();
+			try {
+				if (!ScriptInterface.isCHelperAvailable()) return;
+				if (CA._chelperApplying) return;
+				var pack = "release-vanilla-1.21.132.1.cpack";
+				CA.chelperPack = pack;
+				// 一次解析取回结构/参数提示/错误/候选，避免同一条命令解析四遍
+				var raw = String(ScriptInterface.chelperQuery(pack, cmd, cursor));
+				var parts = raw.split("");
+				var structure = parts[0] || "";
+				var hint = parts[1] || "";
+				var error = parts[2] || "";
+				var input = parts[3] ? parts[3].split("") : [];
+
+				// 说明栏：结构行常驻；第二行优先错误（红色），否则参数提示（提示色）
+				var pp = new G.SpannableStringBuilder();
+				pp.append(structure);
+				pp.setSpan(new G.ForegroundColorSpan(Common.theme.textcolor),
+					0, pp.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+				var second = error || hint;
+				if (second) {
+					var secondStart = pp.length();
+					pp.append(String.fromCharCode(10));
+					pp.append(second);
+					pp.setSpan(new G.ForegroundColorSpan(
+						error ? Common.theme.criticalcolor : Common.theme.promptcolor),
+						secondStart, pp.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+				}
+				android.util.Log.e("CA", "CHelper query: size=" + input.length + " cursor=" + cursor);
+				CA.sendLog.info("CHelper query: size=" + input.length + " cursor=" + cursor
+					+ " struct=" + (structure ? structure.length : "null")
+					+ " hint=" + (hint ? hint.length : 0)
+					+ " err=" + (error ? error.length : 0)
+					+ (error ? " errMsg=" + error : ""));
+
+				if (!CA.showAssist.con) CA.showAssist();
+				var data = {
+					prompt: [pp],
+					help: "",
+					input: input
+				};
+				if (CA.IntelliSense.applyWithData) CA.IntelliSense.applyWithData(data);
+				else CA.IntelliSense.show(data);
+			} catch (e) {
+				CA.sendLog.error("CHelper 补全异常: " + e + "\n" + (e && e.stack ? e.stack : ""));
+				erp(e);
+			}
 		},
 
 	showSettings: function self() {
@@ -7755,57 +7779,8 @@ MapScript.loadModule("CA", {
 		});
 	},
 
-	// 网络日志，调试用
-	sendLog: {
-		// 内部工具函数：真正发送
-		_post: function (level, text) {
-
-			if (!CA.settings.LogServer) {
-				CA.settings.LogServer = {
-					enabled: false,
-					address: "http://192.168.1.145:2333/logserver"
-				}
-			}
-
-			if (!CA.settings.LogServer.enabled) return;
-			new java.lang.Thread(
-				new java.lang.Runnable({
-					run: function () {
-						try {
-							var url = new java.net.URL(CA.settings.LogServer.address);
-							var conn = url.openConnection();
-							conn.setConnectTimeout(3000);
-							conn.setReadTimeout(3000);
-							conn.setDoOutput(true);
-							conn.setRequestMethod("POST");
-							conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-
-							var body = JSON.stringify({ msg: String(text), level: level, ts: Date.now() });
-							var out = conn.getOutputStream();
-							out.write(new java.lang.String(body).getBytes("UTF-8"));
-							out.flush();
-							out.close();
-
-							var ins = conn.getInputStream();
-							while (ins.read() !== -1) { }
-							ins.close();
-						} catch (e) {
-							Common.toast("日志发送失败: " + e);
-						}
-					}
-				})
-			).start();
-		},
-
-		// 等级快捷方式
-		debug: function (t) { this._post("debug", t); },
-		info: function (t) { this._post("info", t); },
-		warn: function (t) { this._post("warn", t); },
-		error: function (t) { this._post("error", t); },
-
-		// 默认 info
-		log: function (t) { this.info(t); }
-	},
+	// 网络日志（WebSocket），实现在 modules/CA.SendLog.js
+	sendLog: Loader.fromFile("CA.SendLog.js"),
 
 	Library: Loader.fromFile("CA.Library.js"),
 	IntelliSense: Loader.fromFile("CA.IntelliSense.js"),

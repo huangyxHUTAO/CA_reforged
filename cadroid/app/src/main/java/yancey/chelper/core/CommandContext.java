@@ -25,6 +25,16 @@ public final class CommandContext {
         return p == 0L ? null : getStructure0(p);
     }
 
+    public String getParamHint(int index) {
+        long p = pointer;
+        return p == 0L ? null : getParamHint0(p, index);
+    }
+
+    public ErrorReason[] getErrorReasons() {
+        long p = pointer;
+        return p == 0L ? null : getErrorReasons0(p);
+    }
+
     /**
      * 指定光标位置上的补全候选数量
      */
@@ -47,9 +57,23 @@ public final class CommandContext {
         if (p != 0L) release0(p);
     }
 
+    /**
+     * 把第 which 个补全建议应用到命令上（index 是当初计算建议时的光标位置）
+     */
+    public ClickSuggestionResult applySuggestion(int index, int which) {
+        long p = pointer;
+        return p == 0L ? null : applySuggestion0(p, index, which);
+    }
+
+    private static native ClickSuggestionResult applySuggestion0(long pointer, int index, int which);
+
     private static native String command0(long pointer);
 
     private static native String getStructure0(long pointer);
+
+    private static native String getParamHint0(long pointer, int index);
+
+    private static native ErrorReason[] getErrorReasons0(long pointer);
 
     private static native int getSuggestionsSize0(long pointer, int index);
 
