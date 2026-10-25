@@ -782,13 +782,9 @@ MapScript.loadModule("CA", {
 							state = 2;
 							CA.hideHistory(); CA.showAssist();
 							CA.Assist.hide();
-							// CHelper 引擎不接管 /help，交给自己处理
-							if (CA.settings.commandEngine === "chelper") {
-								CA.updateCHelperSuggest("/help", 5);
-							} else {
-								CA.IntelliSense.show();
-								CA.IntelliSense.showHelp();
-							}
+							// /help 是命令助手自己的设置菜单，任何引擎都不接管
+							CA.IntelliSense.show();
+							CA.IntelliSense.showHelp();
 							self.copy.setText("关闭");
 							self.add.setVisibility(G.View.GONE);
 							self.clear.setVisibility(G.View.VISIBLE);
@@ -805,9 +801,12 @@ MapScript.loadModule("CA", {
 						return function (s, cursor) {
 							s.setSpan(self.spanWatcher, 0, s.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 							CA.cmdstr = String(s);
+							// s 是 SpannableStringBuilder，判断内容前必须先转成字符串，
+							// Rhino 的 == 对 Java 对象不做隐式转换
+							var isHelp = /^\/help\s*$/.test(String(s));
 							if ((CA.settings.iiMode == 1 || CA.settings.iiMode == 3) && CA.Assist.active) {
 								if (state != 3) gostate3();
-							} else if (s == "/help") {
+							} else if (isHelp) {
 								if (state != 2) gostate2();
 							} else if (s.length() /*&& !CA.Library.loadingStatus*/) {
 								if (state != 1) gostate1();
