@@ -937,6 +937,11 @@ MapScript.loadModule("CA", {
 					CA.cmd.setPadding(5 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 					CA.cmd.setImeOptions(G.EditorInfo.IME_FLAG_NO_FULLSCREEN);
 					CA.cmd.setTypeface(iconFont);
+					// hint 里的中文 iconFont 没有字形，会 fallback 到系统字体，
+					// 行高和实际输入的 ASCII 命令不一样，空输入时高度会差几像素。
+					// 按 iconFont 的行高把高度定死，bar 是 wrap_content，高度随之固定。
+					var fm = CA.cmd.getPaint().getFontMetrics();
+					CA.cmd.setHeight(parseInt(Math.ceil(fm.bottom - fm.top) + 20 * G.dp, 10));
 					CA.cmd.setText(CA.cmdstr);
 
 					// 文本变化监听器
