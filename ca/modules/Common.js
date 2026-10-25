@@ -822,7 +822,7 @@ MapScript.loadModule("Common", {
 		})
 	},
 
-	showSettings: function self(title, data, callback) {
+	showSettings: function self(title, data, callback, replace) {
 		G.ui(function () {
 			try {
 				if (!self.linear) {
@@ -1136,13 +1136,16 @@ MapScript.loadModule("Common", {
 					self.current = null;
 					PWM.registerResetFlag(self, "linear");
 				}
+				// 保留过滤前的原始数据，reloadSettings 要靠它重新计算 hidden
+				var source = data;
 				data = data.filter(function (e) {
 					if (e.hidden && e.hidden()) return false;
 					return true;
 				});
-				if (self.current) self.stack.push(self.current);
+				if (self.current && !replace) self.stack.push(self.current);
 				self.current = {
 					title: title,
+					source: source,
 					data: data,
 					last: data.map(function (e) {
 						switch (e.type) {
@@ -1162,6 +1165,13 @@ MapScript.loadModule("Common", {
 				self.popup.enter();
 			} catch (e) { erp(e) }
 		})
+	},
+
+	// 重新计算 hidden 并重绘当前设置页，用于切换引擎这类会改变选项可见性的操作
+	reloadSettings: function () {
+		var s = Common.showSettings;
+		if (!s.current) return;
+		Common.showSettings(s.current.title, s.current.source, s.current.callback, true);
 	},
 
 	showFileDialog: function self(o) {
