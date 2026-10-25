@@ -3402,7 +3402,7 @@ MapScript.loadModule("CA", {
 						description: "选择解析、补全、高亮所使用的命令引擎。",
 						type: "custom",
 						get: function () {
-							return CA.settings.commandEngine === "chelper" ? "CHelper（实验）" : "内置解析器";
+							return CA.settings.commandEngine === "chelper" ? "CHelper（Alpha）" : "内置解析器";
 						},
 						onclick: function () {
 							Common.showOperateDialog([{
