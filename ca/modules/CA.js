@@ -3395,6 +3395,9 @@ MapScript.loadModule("CA", {
 						set: self.setsettingbool
 					}];
 					self.intellisense = [{
+						name: "解析器",
+						type: "tag"
+					}, {
 						name: "命令引擎",
 						description: "选择解析、补全、高亮所使用的命令引擎。",
 						type: "custom",
