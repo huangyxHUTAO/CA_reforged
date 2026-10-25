@@ -3411,7 +3411,6 @@ MapScript.loadModule("CA", {
 									CA.settings.commandEngine = "builtin";
 									CA.trySave();
 									CA._chelperKey = null;
-									Common.toast("已切换为内置解析器");
 									Common.reloadSettings();
 								}
 							}, {
@@ -3422,18 +3421,15 @@ MapScript.loadModule("CA", {
 											Common.toast("CHelper 内核资源缺失（.so 或 cpack），请按文档重新构建");
 											return;
 										}
-										var pack = CA.chelperPackName();
-										var cmd = "execute @a ~ ~ ~ say hi";
-										var structure = ScriptInterface.chelperStructure(pack, cmd);
-										var parsed = ScriptInterface.probeCHelper(pack, cmd);
+										// 切换前先解析一条命令，坏包在这里就暴露，不会拖到第一次输入
+										ScriptInterface.probeCHelper(CA.chelperPackName(), "execute @a ~ ~ ~ say hi");
 										CA.settings.commandEngine = "chelper";
 										CA.trySave();
 										CA._chelperKey = null;
-										Common.toast("已切换为 CHelper（Alpha）\n结构: " + structure + "\n命令: " + parsed);
 										Common.reloadSettings();
 									} catch (e) {
 										erp(e);
-										Common.toast("CHelper 调用失败：" + e);
+										Common.toast("切换失败：" + e);
 									}
 								}
 							}]);
