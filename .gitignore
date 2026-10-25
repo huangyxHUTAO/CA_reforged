@@ -4,8 +4,15 @@
 /ca/node_modules/
 /ca/update.json
 /ca/sign_apk.ps1
-/ca/node_modules/
-/ca/config/
+
+# 构建配置里只有这几份含密码、密钥路径或服务器信息，其余入库
+/ca/config/sign.local.toml
+/ca/config/sign.toml
+/ca/config/publish.toml
+
+# ./ca-web 目录
+/ca-web/node_modules/
+/ca-web/dist/
 
 # ./cabuildtools 目录
 /cabuildtools/node_modules/
