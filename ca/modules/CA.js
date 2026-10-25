@@ -2763,6 +2763,9 @@ MapScript.loadModule("CA", {
 	// CHelper 内核资源包。直接扫描 assets/cpack 得到，资源更新时不用改代码。
 	// id 去掉版本号（如 release-vanilla），作为 settings.chelperPack 的稳定标记，
 	// 这样换了资源版本，用户的选择依然有效。
+	// 语法高亮加过的 span，下次上色前先移除
+	_syntaxSpans: [],
+
 	chelperPackList: function () {
 		if (this._chelperPackList) return this._chelperPackList;
 		var titles = { release: "正式版", beta: "测试版", netease: "网易版" };
@@ -2796,10 +2799,65 @@ MapScript.loadModule("CA", {
 		return this.chelperPackInfo().pack;
 	},
 
+	// CHelper 语法类型（SyntaxTokenType）到主题色的映射，null 表示保持默认
+	syntaxColorOf: function (t) {
+		var c = Common.theme;
+		switch (t) {
+			case 5:   // ID
+			case 6:   // TARGET_SELECTOR
+			case 7:   // COMMAND
+				return c.highlightcolor;
+			case 4:   // SYMBOL
+			case 8:   // BRACKET1
+			case 9:   // BRACKET2
+			case 10:  // BRACKET3
+			case 11:  // STRING
+				return c.promptcolor;
+			default:
+				return null;
+		}
+	},
+
+	// 按语法类型给输入框上色。含 § 的片段整段跳过，
+	// 让样式代码自己决定颜色，两套着色不打架
+	applySyntaxHighlight: function (s, types) {
+		var self = CA, spans = self._syntaxSpans, i, n, t, j, color, span;
+		if (spans.length) {
+			for (i = 0; i < spans.length; i++) {
+				try { s.removeSpan(spans[i]) } catch (e) { }
+			}
+			spans.length = 0;
+		}
+		if (!types) return;
+		n = Math.min(s.length(), types.length);
+		i = 0;
+		while (i < n) {
+			t = types.charCodeAt(i) - 48;
+			j = i + 1;
+			while (j < n && types.charCodeAt(j) - 48 === t) j++;
+			color = self.syntaxColorOf(t);
+			if (color !== null && String(s.subSequence(i, j)).indexOf("\u00a7") < 0) {
+				span = new G.ForegroundColorSpan(color);
+				s.setSpan(span, i, j, G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+				spans.push(span);
+			}
+			i = j;
+		}
+	},
+
+	// 语法高亮：颜色数据来自上一次 query，文本长度对不上说明已经过期
+	highlightIfEnabled: function (cmd) {
+		if (!CA.settings.syntaxHighlight || !CA._chelperTypes) return;
+		var s = CA.cmd.getText();
+		if (s.length() !== cmd.length) return;
+		CA.applySyntaxHighlight(s, CA._chelperTypes);
+	},
+
 	// 换内核资源包：解析缓存和已渲染的候选都作废，
 	// 下次 query 时 CHelperBridge.ensureCore 会按新包名重建内核
 	reloadCHelperPack: function () {
 		CA._chelperKey = null;
+		CA._chelperTypes = null;
 		CA.chelperPack = null;
 		CA.trySave();
 		CA.IntelliSense.hide();
@@ -2815,7 +2873,12 @@ MapScript.loadModule("CA", {
 				CA.IntelliSense.engine = "chelper";
 				// afterTextChanged 和 onSelectionChanged 都会调到这里，同一组参数解析一次就够
 				var key = cursor + ":" + cmd;
-				if (CA._chelperKey === key) { CA.sendLog.debug("[CH] 复用解析结果 " + key); CA.IntelliSense.apply(); return; }
+				if (CA._chelperKey === key) {
+					CA.sendLog.debug("[CH] 复用解析结果 " + key);
+					CA.IntelliSense.apply();
+					CA.highlightIfEnabled(cmd);
+					return;
+				}
 				CA._chelperKey = key;
 				var pack = CA.chelperPackName();
 				CA.chelperPack = pack;
@@ -2826,6 +2889,9 @@ MapScript.loadModule("CA", {
 				var hint = parts[1] || "";
 				var error = parts[2] || "";
 				var input = parts[3] ? parts[3].split("") : [];
+
+				// 逐字符的语法类型（'0' + type），上色时按连续区间合并
+				CA._chelperTypes = parts[4] || "";
 
 				// 说明栏：结构行常驻；第二行优先错误（红色），否则参数提示（提示色）
 				var pp = new G.SpannableStringBuilder();
@@ -2852,6 +2918,7 @@ MapScript.loadModule("CA", {
 				CA.IntelliSense.help = "";
 				CA.IntelliSense.input = input;
 				CA.IntelliSense.apply();
+				CA.highlightIfEnabled(cmd);
 			} catch (e) {
 				CA._chelperKey = null;
 				erp(e);
@@ -3489,6 +3556,16 @@ MapScript.loadModule("CA", {
 						id: "autoFormatCmd",
 						name: "启用样式代码显示",
 						description: "输入框会自动解释输入命令中的样式代码。",
+						type: "boolean",
+						get: self.getsettingbool,
+						set: self.setsettingbool
+					}, {
+						id: "syntaxHighlight",
+						name: "启用语法高亮",
+						description: "按语法类型给命令着色，带 § 的片段保持原样",
+						hidden: function () {
+							return CA.settings.commandEngine !== "chelper";
+						},
 						type: "boolean",
 						get: self.getsettingbool,
 						set: self.setsettingbool

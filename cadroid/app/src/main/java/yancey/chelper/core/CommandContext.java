@@ -30,6 +30,15 @@ public final class CommandContext {
         return p == 0L ? null : getParamHint0(p, index);
     }
 
+    /**
+     * 每个字符的语法类型，长度与命令文本一致。
+     * 具体取值见 CHelper 的 SyntaxTokenType。
+     */
+    public int[] getColors() {
+        long p = pointer;
+        return p == 0L ? null : getColors0(p);
+    }
+
     public ErrorReason[] getErrorReasons() {
         long p = pointer;
         return p == 0L ? null : getErrorReasons0(p);
@@ -72,6 +81,8 @@ public final class CommandContext {
     private static native String getStructure0(long pointer);
 
     private static native String getParamHint0(long pointer, int index);
+
+    private static native int[] getColors0(long pointer);
 
     private static native ErrorReason[] getErrorReasons0(long pointer);
 

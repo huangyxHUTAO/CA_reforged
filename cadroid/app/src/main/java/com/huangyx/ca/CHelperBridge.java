@@ -65,8 +65,9 @@ public final class CHelperBridge {
     }
 
     /**
-     * 一次解析取回全部补全数据，避免同一条命令重复解析 4 次。
-     * 返回：{ structure, hint, error, suggestions[] }，用 "\u0001" 分段。
+     * 一次解析取回全部补全数据，避免同一条命令重复解析。
+     * 返回：{ structure, hint, error, suggestions[], syntaxTypes }，用 "\u0001" 分段。
+     * syntaxTypes 每个字符代表一个字符的语法类型（'0' + type），长度与命令一致。
      */
     public static synchronized String query(AssetManager assets, String pack, String command, int cursor) {
         try {
@@ -93,6 +94,13 @@ public final class CHelperBridge {
                     String desc = s.description == null ? "" : s.description;
                     if (sb.length() > 0 && sb.charAt(sb.length() - 1) != '\u0001') sb.append('\u0002');
                     sb.append(desc.isEmpty() ? name : name + " - " + desc);
+                }
+                sb.append('\u0001');
+                int[] types = context.getColors();
+                if (types != null) {
+                    for (int i = 0; i < types.length; i++) {
+                        sb.append((char) ('0' + types[i]));
+                    }
                 }
                 return sb.toString();
             } finally {
