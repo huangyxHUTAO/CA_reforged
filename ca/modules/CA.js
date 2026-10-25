@@ -2765,6 +2765,9 @@ MapScript.loadModule("CA", {
 	// 这样换了资源版本，用户的选择依然有效。
 	// 语法高亮加过的 span，下次上色前先移除
 	_syntaxSpans: [],
+	// 语法高亮配色跟着主题背景走，缓存上次算过的背景色
+	_syntaxBg: "",
+	_syntaxDark: false,
 
 	chelperPackList: function () {
 		if (this._chelperPackList) return this._chelperPackList;
@@ -2799,21 +2802,46 @@ MapScript.loadModule("CA", {
 		return this.chelperPackInfo().pack;
 	},
 
-	// CHelper 语法类型（SyntaxTokenType）到主题色的映射，null 表示保持默认
+	// 背景够暗就换一套亮色，否则浅色文字在浅色主题上看不见
+	syntaxDark: function () {
+		var bg = String(Common.theme.bgcolor || "#FFFFFF");
+		if (bg === this._syntaxBg) return this._syntaxDark;
+		var r = parseInt(bg.substr(1, 2), 16) || 0;
+		var g = parseInt(bg.substr(3, 2), 16) || 0;
+		var b = parseInt(bg.substr(5, 2), 16) || 0;
+		this._syntaxBg = bg;
+		return this._syntaxDark = (r * 299 + g * 587 + b * 114) / 1000 < 128;
+	},
+
+	// CHelper 语法类型（SyntaxTokenType）到颜色，null 表示保持默认。
+	// 先硬编码，等主题系统加上语法色字段再改成读主题
 	syntaxColorOf: function (t) {
-		var c = Common.theme;
+		var dark = CA.syntaxDark();
 		switch (t) {
-			case 5:   // ID
-			case 6:   // TARGET_SELECTOR
-			case 7:   // COMMAND
-				return c.highlightcolor;
+			case 1:   // BOOLEAN
+			case 2:   // FLOAT
+			case 3:   // INTEGER
+				return dark ? "#B37FEB" : "#531DAB";
 			case 4:   // SYMBOL
+			case 14:  // LITERAL
+				return dark ? "#95DE64" : "#389E0D";
+			case 5:   // ID
+				return dark ? "#FFD591" : "#874D00";
+			case 6:   // TARGET_SELECTOR
+				return dark ? "#FFC069" : "#AD6800";
+			case 7:   // COMMAND
+				return dark ? "#69B1FF" : "#0050B3";
 			case 8:   // BRACKET1
 			case 9:   // BRACKET2
 			case 10:  // BRACKET3
+				return dark ? "#8C8C8C" : "#595959";
 			case 11:  // STRING
-				return c.promptcolor;
-			default:
+				return dark ? "#FF85C0" : "#C41D7F";
+			case 12:  // NULL_TOKEN
+				return dark ? "#FF7875" : "#CF1322";
+			case 13:  // RANGE
+				return dark ? "#FF9C6E" : "#D4380D";
+			default:  // UNKNOWN
 				return null;
 		}
 	},
