@@ -942,6 +942,9 @@ MapScript.loadModule("CA", {
 					// 取较大值定死输入框高度；bar 是 wrap_content，高度随之固定，
 					// 取 max 是为了 hint 和输入都不会被裁
 					var probe = new G.TextView(ctx);
+					// 没有 LayoutParams 的 TextView 调 setText 会走 checkForRelayout，
+					// 那里直接读 mLayoutParams.width，会 NPE
+					probe.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 					probe.setTypeface(iconFont);
 					probe.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, CA.cmd.getTextSize());
 					probe.setText("M");
