@@ -937,11 +937,19 @@ MapScript.loadModule("CA", {
 					CA.cmd.setPadding(5 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 					CA.cmd.setImeOptions(G.EditorInfo.IME_FLAG_NO_FULLSCREEN);
 					CA.cmd.setTypeface(iconFont);
-					// hint 里的中文 iconFont 没有字形，会 fallback 到系统字体，
-					// 行高和实际输入的 ASCII 命令不一样，空输入时高度会差几像素。
-					// 按 iconFont 的行高把高度定死，bar 是 wrap_content，高度随之固定。
-					var fm = CA.cmd.getPaint().getFontMetrics();
-					CA.cmd.setHeight(parseInt(Math.ceil(fm.bottom - fm.top) + 20 * G.dp, 10));
+					// hint 里的中文 iconFont 没有字形，会 fallback 到系统字体，行高和
+					// 实际输入的 ASCII 命令不同。用临时 TextView 把两种情况各量一次，
+					// 取较大值定死输入框高度；bar 是 wrap_content，高度随之固定，
+					// 取 max 是为了 hint 和输入都不会被裁
+					var probe = new G.TextView(ctx);
+					probe.setTypeface(iconFont);
+					probe.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, CA.cmd.getTextSize());
+					probe.setText("M");
+					probe.measure(0, 0);
+					var hInput = probe.getMeasuredHeight();
+					probe.setText("输入命令喵~");
+					probe.measure(0, 0);
+					CA.cmd.setHeight(Math.max(hInput, probe.getMeasuredHeight()) + Math.round(20 * G.dp));
 					CA.cmd.setText(CA.cmdstr);
 
 					// 文本变化监听器
