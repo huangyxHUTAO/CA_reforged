@@ -66,8 +66,9 @@ public final class CHelperBridge {
 
     /**
      * 一次解析取回全部补全数据，避免同一条命令重复解析。
-     * 返回：{ structure, hint, error, suggestions[], syntaxTypes }，用 "\u0001" 分段。
-     * syntaxTypes 每个字符代表一个字符的语法类型（'0' + type），长度与命令一致。
+     * 返回：{ structure, hint, error, suggestions[], syntaxTypes, errorRanges }，
+     * 用 "\u0001" 分段。syntaxTypes 每个字符代表一个字符的语法类型（'0' + type），
+     * 长度与命令一致；errorRanges 是 "start,end" 列表，用 "\u0002" 分隔。
      */
     public static synchronized String query(AssetManager assets, String pack, String command, int cursor) {
         try {
@@ -100,6 +101,18 @@ public final class CHelperBridge {
                 if (types != null) {
                     for (int i = 0; i < types.length; i++) {
                         sb.append((char) ('0' + types[i]));
+                    }
+                }
+                // 第 6 段：所有错误区间，start,end 之间用 \u0002 分隔
+                sb.append('\u0001');
+                if (reasons != null) {
+                    boolean first = true;
+                    for (int i = 0; i < reasons.length; i++) {
+                        ErrorReason r = reasons[i];
+                        if (r == null) continue;
+                        if (!first) sb.append('\u0002');
+                        sb.append(r.start).append(',').append(r.end);
+                        first = false;
                     }
                 }
                 return sb.toString();

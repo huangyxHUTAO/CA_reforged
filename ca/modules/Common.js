@@ -49,12 +49,20 @@ MapScript.loadModule("Common", {
 			"go_bgcolor": "#FFB6C1",		// GO按钮：经典粉
 			"go_textcolor": "#FFFFFF",		// 按钮文字：纯白
 			"go_touchbgcolor": "#FF85A2",	// 按下按钮：水蜜桃粉
-			"go_touchtextcolor": "#FFFFFF"	// 按下文字：纯白
+			"go_touchtextcolor": "#FFFFFF",	// 按下文字：纯白
+			"syntaxCommand": "#C2185B",	// 语法高亮：命令名
+			"syntaxSelector": "#AD4E00",	// 语法高亮：目标选择器
+			"syntaxId": "#6A1B9A",		// 语法高亮：ID
+			"syntaxNumber": "#00796B",	// 语法高亮：数字
+			"syntaxString": "#2E7D32",	// 语法高亮：字符串
+			"syntaxSymbol": "#795548"	// 语法高亮：符号和括号
 		};
 		// 文字色字段：只有这些会走到 TextView 的绘制路径
 		var textColorKeys = {
 			textcolor: 1, promptcolor: 1, highlightcolor: 1, criticalcolor: 1,
-			go_textcolor: 1, go_touchtextcolor: 1
+			go_textcolor: 1, go_touchtextcolor: 1,
+			syntaxCommand: 1, syntaxSelector: 1, syntaxId: 1,
+			syntaxNumber: 1, syntaxString: 1, syntaxSymbol: 1
 		};
 		var convert = function (v, d, isText) {
 			var n = Number("0x" + String(v).slice(1));

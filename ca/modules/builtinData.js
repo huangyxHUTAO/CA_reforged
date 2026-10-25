@@ -30,7 +30,13 @@ Common.themelist = {
 		"go_bgcolor": "#B4CFEA",        // GO按钮：浅水蓝（参考色）
 		"go_textcolor": "#FFFFFF",      // 按钮文字：纯白
 		"go_touchbgcolor": "#8FB0D5",   // 按下按钮：深海蓝
-		"go_touchtextcolor": "#FFFFFF"  // 按下文字：纯白
+		"go_touchtextcolor": "#FFFFFF", // 按下文字：纯白
+		"syntaxCommand": "#0050B3",     // 语法高亮：命令名
+		"syntaxSelector": "#AD6800",    // 语法高亮：目标选择器
+		"syntaxId": "#531DAB",          // 语法高亮：ID
+		"syntaxNumber": "#006D75",      // 语法高亮：数字
+		"syntaxString": "#237804",      // 语法高亮：字符串
+		"syntaxSymbol": "#595959"       // 语法高亮：符号和括号
 	},
 
 	"purple_theme": {
@@ -45,7 +51,13 @@ Common.themelist = {
 		"go_bgcolor": "#BB89DA",        // GO按钮：围巾主色
 		"go_textcolor": "#FFFFFF",      // 按钮文字：纯白
 		"go_touchbgcolor": "#9C6ABA",   // 按下按钮：深紫，从围巾色加深
-		"go_touchtextcolor": "#FFFFFF"  // 按下文字：纯白
+		"go_touchtextcolor": "#FFFFFF", // 按下文字：纯白
+		"syntaxCommand": "#531DAB",     // 语法高亮：命令名
+		"syntaxSelector": "#AD6800",    // 语法高亮：目标选择器
+		"syntaxId": "#874D00",          // 语法高亮：ID
+		"syntaxNumber": "#006D75",      // 语法高亮：数字
+		"syntaxString": "#237804",      // 语法高亮：字符串
+		"syntaxSymbol": "#595959"       // 语法高亮：符号和括号
 	},
 
 	"light": {
@@ -60,7 +72,13 @@ Common.themelist = {
 		"go_bgcolor": "#EEEEEE",
 		"go_textcolor": "#000000",
 		"go_touchbgcolor": "#616161",
-		"go_touchtextcolor": "#FAFAFA"
+		"go_touchtextcolor": "#FAFAFA",
+		"syntaxCommand": "#0050B3",     // 语法高亮：命令名
+		"syntaxSelector": "#AD6800",    // 语法高亮：目标选择器
+		"syntaxId": "#874D00",          // 语法高亮：ID
+		"syntaxNumber": "#531DAB",      // 语法高亮：数字
+		"syntaxString": "#C41D7F",      // 语法高亮：字符串
+		"syntaxSymbol": "#595959"       // 语法高亮：符号和括号
 	},
 	"dark": {
 		"name": Intl.get("common.theme.dark"),
@@ -74,7 +92,13 @@ Common.themelist = {
 		"go_bgcolor": "#616161",
 		"go_textcolor": "#FAFAFA",
 		"go_touchbgcolor": "#EEEEEE",
-		"go_touchtextcolor": "#000000"
+		"go_touchtextcolor": "#000000",
+		"syntaxCommand": "#69B1FF",     // 语法高亮：命令名
+		"syntaxSelector": "#FFC069",    // 语法高亮：目标选择器
+		"syntaxId": "#FFD591",          // 语法高亮：ID
+		"syntaxNumber": "#B37FEB",      // 语法高亮：数字
+		"syntaxString": "#FF85C0",      // 语法高亮：字符串
+		"syntaxSymbol": "#8C8C8C"       // 语法高亮：符号和括号
 	},
 
 	/* 新建主题格式

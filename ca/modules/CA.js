@@ -2765,9 +2765,6 @@ MapScript.loadModule("CA", {
 	// 这样换了资源版本，用户的选择依然有效。
 	// 语法高亮加过的 span，下次上色前先移除
 	_syntaxSpans: [],
-	// 语法高亮配色跟着主题背景走，缓存上次算过的背景色
-	_syntaxBg: "",
-	_syntaxDark: false,
 
 	chelperPackList: function () {
 		if (this._chelperPackList) return this._chelperPackList;
@@ -2802,45 +2799,31 @@ MapScript.loadModule("CA", {
 		return this.chelperPackInfo().pack;
 	},
 
-	// 背景够暗就换一套亮色，否则浅色文字在浅色主题上看不见
-	syntaxDark: function () {
-		var bg = String(Common.theme.bgcolor || "#FFFFFF");
-		if (bg === this._syntaxBg) return this._syntaxDark;
-		var r = parseInt(bg.substr(1, 2), 16) || 0;
-		var g = parseInt(bg.substr(3, 2), 16) || 0;
-		var b = parseInt(bg.substr(5, 2), 16) || 0;
-		this._syntaxBg = bg;
-		return this._syntaxDark = (r * 299 + g * 587 + b * 114) / 1000 < 128;
-	},
-
-	// CHelper 语法类型（SyntaxTokenType）到颜色，null 表示保持默认。
-	// 先硬编码，等主题系统加上语法色字段再改成读主题
+	// CHelper 语法类型（SyntaxTokenType）到主题色，null 表示保持默认
 	syntaxColorOf: function (t) {
-		var dark = CA.syntaxDark();
+		var c = Common.theme;
 		switch (t) {
 			case 1:   // BOOLEAN
 			case 2:   // FLOAT
 			case 3:   // INTEGER
-				return dark ? "#B37FEB" : "#531DAB";
+			case 13:  // RANGE
+				return c.syntaxNumber;
 			case 4:   // SYMBOL
-			case 14:  // LITERAL
-				return dark ? "#95DE64" : "#389E0D";
-			case 5:   // ID
-				return dark ? "#FFD591" : "#874D00";
-			case 6:   // TARGET_SELECTOR
-				return dark ? "#FFC069" : "#AD6800";
-			case 7:   // COMMAND
-				return dark ? "#69B1FF" : "#0050B3";
 			case 8:   // BRACKET1
 			case 9:   // BRACKET2
 			case 10:  // BRACKET3
-				return dark ? "#8C8C8C" : "#595959";
+			case 14:  // LITERAL
+				return c.syntaxSymbol;
+			case 5:   // ID
+				return c.syntaxId;
+			case 6:   // TARGET_SELECTOR
+				return c.syntaxSelector;
+			case 7:   // COMMAND
+				return c.syntaxCommand;
 			case 11:  // STRING
-				return dark ? "#FF85C0" : "#C41D7F";
+				return c.syntaxString;
 			case 12:  // NULL_TOKEN
-				return dark ? "#FF7875" : "#CF1322";
-			case 13:  // RANGE
-				return dark ? "#FF9C6E" : "#D4380D";
+				return c.criticalcolor;
 			default:  // UNKNOWN
 				return null;
 		}
@@ -2848,37 +2831,73 @@ MapScript.loadModule("CA", {
 
 	// 按语法类型给输入框上色。含 § 的片段整段跳过，
 	// 让样式代码自己决定颜色，两套着色不打架
-	applySyntaxHighlight: function (s, types) {
-		var self = CA, spans = self._syntaxSpans, i, n, t, j, color, span;
+	applySyntaxHighlight: function (s, types, errorSrc) {
+		var self = CA, spans = self._syntaxSpans;
+		var errors = self.parseErrorRanges(errorSrc), i, n, t, j, k, color, span, a, b, hit;
 		if (spans.length) {
 			for (i = 0; i < spans.length; i++) {
 				try { s.removeSpan(spans[i]) } catch (e) { }
 			}
 			spans.length = 0;
 		}
-		if (!types) return;
-		n = Math.min(s.length(), types.length);
+		n = types ? Math.min(s.length(), types.length) : 0;
 		i = 0;
 		while (i < n) {
 			t = types.charCodeAt(i) - 48;
 			j = i + 1;
 			while (j < n && types.charCodeAt(j) - 48 === t) j++;
-			color = self.syntaxColorOf(t);
-			if (color !== null && String(s.subSequence(i, j)).indexOf("\u00a7") < 0) {
-				span = new G.ForegroundColorSpan(color);
-				s.setSpan(span, i, j, G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-				spans.push(span);
+			// 和错误区间重叠的片段交给下面的错误标记，避免两套 span 打架
+			hit = false;
+			for (k = 0; k < errors.length; k++) {
+				if (errors[k][0] < j && errors[k][1] > i) { hit = true; break; }
+			}
+			if (!hit) {
+				color = self.syntaxColorOf(t);
+				if (color !== null && String(s.subSequence(i, j)).indexOf("\u00a7") < 0) {
+					span = new G.ForegroundColorSpan(color);
+					s.setSpan(span, i, j, G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+					spans.push(span);
+				}
 			}
 			i = j;
 		}
+		// 有错误的片段：红字 + 下划线，优先于语法色
+		for (k = 0; k < errors.length; k++) {
+			a = Math.max(0, errors[k][0]);
+			b = Math.min(s.length(), errors[k][1]);
+			if (b <= a) continue;
+			span = new G.ForegroundColorSpan(Common.theme.criticalcolor);
+			s.setSpan(span, a, b, G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			spans.push(span);
+			span = new G.UnderlineSpan();
+			s.setSpan(span, a, b, G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+			spans.push(span);
+		}
+	},
+
+	// "start,end" 用 U+0002 分隔，解析成 [start, end] 数组
+	parseErrorRanges: function (src) {
+		var r = [], a, i, p, start, end;
+		if (!src) return r;
+		a = src.split("\u0002");
+		for (i = 0; i < a.length; i++) {
+			p = a[i].split(",");
+			if (p.length < 2) continue;
+			start = parseInt(p[0], 10);
+			end = parseInt(p[1], 10);
+			if (isNaN(start) || isNaN(end) || end <= start) continue;
+			r.push([start, end]);
+		}
+		return r;
 	},
 
 	// 语法高亮：颜色数据来自上一次 query，文本长度对不上说明已经过期
 	highlightIfEnabled: function (cmd) {
-		if (!CA.settings.syntaxHighlight || !CA._chelperTypes) return;
+		if (!CA._chelperTypes && !CA._chelperErrors) return;
 		var s = CA.cmd.getText();
 		if (s.length() !== cmd.length) return;
-		CA.applySyntaxHighlight(s, CA._chelperTypes);
+		// 语法色受开关控制，错误标记始终显示
+		CA.applySyntaxHighlight(s, CA.settings.syntaxHighlight ? CA._chelperTypes : "", CA._chelperErrors);
 	},
 
 	// 换内核资源包：解析缓存和已渲染的候选都作废，
@@ -2886,6 +2905,7 @@ MapScript.loadModule("CA", {
 	reloadCHelperPack: function () {
 		CA._chelperKey = null;
 		CA._chelperTypes = null;
+		CA._chelperErrors = null;
 		CA.chelperPack = null;
 		CA.trySave();
 		CA.IntelliSense.hide();
@@ -2920,6 +2940,8 @@ MapScript.loadModule("CA", {
 
 				// 逐字符的语法类型（'0' + type），上色时按连续区间合并
 				CA._chelperTypes = parts[4] || "";
+				// 错误区间 "start,end"，用 U+0002 分隔；可能有多个
+				CA._chelperErrors = parts[5] || "";
 
 				// 说明栏：结构行常驻；第二行优先错误（红色），否则参数提示（提示色）
 				var pp = new G.SpannableStringBuilder();
