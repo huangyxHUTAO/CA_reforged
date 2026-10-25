@@ -2760,34 +2760,36 @@ MapScript.loadModule("CA", {
 		})
 	},
 
-	// CHelper 内核资源包。包名里带资源版本号，更新 assets/cpack 时要同步改这里
-	chelperPacks: [{
-		name: "正式版 1.21.132.1",
-		pack: "release-vanilla-1.21.132.1.cpack"
-	}, {
-		name: "正式版 1.21.132.1 实验性玩法",
-		pack: "release-experiment-1.21.132.1.cpack"
-	}, {
-		name: "测试版 1.26.0.29",
-		pack: "beta-vanilla-1.26.0.29.cpack"
-	}, {
-		name: "测试版 1.26.0.29 实验性玩法",
-		pack: "beta-experiment-1.26.0.29.cpack"
-	}, {
-		name: "网易版 1.21.50.07",
-		pack: "netease-vanilla-1.21.50.07.cpack"
-	}, {
-		name: "网易版 1.21.50.07 实验性玩法",
-		pack: "netease-experiment-1.21.50.07.cpack"
-	}],
-
-	// 找不到时回落到第一项，避免设置里的旧值失效后整个补全不可用
-	chelperPackInfo: function () {
-		var packs = this.chelperPacks, i;
-		for (i = 0; i < packs.length; i++) {
-			if (packs[i].pack === CA.settings.chelperPack) return packs[i];
+	// CHelper 内核资源包。直接扫描 assets/cpack 得到，资源更新时不用改代码。
+	// id 去掉版本号（如 release-vanilla），作为 settings.chelperPack 的稳定标记，
+	// 这样换了资源版本，用户的选择依然有效。
+	chelperPackList: function () {
+		if (this._chelperPackList) return this._chelperPackList;
+		var titles = { release: "正式版", beta: "测试版", netease: "网易版" };
+		var ranks = { release: 0, beta: 1, netease: 2 };
+		var list = ctx.getAssets().list("cpack"), r = [], i, n, m;
+		for (i = 0; i < list.length; i++) {
+			n = String(list[i]);
+			m = /^([a-z]+)-(vanilla|experiment)-(.+)\.cpack$/.exec(n);
+			if (!m) continue;
+			r.push({
+				id: m[1] + "-" + m[2],
+				pack: n,
+				rank: (m[1] in ranks ? ranks[m[1]] : 9) * 2 + (m[2] == "experiment" ? 1 : 0),
+				name: (titles[m[1]] || m[1]) + " " + m[3] + (m[2] == "experiment" ? " 实验性玩法" : "")
+			});
 		}
-		return packs[0];
+		r.sort(function (a, b) { return a.rank - b.rank });
+		return this._chelperPackList = r;
+	},
+
+	// 找不到就回落到第一项，避免设置里的旧标记失效后补全整个不可用
+	chelperPackInfo: function () {
+		var packs = this.chelperPackList(), i;
+		for (i = 0; i < packs.length; i++) {
+			if (packs[i].id === CA.settings.chelperPack) return packs[i];
+		}
+		return packs[0] || { id: "", pack: "", name: "未找到内核资源" };
 	},
 
 	chelperPackName: function () {
@@ -3444,12 +3446,12 @@ MapScript.loadModule("CA", {
 							return CA.chelperPackInfo().name;
 						},
 						onclick: function () {
-							Common.showOperateDialog(CA.chelperPacks.map(function (e) {
+							Common.showOperateDialog(CA.chelperPackList().map(function (e) {
 								return {
 									text: e.name,
 									description: e.pack,
 									onclick: function () {
-										CA.settings.chelperPack = e.pack;
+										CA.settings.chelperPack = e.id;
 										CA.reloadCHelperPack();
 										Common.reloadSettings();
 									}
