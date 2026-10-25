@@ -803,7 +803,7 @@ MapScript.loadModule("CA", {
 							CA.cmdstr = String(s);
 							// s 是 SpannableStringBuilder，判断内容前必须先转成字符串，
 							// Rhino 的 == 对 Java 对象不做隐式转换
-							var isHelp = /^\/help\s*$/.test(String(s));
+							var isHelp = CA.isHelpText(s);
 							if ((CA.settings.iiMode == 1 || CA.settings.iiMode == 3) && CA.Assist.active) {
 								if (state != 3) gostate3();
 							} else if (isHelp) {
@@ -2909,6 +2909,25 @@ MapScript.loadModule("CA", {
 		CA.chelperPack = null;
 		CA.trySave();
 		CA.IntelliSense.hide();
+		// 文本和光标都没变，回来时不会触发 textUpdate，
+		// 得主动按当前输入重画一次，否则补全区域一直空着
+		CA.refreshAssist();
+	},
+
+	// /help 是命令助手自己的菜单，任何引擎都不接管
+	isHelpText: function (s) {
+		return /^\/help\s*$/.test(String(s));
+	},
+
+	// 按输入框当前内容重新渲染补全，不改动文本
+	refreshAssist: function () {
+		if (!CA.cmd) return;
+		var s = String(CA.cmd.getText());
+		if (CA.isHelpText(s)) {
+			CA.IntelliSense.showHelp();
+		} else if (s.length && CA.settings.commandEngine === "chelper") {
+			CA.updateCHelperSuggest(s, Math.max(0, CA.cmd.getSelectionStart()));
+		}
 	},
 
 	/**
