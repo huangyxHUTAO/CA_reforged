@@ -3483,6 +3483,9 @@ MapScript.loadModule("CA", {
 						get: self.getsettingbool,
 						set: self.setsettingbool
 					}, {
+						name: "输入框",
+						type: "tag"
+					}, {
 						id: "autoFormatCmd",
 						name: "启用样式代码显示",
 						description: "输入框会自动解释输入命令中的样式代码。",
