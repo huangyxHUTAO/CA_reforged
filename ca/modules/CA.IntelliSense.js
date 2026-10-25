@@ -6,6 +6,7 @@
         COMMAND_WITH_PATTERN: 2,
         UNKNOWN_PATTERN: -2,
 
+        // —— 补全数据：proc / updateCHelperSuggest 写入，render 读取 ——
         input: [],
         output: [],
         cmdname: "",
@@ -15,6 +16,12 @@
         mode: 0,
         last: {},
         jsonLanguageServices: {},
+        // —— 补全 UI：resetUICache 会置空，apply 负责按需重建 ——
+        ui: null,
+        header: null,
+        adapter: null,
+        keep: null,
+        lastToast: null,
         callDelay: function self(s, cursor) {
             if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
             if (self.timer) {
@@ -41,8 +48,15 @@
                 }
             }), 50);
         },
+        // 两个引擎的统一出口：UI 缺了就建，然后按模块当前状态渲染
         apply: function () {
-            if (this.ui) this.show.apply(this);
+            var self = this;
+            G.ui(function () {
+                try {
+                    self.show();
+                    if (self.ui && self.header) self.render();
+                } catch (e) { erp(e) }
+            })
         },
         proc: function (s, cursor) {
             try {
@@ -1683,177 +1697,163 @@
             this.patterns = [];
             return this.apply();
         },
-        show: function self(data) {
+        // 按模块当前的 prompt/help/input 渲染。不接参数：
+        // 数据源只有这一处，避免再出现"传进来的是模块自己"这类错位
+        render: function () {
+            var self = this;
             G.ui(function () {
                 try {
-                    if (CA.IntelliSense.ui) {
-                        if (data) self.apply(data);
-                        return;
+                    if (!self.ui || !self.header) return;
+                    self.header.setText(self.prompt[0] || "");
+                    try {
+                        new java.net.URL(self.help);
+                        CA.showAssist.postHelp(0, self.help);
+                    } catch (e) {
+                        CA.showAssist.postHelp(1, self.help || "暂时没有帮助，以后会加上的啦");
                     }
-                    if (!self.prompt) {
-                        self.adptcon = null;
-                        self.apply = function (z) {
-                            G.ui(function () {
-                                try {
-                                    // PWM.resetUICache() 会把 prompt 置空（切换引擎/刷新设置时触发），
-                                    // 这里重建一次 UI，否则后续渲染全部失效
-                                    if (!self.prompt) {
-                                        CA.IntelliSense.show(z);
-                                        return;
-                                    }
-                                    self.prompt.setText(z.prompt[0] || "");
-                                    try {
-                                        new java.net.URL(z.help);
-                                        CA.showAssist.postHelp(0, z.help);
-                                    } catch (e) {
-                                        CA.showAssist.postHelp(1, z.help || "暂时没有帮助，以后会加上的啦");
-                                    }
-                                    if (self.adptcon) {
-                                        self.adptcon.setArray(z.input);
-                                    } else {
-                                        var a = new SimpleListAdapter(z.input.slice(), self.vmaker, self.vbinder, null, true);
-                                        self.adptcon = SimpleListAdapter.getController(a);
-                                        self.list.setAdapter(a);
-                                    }
-                                } catch (e) { erp(e) }
-                            })
+                    if (self.adapter) {
+                        self.adapter.setArray(self.input);
+                    } else {
+                        var a = new SimpleListAdapter(self.input.slice(), self.vmaker, self.vbinder, null, true);
+                        self.adapter = SimpleListAdapter.getController(a);
+                        self.ui.setAdapter(a);
+                    }
+                } catch (e) { erp(e) }
+            })
+        },
+        // 只负责把补全 UI 建出来，数据交给 render
+        show: function () {
+            var self = this;
+            G.ui(function () {
+                try {
+                    if (self.ui) return;
+                    if (!CA.showAssist.con) CA.showAssist();
+                    self.adapter = null;
+                    self.vmaker = function (holder) {
+                        var view = new G.TextView(ctx);
+                        view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
+                        Common.applyStyle(view, "textview_default", 3);
+                        view.setTypeface(iconFont); // ✅ 设置字体
+                        return view;
+                    }
+                    self.vbinder = function (holder, s, i, a) {
+                        if (self.keep) {
+                            holder.self.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 15 * G.dp);
+                        } else {
+                            holder.self.setPadding(15 * G.dp, 2 * G.dp, 15 * G.dp, 2 * G.dp);
                         }
-                        // self.vmaker = function (holder) {
-                        // 	var view = new G.TextView(ctx);
-                        // 	view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
-                        // 	Common.applyStyle(view, "textview_default", 3);
-                        // 	return view;
-                        // }
-                        self.vmaker = function (holder) {
-                            var view = new G.TextView(ctx);
-                            view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
-                            Common.applyStyle(view, "textview_default", 3);
-                            view.setTypeface(iconFont); // ✅ 设置字体
-                            // Common.toast("字体被渲染")
-                            return view;
-                        }
-                        self.vbinder = function (holder, s, i, a) {
-                            if (self.keep) {
-                                holder.self.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 15 * G.dp);
-                            } else {
-                                holder.self.setPadding(15 * G.dp, 2 * G.dp, 15 * G.dp, 2 * G.dp);
-                            }
-                            holder.self.setText(s);
-                        }
-                        self.prompt = new G.TextView(ctx);
-                        self.prompt.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
-                        self.prompt.setPadding(20 * G.dp, 10 * G.dp, 20 * G.dp, 10 * G.dp);
-                        self.prompt.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
-                        self.prompt.setLineSpacing(10, 1);
-                        Common.applyStyle(self.prompt, "textview_default", 2);
-                        self.list = new G.ListView(ctx);
-                        self.list.setOnItemClickListener(new G.AdapterView.OnItemClickListener({
-                            onItemClick: function (parent, view, pos, id) {
-                                try {
-                                    if (CA.settings.commandEngine === "chelper") {
-                                        var hc = parent.getHeaderViewsCount();
-                                        var which = pos - hc;
-                                        if (which < 0) return;
-                                        var r = ScriptInterface.chelperApplySuggestion(
-                                            CA.chelperPack,
-                                            CA.cmd.getText().toString(),
-                                            CA.cmd.getSelectionStart(),
-                                            which
-                                        );
-                                        if (r && r[0]) {
-                                            CA._chelperApplying = true;
-                                            CA.cmd.setText(String(r[0]));
-                                            CA.cmd.setSelection(parseInt(String(r[1]), 10) || 0);
-                                            CA._chelperApplying = false;
-                                        }
-                                        return;
+                        holder.self.setText(s);
+                    }
+                    self.header = new G.TextView(ctx);
+                    self.header.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
+                    self.header.setPadding(20 * G.dp, 10 * G.dp, 20 * G.dp, 10 * G.dp);
+                    self.header.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
+                    self.header.setLineSpacing(10, 1);
+                    Common.applyStyle(self.header, "textview_default", 2);
+                    self.ui = new G.ListView(ctx);
+                    self.ui.setOnItemClickListener(new G.AdapterView.OnItemClickListener({
+                        onItemClick: function (parent, view, pos, id) {
+                            try {
+                                if (CA.settings.commandEngine === "chelper") {
+                                    var hc = parent.getHeaderViewsCount();
+                                    var which = pos - hc;
+                                    if (which < 0) return;
+                                    var r = ScriptInterface.chelperApplySuggestion(
+                                        CA.chelperPack,
+                                        CA.cmd.getText().toString(),
+                                        CA.cmd.getSelectionStart(),
+                                        which
+                                    );
+                                    if (r && r[0]) {
+                                        CA._chelperApplying = true;
+                                        CA.cmd.setText(String(r[0]));
+                                        CA.cmd.setSelection(parseInt(String(r[1]), 10) || 0);
+                                        CA._chelperApplying = false;
                                     }
-                                    if (pos == 0) {
-                                        CA.IntelliSense.showMoreUsage();
-                                        return;
-                                    }
-                                    var a = CA.IntelliSense.output[CA.IntelliSense.input[pos - parent.getHeaderViewsCount()]];
-                                    if (a instanceof Function) {
-                                        a();
-                                    } else if (a) {
-                                        if (a && typeof a === 'object' && a.text !== undefined) {
-                                            CA.sendLog.info("补全点击: cursor=" + a.cursor + ", textLen=" + a.text.length);
-                                            CA.cmd.setText(String(a.text));
-                                            if (a.cursor >= 0) {
-                                                CA.showGen.activate(false, a.cursor);
-                                                CA.IntelliSense.proc(String(a.text), a.cursor);
-                                            } else {
-                                                CA.showGen.activate(false);
-                                            }
+                                    return;
+                                }
+                                if (pos == 0) {
+                                    CA.IntelliSense.showMoreUsage();
+                                    return;
+                                }
+                                var a = CA.IntelliSense.output[CA.IntelliSense.input[pos - parent.getHeaderViewsCount()]];
+                                if (a instanceof Function) {
+                                    a();
+                                } else if (a) {
+                                    if (a && typeof a === 'object' && a.text !== undefined) {
+                                        CA.sendLog.info("补全点击: cursor=" + a.cursor + ", textLen=" + a.text.length);
+                                        CA.cmd.setText(String(a.text));
+                                        if (a.cursor >= 0) {
+                                            CA.showGen.activate(false, a.cursor);
+                                            CA.IntelliSense.proc(String(a.text), a.cursor);
                                         } else {
-                                            CA.cmd.setText(String(a));
                                             CA.showGen.activate(false);
                                         }
-                                    }
-                                } catch (e) { erp(e) }
-                            }
-                        }));
-                        self.list.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({
-                            onItemLongClick: function (parent, view, pos, id) {
-                                try {
-                                    if (pos == 0) {
-                                        CA.IntelliSense.showMoreUsage();
-                                        return true;
-                                    }
-                                    var a = CA.IntelliSense.output[CA.IntelliSense.input[pos - parent.getHeaderViewsCount()]];
-                                    if (a && !(a instanceof Function)) {
-                                        var rect, metrics = Common.getMetrics();
-                                        if (self.lastToast) self.lastToast.cancel();
-                                        self.lastToast = G.Toast.makeText(ctx, String(a), 0);
-                                        view.getGlobalVisibleRect(rect = new G.Rect());
-                                        self.lastToast.setGravity(G.Gravity.CENTER, rect.centerX() - metrics[0] / 2, rect.centerY() - metrics[1] / 2);
-                                        self.lastToast.show();
-                                    }
-                                    return true;
-                                } catch (e) { return erp(e), true }
-                            }
-                        }));
-                        self.list.addOnLayoutChangeListener(new G.View.OnLayoutChangeListener({
-                            onLayoutChange: function (v, l, t, r, b, ol, ot, or, ob) {
-                                try {
-                                    var t = (b - t > Common.theme.textsize[3] * G.sp * 8) || CA.settings.keepWhenIME;
-                                    if (self.keep == t) return;
-                                    self.keep = t;
-                                    if (t) {
-                                        self.prompt.setPadding(20 * G.dp, 10 * G.dp, 20 * G.dp, 10 * G.dp);
                                     } else {
-                                        self.prompt.setPadding(20 * G.dp, 2 * G.dp, 20 * G.dp, 2 * G.dp);
+                                        CA.cmd.setText(String(a));
+                                        CA.showGen.activate(false);
                                     }
-                                    v.post(function () { CA.IntelliSense.apply() });
-                                } catch (e) { erp(e) }
-                            }
-                        }));
-                        self.list.addHeaderView(self.prompt);
-                        self.list.setLayoutParams(new G.FrameLayout.LayoutParams(-1, -1));
-                        if (G.style == "Material") { //Fixed：Android 5.0以下FastScroller会尝试将RhinoListAdapter强转为BaseAdapter
-                            self.list.setFastScrollEnabled(true);
-                            self.list.setFastScrollAlwaysVisible(false);
+                                }
+                            } catch (e) { erp(e) }
                         }
-                        CA.showAssist.initContent(self.list);
-                        PWM.registerResetFlag(CA.IntelliSense, "ui");
-                        PWM.registerResetFlag(self, "prompt");
-                        // 只同步函数引用，不要同步 prompt/list（它们是 View，
-                        // 同步到模块上会污染 this.prompt，导致 apply(z) 收到 TextView）
-                        CA.IntelliSense.applyWithData = self.apply;
-                        CA.IntelliSense.vmaker = self.vmaker;
-                        CA.IntelliSense.vbinder = self.vbinder;
+                    }));
+                    self.ui.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({
+                        onItemLongClick: function (parent, view, pos, id) {
+                            try {
+                                if (pos == 0) {
+                                    CA.IntelliSense.showMoreUsage();
+                                    return true;
+                                }
+                                var a = CA.IntelliSense.output[CA.IntelliSense.input[pos - parent.getHeaderViewsCount()]];
+                                if (a && !(a instanceof Function)) {
+                                    var rect, metrics = Common.getMetrics();
+                                    if (self.lastToast) self.lastToast.cancel();
+                                    self.lastToast = G.Toast.makeText(ctx, String(a), 0);
+                                    view.getGlobalVisibleRect(rect = new G.Rect());
+                                    self.lastToast.setGravity(G.Gravity.CENTER, rect.centerX() - metrics[0] / 2, rect.centerY() - metrics[1] / 2);
+                                    self.lastToast.show();
+                                }
+                                return true;
+                            } catch (e) { return erp(e), true }
+                        }
+                    }));
+                    self.ui.addOnLayoutChangeListener(new G.View.OnLayoutChangeListener({
+                        onLayoutChange: function (v, l, t, r, b, ol, ot, or, ob) {
+                            try {
+                                var t = (b - t > Common.theme.textsize[3] * G.sp * 8) || CA.settings.keepWhenIME;
+                                if (self.keep == t) return;
+                                self.keep = t;
+                                if (t) {
+                                    self.header.setPadding(20 * G.dp, 10 * G.dp, 20 * G.dp, 10 * G.dp);
+                                } else {
+                                    self.header.setPadding(20 * G.dp, 2 * G.dp, 20 * G.dp, 2 * G.dp);
+                                }
+                                v.post(function () { CA.IntelliSense.apply() });
+                            } catch (e) { erp(e) }
+                        }
+                    }));
+                    self.ui.addHeaderView(self.header);
+                    self.ui.setLayoutParams(new G.FrameLayout.LayoutParams(-1, -1));
+                    if (G.style == "Material") { //Fixed：Android 5.0以下FastScroller会尝试将RhinoListAdapter强转为BaseAdapter
+                        self.ui.setFastScrollEnabled(true);
+                        self.ui.setFastScrollAlwaysVisible(false);
                     }
-                    CA.showAssist.con.addView(CA.IntelliSense.ui = self.list);
-                    if (data) self.apply(data);
+                    CA.showAssist.initContent(self.ui);
+                    PWM.registerResetFlag(CA.IntelliSense, "ui");
+                    PWM.registerResetFlag(CA.IntelliSense, "header");
+                    CA.showAssist.con.addView(self.ui);
                 } catch (e) { erp(e) }
             })
         },
         hide: function () {
+            var self = this;
             G.ui(function () {
                 try {
-                    if (!CA.IntelliSense.ui) return;
-                    CA.showAssist.con.removeView(CA.IntelliSense.ui);
-                    CA.IntelliSense.ui = null;
+                    if (!self.ui) return;
+                    CA.showAssist.con.removeView(self.ui);
+                    self.ui = null;
+                    self.header = null;
+                    self.adapter = null;
                 } catch (e) { erp(e) }
             })
         },

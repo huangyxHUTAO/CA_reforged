@@ -2764,6 +2764,10 @@ MapScript.loadModule("CA", {
 			try {
 				if (!ScriptInterface.isCHelperAvailable()) return;
 				if (CA._chelperApplying) return;
+				// afterTextChanged 和 onSelectionChanged 都会调到这里，同一组参数解析一次就够
+				var key = cursor + ":" + cmd;
+				if (CA._chelperKey === key) return;
+				CA._chelperKey = key;
 				var pack = "release-vanilla-1.21.132.1.cpack";
 				CA.chelperPack = pack;
 				// 一次解析取回结构/参数提示/错误/候选，避免同一条命令解析四遍
@@ -2788,23 +2792,19 @@ MapScript.loadModule("CA", {
 						error ? Common.theme.criticalcolor : Common.theme.promptcolor),
 						secondStart, pp.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 				}
-				android.util.Log.e("CA", "CHelper query: size=" + input.length + " cursor=" + cursor);
 				CA.sendLog.info("CHelper query: size=" + input.length + " cursor=" + cursor
 					+ " struct=" + (structure ? structure.length : "null")
 					+ " hint=" + (hint ? hint.length : 0)
 					+ " err=" + (error ? error.length : 0)
 					+ (error ? " errMsg=" + error : ""));
 
-				if (!CA.showAssist.con) CA.showAssist();
-				var data = {
-					prompt: [pp],
-					help: "",
-					input: input
-				};
-				if (CA.IntelliSense.applyWithData) CA.IntelliSense.applyWithData(data);
-				else CA.IntelliSense.show(data);
+				// 和 proc() 走同一个约定：先写模块状态，再由 apply 统一渲染
+				CA.IntelliSense.prompt = [pp];
+				CA.IntelliSense.help = "";
+				CA.IntelliSense.input = input;
+				CA.IntelliSense.apply();
 			} catch (e) {
-				CA.sendLog.error("CHelper 补全异常: " + e + "\n" + (e && e.stack ? e.stack : ""));
+				CA._chelperKey = null;
 				erp(e);
 			}
 		},
@@ -3799,6 +3799,8 @@ MapScript.loadModule("CA", {
 			PWM.dismissPopup();
 			PWM.reset();
 			PWM.resetUICache();
+			// 补全 UI 已经被丢弃，缓存键也要失效，否则同一条命令不会再触发解析
+			CA._chelperKey = null;
 		} catch (e) { erp(e) }
 	},
 
