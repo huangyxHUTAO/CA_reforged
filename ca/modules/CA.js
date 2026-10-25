@@ -936,7 +936,10 @@ MapScript.loadModule("CA", {
 					CA.cmd.setFocusableInTouchMode(true);
 					CA.cmd.setPadding(5 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 					CA.cmd.setImeOptions(G.EditorInfo.IME_FLAG_NO_FULLSCREEN);
-					CA.cmd.setTypeface(iconFont);
+					// 输入框固定用系统默认字体。iconFont 没有中文字形，hint 会被
+					// fallback 成系统字体，和输入的 ASCII（iconFont）行高差 3px，
+					// 空输入时整个 bar 会矮一截；一行里混两种字体没法对齐
+					CA.cmd.setTypeface(G.Typeface.DEFAULT);
 					CA.cmd.setText(CA.cmdstr);
 
 					// 文本变化监听器
