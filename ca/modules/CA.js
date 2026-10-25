@@ -929,7 +929,13 @@ MapScript.loadModule("CA", {
 
 					CA.cmd = new G.EditText(ctx);
 					CA.cmd.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -1, 1.0));
-					CA.cmd.setHint("输入命令喵~");
+					// hint 是中文，iconFont 没有这些字形会 fallback 到系统字体，
+					// 行高比输入的命令小几像素，空输入时整个 bar 会矮一截。
+					// 末尾挂一个透明的 iconFont 字符，同一行取最大行高就对齐了
+					var hint = new G.SpannableStringBuilder("输入命令喵~M");
+					hint.setSpan(new G.ForegroundColorSpan(0x00000000),
+						hint.length() - 1, hint.length(), G.Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+					CA.cmd.setHint(hint);
 					Common.applyStyle(CA.cmd, "edittext_default", 3);
 					CA.cmd.setInputType(G.InputType.TYPE_CLASS_TEXT | G.InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
 					CA.cmd.setFilters([new G.InputFilter.LengthFilter(32768)])
@@ -937,25 +943,6 @@ MapScript.loadModule("CA", {
 					CA.cmd.setPadding(5 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 					CA.cmd.setImeOptions(G.EditorInfo.IME_FLAG_NO_FULLSCREEN);
 					CA.cmd.setTypeface(iconFont);
-					// hint 里的中文 iconFont 没有字形，会 fallback 到系统字体，行高和
-					// 实际输入的 ASCII 命令不同。用临时 TextView 把两种情况各量一次，
-					// 取较大值定死输入框高度；bar 是 wrap_content，高度随之固定，
-					// 取 max 是为了 hint 和输入都不会被裁
-					var probe = new G.TextView(ctx);
-					// 没有 LayoutParams 的 TextView 调 setText 会走 checkForRelayout，
-					// 那里直接读 mLayoutParams.width，会 NPE
-					probe.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
-					probe.setTypeface(iconFont);
-					probe.setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX, CA.cmd.getTextSize());
-					probe.setText("M");
-					probe.measure(0, 0);
-					var hInput = probe.getMeasuredHeight();
-					probe.setText("输入命令喵~");
-					probe.measure(0, 0);
-					// 高度写在 layoutParams 上：EditText 原本是 MATCH_PARENT，
-					// 父容器给的是精确值，setHeight 设的 min/max 会被无视
-					CA.cmd.setLayoutParams(new G.LinearLayout.LayoutParams(-1,
-						Math.max(hInput, probe.getMeasuredHeight()) + Math.round(20 * G.dp), 1.0));
 					CA.cmd.setText(CA.cmdstr);
 
 					// 文本变化监听器
