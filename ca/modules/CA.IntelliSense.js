@@ -16,6 +16,10 @@
         mode: 0,
         last: {},
         jsonLanguageServices: {},
+        // 当前补全列表的数据来源："builtin" / "chelper"。
+        // 点击候选要按它分发，不能看 CA.settings.commandEngine ——
+        // CHelper 模式下 /help 菜单仍由内置渲染，那会儿点的是内置的项
+        engine: "builtin",
         // —— 补全 UI：resetUICache 会置空，apply 负责按需重建 ——
         ui: null,
         header: null,
@@ -61,6 +65,7 @@
         proc: function (s, cursor) {
             try {
                 CA.sendLog.info("光标位置(补全器处): " + cursor);
+                this.engine = "builtin";
                 if (CA.settings.iiMode != 2 && CA.settings.iiMode != 3) return;
                 // 全局缓存：文本和光标都没变时直接复用
                 if (this._cacheS === s && this._cacheCursor === cursor) {
@@ -1649,6 +1654,7 @@
         showHelp: function () {
             var pp = new G.SpannableStringBuilder();
             this.source = "/help";
+            this.engine = "builtin";
             this.cmdname = "help";
             this.hasSlash = true;
             this.strParam = "";
@@ -1757,7 +1763,7 @@
                     self.ui.setOnItemClickListener(new G.AdapterView.OnItemClickListener({
                         onItemClick: function (parent, view, pos, id) {
                             try {
-                                if (CA.settings.commandEngine === "chelper") {
+                                if (CA.IntelliSense.engine === "chelper") {
                                     var hc = parent.getHeaderViewsCount();
                                     var which = pos - hc;
                                     if (which < 0) return;
@@ -1803,11 +1809,11 @@
                     self.ui.setOnItemLongClickListener(new G.AdapterView.OnItemLongClickListener({
                         onItemLongClick: function (parent, view, pos, id) {
                             try {
-                                if (pos == 0) {
-                                    CA.IntelliSense.showMoreUsage();
-                                    return true;
-                                }
-                                var a = CA.IntelliSense.output[CA.IntelliSense.input[pos - parent.getHeaderViewsCount()]];
+                                var which = pos - parent.getHeaderViewsCount();
+                                if (which < 0) return true;
+                                var a = CA.IntelliSense.engine === "chelper"
+                                    ? CA.IntelliSense.input[which]
+                                    : CA.IntelliSense.output[CA.IntelliSense.input[which]];
                                 if (a && !(a instanceof Function)) {
                                     var rect, metrics = Common.getMetrics();
                                     if (self.lastToast) self.lastToast.cancel();

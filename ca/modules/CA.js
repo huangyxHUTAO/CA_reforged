@@ -2767,6 +2767,7 @@ MapScript.loadModule("CA", {
 			try {
 				if (!ScriptInterface.isCHelperAvailable()) return CA.sendLog.debug("[CH] 内核不可用");
 				if (CA._chelperApplying) return CA.sendLog.debug("[CH] 正处于 applySuggestion");
+				CA.IntelliSense.engine = "chelper";
 				// afterTextChanged 和 onSelectionChanged 都会调到这里，同一组参数解析一次就够
 				var key = cursor + ":" + cmd;
 				if (CA._chelperKey === key) { CA.sendLog.debug("[CH] 复用解析结果 " + key); CA.IntelliSense.apply(); return; }
