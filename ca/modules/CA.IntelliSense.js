@@ -1735,7 +1735,13 @@
             var self = this;
             G.ui(function () {
                 try {
-                    if (self.ui) return;
+                    // 有父容器才算有效；con 被重建后残留的旧列表不算
+                    if (self.ui) {
+                        if (self.ui.getParent()) return;
+                        self.ui = null;
+                        self.header = null;
+                        self.adapter = null;
+                    }
                     if (!CA.showAssist.con) CA.showAssist();
                     self.adapter = null;
                     self.vmaker = function (holder) {
@@ -1857,13 +1863,16 @@
         hide: function () {
             var self = this;
             G.ui(function () {
+                if (!self.ui) return;
+                // 先摘视图再清状态：摘的时候 con 可能已经不在了，
+                // 无论如何都要把 ui/header/adapter 置空，否则 show() 会
+                // 以为列表还在，再也不重建，界面就一直空着
                 try {
-                    if (!self.ui) return;
-                    CA.showAssist.con.removeView(self.ui);
-                    self.ui = null;
-                    self.header = null;
-                    self.adapter = null;
+                    if (CA.showAssist.con) CA.showAssist.con.removeView(self.ui);
                 } catch (e) { erp(e) }
+                self.ui = null;
+                self.header = null;
+                self.adapter = null;
             })
         },
         showMoreUsage: function () {
