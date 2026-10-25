@@ -85,39 +85,24 @@ cd ./ca
 
 #### 3.1 配置构建环境（首次使用）
 
-在 `ca/config/` 目录下创建 `shell.txt` 和 `sign.txt` 配置文件：
+`ca/config/` 里的通用配置已随仓库提供；涉及**密码**和**服务器信息**的不入库，仓库里给了模板：
 
-**shell.txt** - Android 构建配置：
-```
-shell {
-    # Android 项目路径（cadroid 目录的绝对路径）
-    path = "F:/CA-Project/cadroid"
-    
-    # Android SDK 工具路径
-    tools {
-        jarsigner {
-            path = "C:/Program Files/Android/Android Studio/jbr/bin/jarsigner.exe"
-        }
-        zipalign {
-            path = "C:/Users/xxx/AppData/Local/Android/Sdk/build-tools/33.0.0/zipalign.exe"
-        }
-    }
-    
-    # Android SDK 路径
-    android_jar_path = "C:/Users/xxx/AppData/Local/Android/Sdk/platforms/android-32/android.jar"
-}
+```bash
+cd ca/config
+cp sign.toml.example sign.toml
+cp sign.local.toml.example sign.local.toml
 ```
 
-**sign.txt** - 签名配置（Release 构建需要）：
-```
-sign {
-    # 密钥库路径
-    keystore = "F:/CA-Project/keystore.jks"
-    key_alias = "ca"
-    store_password = "your_password"
-    key_password = "your_password"
-}
-```
+| 文件 | 用途 | 是否入库 |
+| --- | --- | --- |
+| `build.toml` | 版本号、发布日期、更新说明 | 是 |
+| `shell.toml` | Android SDK 与签名工具路径（按本机修改） | 是 |
+| `update.toml` | 更新源地址 | 是 |
+| `sign.toml` | 密钥库、公钥、热更新私钥的路径 | 否，从 `.example` 复制 |
+| `sign.local.toml` | 密钥库密码、密钥密码 | 否，从 `.example` 复制 |
+| `publish.toml` | 发布方式与 SSH 配置（仅发布时需要） | 否，从 `.example` 复制 |
+
+Release 构建还需要 `cadroid/app/signatures/` 下的密钥库和公钥文件，同样不入库。
 
 ---
 

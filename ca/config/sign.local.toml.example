@@ -1,0 +1,12 @@
+# 本地敏感配置示例
+# 复制为 sign.local.toml 后填入自己的密码；该文件已被 .gitignore 忽略
+
+[sign]
+# 密钥别名
+key_alias = "your_alias"
+
+# 密钥库(keystore)的密码
+store_password = "your_store_password"
+
+# 密钥(key)的密码
+key_password = "your_key_password"
