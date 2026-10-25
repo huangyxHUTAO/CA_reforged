@@ -3546,6 +3546,7 @@ MapScript.loadModule("CA", {
 						onclick: function () {
 							Common.showOperateDialog([{
 								text: "内置解析器",
+								description: "命令助手内置解析器",
 								onclick: function () {
 									CA.settings.commandEngine = "builtin";
 									CA.trySave();
@@ -3554,6 +3555,7 @@ MapScript.loadModule("CA", {
 								}
 							}, {
 								text: "CHelper（Alpha）",
+								description: "实验性。来自 Yancey/CHelper 的命令解析器，更强大的解析系统",
 								onclick: function () {
 									try {
 										if (!ScriptInterface.isCHelperAvailable()) {

@@ -31,7 +31,8 @@
     再次感谢原作者 [ProjectXero](https://github.com/XeroAlpha) 提供的开源工具链与数据支持！
   
   - CHelper
-    - 部分**补全机制**的参考，以及**方块状态**等复杂ID的数据，如果你觉得 *命令助手 Reforged* 不好用，欢迎试试[CHelper](https://github.com/Yancey2023/CHelper-Core)
+    - 0.3.0 起集成了 [CHelper-Core](https://github.com/Yancey2023/CHelper-Core) 的命令解析内核（在 设置 → 智能补全 → 命令引擎 中启用），提供更严格的语法检查与错误定位；命令库资源（cpack）同样来自该项目。
+    - 早期版本还参考过其**补全机制**与**方块状态**等复杂 ID 数据。如果你觉得 *命令助手 Reforged* 不好用，欢迎试试 CHelper 本体。
 
 - **动画、粒子、声音 ID 及中文译名**  
   由 **南鸢晨星** 独立翻译；原始英文条目取自 [中文 Minecraft Wiki](https://zh.minecraft.wiki) ，遵循 CC BY-NC-SA 3.0。
