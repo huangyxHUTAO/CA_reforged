@@ -952,7 +952,10 @@ MapScript.loadModule("CA", {
 					var hInput = probe.getMeasuredHeight();
 					probe.setText("输入命令喵~");
 					probe.measure(0, 0);
-					CA.cmd.setHeight(Math.max(hInput, probe.getMeasuredHeight()) + Math.round(20 * G.dp));
+					// 高度写在 layoutParams 上：EditText 原本是 MATCH_PARENT，
+					// 父容器给的是精确值，setHeight 设的 min/max 会被无视
+					CA.cmd.setLayoutParams(new G.LinearLayout.LayoutParams(-1,
+						Math.max(hInput, probe.getMeasuredHeight()) + Math.round(20 * G.dp), 1.0));
 					CA.cmd.setText(CA.cmdstr);
 
 					// 文本变化监听器
