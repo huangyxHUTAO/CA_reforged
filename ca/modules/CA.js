@@ -758,6 +758,7 @@ MapScript.loadModule("CA", {
 						}
 						var gostate0 = function () { //输入内容为空
 							state = 0;
+							CA.sendLog.debug("[TU] gostate0");
 							CA.hideAssist(); CA.showHistory();
 							self.copy.setText("关闭");
 							self.add.setVisibility(G.View.VISIBLE);
@@ -775,6 +776,7 @@ MapScript.loadModule("CA", {
 							self.copy.setText(CA.settings.pasteMode == 2 ? "粘贴" : "复制");
 							self.add.setVisibility(G.View.GONE);
 							self.clear.setVisibility(CA.settings.showClearButton ? G.View.VISIBLE : G.View.GONE);
+							CA.sendLog.debug("[TU] gostate1 done state=" + state);
 						}
 						var gostate2 = function () { //输入了/help
 							state = 2;
@@ -793,6 +795,7 @@ MapScript.loadModule("CA", {
 						}
 						var gostate3 = function () { //辅助输入模式
 							state = 3;
+							CA.sendLog.debug("[TU] gostate3 assist.active=" + CA.Assist.active);
 							CA.hideHistory(); CA.showAssist();
 							CA.IntelliSense.hide(); CA.Assist.show(); CA.hideFCS();
 							self.copy.setText(CA.settings.pasteMode == 2 ? "粘贴" : "复制");
@@ -814,6 +817,7 @@ MapScript.loadModule("CA", {
 							if (CA.fcs) CA.showFCS(s);
 							if (CA.settings.autoFormatCmd) rep(s);
 							if (CA.settings.commandEngine === "chelper") {
+								CA.sendLog.debug("[TU] state=" + state + " len=" + s.length() + " cur=" + cursor);
 								if (state != 1) return;
 								CA.updateCHelperSuggest(String(s), cursor);
 								return;
@@ -2762,11 +2766,11 @@ MapScript.loadModule("CA", {
 	 */
 		updateCHelperSuggest: function (cmd, cursor) {
 			try {
-				if (!ScriptInterface.isCHelperAvailable()) return;
-				if (CA._chelperApplying) return;
+				if (!ScriptInterface.isCHelperAvailable()) return CA.sendLog.debug("[CH] 内核不可用");
+				if (CA._chelperApplying) return CA.sendLog.debug("[CH] 正处于 applySuggestion");
 				// afterTextChanged 和 onSelectionChanged 都会调到这里，同一组参数解析一次就够
 				var key = cursor + ":" + cmd;
-				if (CA._chelperKey === key) return;
+				if (CA._chelperKey === key) { CA.sendLog.debug("[CH] 复用解析结果 " + key); CA.IntelliSense.apply(); return; }
 				CA._chelperKey = key;
 				var pack = "release-vanilla-1.21.132.1.cpack";
 				CA.chelperPack = pack;
@@ -3129,6 +3133,7 @@ MapScript.loadModule("CA", {
 						set: function (v) {
 							CA.settings.LogServer.enabled = Boolean(v);
 							CA.trySave();
+							CA.sendLog.reset();
 							if (v === true) {
 								Common.toast("日志服务器 已启用 如未生效请检查地址...")
 								CA.sendLog.info("喵呜~") // 测试发送
@@ -3149,8 +3154,11 @@ MapScript.loadModule("CA", {
 								title: "日志服务器地址",
 								defaultValue: CA.settings.LogServer.address,
 								callback: function (s) {
-									CA.settings.LogServer.address = s
+									s = String(s).trim();
+									if (!/^wss?:\/\//.test(s)) s = "ws://" + s.replace(/^https?:\/\//, "");
+									CA.settings.LogServer.address = s;
 									CA.trySave();
+									CA.sendLog.reset();
 									Common.toast("日志服务器 已设置为 " + s)
 									fset();
 								}

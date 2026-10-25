@@ -68,8 +68,10 @@
 
 	// 内部工具函数：真正发送
 	_post: function (level, text) {
-		this._initConfig();
-		if (!CA.settings.LogServer.enabled) return;
+		// LogServer 由 _initConfig 在 CA.initialize 时建好，这里直接读，
+		// 未启用时就一次属性访问，高频日志也不会有开销
+		var cfg = CA.settings.LogServer;
+		if (!cfg || !cfg.enabled) return;
 		var body = JSON.stringify({ msg: String(text), level: level, ts: Date.now() });
 		var client = this._ensure(this);
 		if (client) {

@@ -1703,6 +1703,9 @@
             var self = this;
             G.ui(function () {
                 try {
+                    CA.sendLog.debug("[IIS] render prompt=" + self.prompt.length
+                        + " input=" + self.input.length
+                        + " ui=" + (self.ui ? "Y" : "N") + " header=" + (self.header ? "Y" : "N"));
                     if (!self.ui || !self.header) return;
                     self.header.setText(self.prompt[0] || "");
                     try {
