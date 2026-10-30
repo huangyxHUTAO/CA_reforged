@@ -1,0 +1,37 @@
+# ===== 构建产物 =====
+build/
+captures/
+.gradle/
+.kotlin/
+*.apk
+*.ap_
+*.aab
+*.class
+*.dex
+*.hprof
+
+# ===== IDE 和本机配置 =====
+.idea/
+*.iml
+local.properties
+
+# ===== 签名相关 =====
+*.keystore
+*.jks
+*.signature
+*.password
+*.p12
+*.pk8
+*.x509.pem
+
+# ===== 项目特有的敏感文件 =====
+/export.bat
+
+# ===== 日志 / 系统 / 编辑器 =====
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+
+# bundletool（32 MB，按需下载，见 tools/build-apks.sh 头部注释）
+tools/bundletool.jar
