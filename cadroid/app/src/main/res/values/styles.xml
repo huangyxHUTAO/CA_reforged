@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
+    <!-- minSdk 是 21，所以直接用 Material 主题（原来的 values-v21 已合并到这里） -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" />
 
     <style name="AppTheme.Translucent" parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 </resources>

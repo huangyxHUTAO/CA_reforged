@@ -12,15 +12,12 @@
 		"settings": "设置",
 		"webviewUnavailable": "您的设备无法加载Android System WebView%n%n%s",
 		"theme": {
-			"light": "明亮",
-			"dark": "暗色",
-			"pink_theme": "晨星粉",
-			"blue_theme": "晨雾蓝",
-			"purple_theme": "略略紫"
+			"default": "默认风格",
+			"dark": "夜间风格"
 		},
 		"ChangeTheme": {
 			"title": "主题选择",
-			"currentTheme": "> %s <",
+			"currentTheme": "%s (当前)",
 			"alphaField": "不透明度：%.0f%%",
 			"textsizeField": "字体大小：%.0f%%"
 		},
@@ -30,6 +27,7 @@
 			"path": "路径",
 			"fileName": "文件名",
 			"fileNotExist": "文件或目录不存在",
+			"directoryCannotRead": "目录不存在或拒绝访问",
 			"createDir": "新建文件夹",
 			"emptyDirName": "文件夹名称不能为空",
 			"errCreateDir": "创建目录失败%n%s",
@@ -37,6 +35,7 @@
 			"emptyFileName": "文件名不能为空",
 			"dirAlreadyExist": "同名目录已存在",
 			"invaildFileName": "无效的文件名",
+			"loading": "获取文件列表中……",
 			"errAccessDir": "拒绝访问%n%s"
 		}
 	},
@@ -63,6 +62,8 @@
 			"edit": "继续编辑",
 			"edit_desc": "继续编辑JSON",
 			"nowhereEditable": "该JSON没有可以编辑的地方",
+			"replace": "替换",
+			"replace_desc": "新建JSON并替换原有内容",
 			"copy": "复制",
 			"copy_desc": "复制JSON",
 			"copy_success": "JSON已复制至剪贴板",
@@ -107,26 +108,5 @@
 			"rename": "重命名",
 			"insertBefore": "插入(上方)"
 		}
-	},
-	"jsonLanguageService": {
-		"Expected a JSON object, array or literal.": "应为 JSON 对象、数组或字面量。",
-		"End of file expected.": "文件末尾后仍有内容。",
-		"Value expected": "需要值",
-		"Trailing comma": "多余的逗号",
-		"Expected comma": "需要逗号",
-		"Expected comma or closing bracket": "需要逗号或右方括号",
-		"Expected comma or closing brace": "需要逗号或右花括号",
-		"Property keys must be doublequoted": "属性名必须用双引号包裹",
-		"Duplicate object key": "重复的对象键",
-		"Colon expected": "需要冒号",
-		"Property expected": "需要属性",
-		"Invalid number format.": "数字格式无效",
-		"Invalid unicode sequence in string.": "字符串中的 Unicode 转义序列无效",
-		"Invalid escape character in string.": "字符串中的转义字符无效",
-		"Unexpected end of number.": "数字意外结束",
-		"Unexpected end of comment.": "注释意外结束",
-		"Unexpected end of string.": "字符串意外结束",
-		"Invalid characters in string. Control characters must be escaped.": "字符串中包含无效字符，控制字符必须转义",
-		"Unable to load schema from '{0}': No content.": "无法从 '{0}' 加载 schema：没有内容。"
 	}
 }

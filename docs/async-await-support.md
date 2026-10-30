@@ -32,7 +32,7 @@ Rhino 1.7.15.1 支持 Generators (`function*`) 和 Promise，因此转译后的�
 
 ### 在构建任务中启用
 
-修改 `cabuildtools/tasks/assembleSource.js`：
+修改 `ca/cabuildtools/tasks/assembleSource.js`：
 
 ```javascript
 module.exports = function(context, args) {
@@ -130,7 +130,7 @@ MapScript.loadModule("MyService", {
 ### 运行单元测试
 
 ```bash
-cd cabuildtools
+cd ca/cabuildtools
 node tests/async-transform.test.js
 ```
 

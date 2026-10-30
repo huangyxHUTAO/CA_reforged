@@ -1,0 +1,327 @@
+{
+	"name": "WebSocket命令库",
+	"author": "ProjectXero",
+	"description": "本命令库包含了只有启用WebSocket服务器并成功连接才能远程执行的命令\n\n部分与吉祥物相关的命令需要订阅事件AgentCommand才能看到返回的内容",
+	"uuid": "17e3d453-acc9-48a2-9806-f516235ceccd",
+	"version": [1, 0],
+	"require": [
+		"acf728c5-dd5d-4a38-b43d-7c4f18149fbd"
+	],
+	"update": "https://projectxero.gitee.io/ca/clib/wsagent.json",
+	"enums": {
+		"agentDirection": {
+			"forward": "向前",
+			"back": "向后",
+			"left": "向左",
+			"right": "向右",
+			"up": "向上",
+			"down": "向下"
+		},
+		"agentTurnDirection": {
+			"left": "向左",
+			"right": "向右"
+		}
+	},
+	"commands": {
+		"closewebsocket": {
+			"description": "让Minecraft客户端断开与WebSocket服务器的连接",
+			"noparams": {}
+		},
+		"agent": {
+			"description": "管理玩家控制的吉祥物(Agent)",
+			"patterns": {
+				"move": {
+					"description": "将玩家的吉祥物向指定方向移动一格",
+					"params": [
+						{
+							"type": "plain",
+							"name": "move",
+							"prompt": "将玩家的吉祥物向指定方向移动一格"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"turn": {
+					"description": "向指定方向转身",
+					"params": [
+						{
+							"type": "plain",
+							"name": "turn",
+							"prompt": "向指定方向转身"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentTurnDirection"
+						}
+					]
+				},
+				"attack": {
+					"description": "攻击指定方向一格方块内的实体",
+					"params": [
+						{
+							"type": "plain",
+							"name": "attack",
+							"prompt": "攻击指定方向一格方块内的实体"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"destroy": {
+					"description": "强行挖掘指定方向一格的方块，不考虑方块的硬度",
+					"params": [
+						{
+							"type": "plain",
+							"name": "destroy",
+							"prompt": "强行挖掘指定方向一格的方块，不考虑方块的硬度"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"drop": {
+					"description": "向指定方向丢出吉祥物背包指定格子内的指定数量的物品",
+					"params": [
+						{
+							"type": "plain",
+							"name": "drop",
+							"prompt": "向指定方向丢出吉祥物背包指定格子内的指定数量的物品"
+						},
+						{
+							"type": "uint",
+							"name": "格子序号"
+						},
+						{
+							"type": "uint",
+							"name": "数量"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"dropall": {
+					"description": "向指定方向丢出吉祥物背包内的所有物品",
+					"params": [
+						{
+							"type": "plain",
+							"name": "dropall",
+							"prompt": "向指定方向丢出吉祥物背包内的所有物品"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"inspect": {
+					"description": "检测指定方向一格方块的ID并返回",
+					"params": [
+						{
+							"type": "plain",
+							"name": "inspect",
+							"prompt": "检测指定方向一格方块的ID"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"inspectdata": {
+					"description": "检测指定方向一格方块的数据值并返回",
+					"params": [
+						{
+							"type": "plain",
+							"name": "inspectdata",
+							"prompt": "检测指定方向一格方块的数据值"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"detect": {
+					"description": "检测向指定方向移动是否会被阻挡，如果会则返回true，否则返回false",
+					"params": [
+						{
+							"type": "plain",
+							"name": "detect",
+							"prompt": "检测向指定方向移动是否会被阻挡"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"detectredstone": {
+					"description": "检测指定方向一格方块是否处于激活状态或被充能，如果满足上述条件则返回true，否则返回false",
+					"params": [
+						{
+							"type": "plain",
+							"name": "detectredstone",
+							"prompt": "检测指定方向一格方块是否处于激活状态或被充能"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"transfer": {
+					"description": "将吉祥物背包源格子内的指定数量的物品移动到目标格子内",
+					"params": [
+						{
+							"type": "plain",
+							"name": "transfer",
+							"prompt": "将吉祥物背包源格子内的指定数量的物品移动到目标格子内"
+						},
+						{
+							"type": "uint",
+							"name": "源格子序号"
+						},
+						{
+							"type": "uint",
+							"name": "数量"
+						},
+						{
+							"type": "uint",
+							"name": "目标格子序号"
+						}
+					]
+				},
+				"createagent": {
+					"description": "如果玩家无吉祥物，则创建一个属于该玩家的吉祥物",
+					"params": [
+						{
+							"type": "plain",
+							"name": "create",
+							"prompt": "如果玩家无吉祥物，则创建一个属于该玩家的吉祥物"
+						}
+					]
+				},
+				"tpagent": {
+					"description": "将吉祥物传送到自身所在位置",
+					"params": [
+						{
+							"type": "plain",
+							"name": "tp",
+							"prompt": "将吉祥物传送到自身所在位置"
+						}
+					]
+				},
+				"collect": {
+					"description": "收集半径一格内指定的物品到吉祥物背包",
+					"params": [
+						{
+							"type": "plain",
+							"name": "collect",
+							"prompt": "收集半径一格内指定的物品到吉祥物背包"
+						},
+						{
+							"type": "string",
+							"name": "物品ID",
+							"suggestion": "item"
+						}
+					]
+				},
+				"till": {
+					"description": "耕指定方向一格的方块",
+					"params": [
+						{
+							"type": "plain",
+							"name": "till",
+							"prompt": "耕指定方向一格的方块"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"place": {
+					"description": "对指定方向放置(或使用)吉祥物背包指定格子内的方块(或工具)，就像玩家点击那样",
+					"params": [
+						{
+							"type": "plain",
+							"name": "place",
+							"prompt": "对指定方向放置(或使用)吉祥物背包指定格子内的方块(或工具)"
+						},
+						{
+							"type": "uint",
+							"name": "格子序号"
+						},
+						{
+							"type": "enum",
+							"name": "方向",
+							"list": "agentDirection"
+						}
+					]
+				},
+				"getitemcount": {
+					"description": "返回吉祥物背包指定格子内的物品的堆叠数量",
+					"params": [
+						{
+							"type": "plain",
+							"name": "getitemcount",
+							"prompt": "返回吉祥物背包指定格子内的物品的堆叠数量"
+						},
+						{
+							"type": "uint",
+							"name": "格子序号"
+						}
+					]
+				},
+				"getitemspace": {
+					"description": "返回吉祥物背包指定格子内剩余可堆叠的相同物品数",
+					"params": [
+						{
+							"type": "plain",
+							"name": "getitemspace",
+							"prompt": "返回吉祥物背包指定格子内剩余可堆叠的相同物品数"
+						},
+						{
+							"type": "uint",
+							"name": "格子序号"
+						}
+					]
+				},
+				"getitemdetail": {
+					"description": "返回吉祥物背包指定格子内的物品的ID",
+					"params": [
+						{
+							"type": "plain",
+							"name": "getitemdetail",
+							"prompt": "返回吉祥物背包指定格子内的物品的ID"
+						},
+						{
+							"type": "uint",
+							"name": "格子序号"
+						}
+					]
+				}
+			}
+		}
+	}
+}

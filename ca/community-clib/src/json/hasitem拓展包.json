@@ -1,0 +1,108 @@
+{
+    "name": "hasitem",
+    "author": "工程师_多多",
+    "description": "增加hasitem",
+    "uuid": "acf56625-dd5d-4a38-b43d-7c4f1d239fcd",
+    "version": [
+        1,
+        0,
+        0
+    ],
+    "require": [],
+    "minSupportVer": "1.19.0.05",
+    "targetSupportVer": "1.19.0.05",
+    "commands": {},
+    "selectors": {
+        "x": {
+            "type": "relative",
+            "name": "x坐标"
+        },
+        "y": {
+            "type": "relative",
+            "name": "y坐标"
+        },
+        "z": {
+            "type": "relative",
+            "name": "z坐标"
+        },
+        "dx": {
+            "type": "float",
+            "name": "x轴方向长度"
+        },
+        "dy": {
+            "type": "float",
+            "name": "y轴方向长度"
+        },
+        "dz": {
+            "type": "float",
+            "name": "z轴方向长度"
+        },
+        "r": {
+            "type": "float",
+            "name": "最大半径"
+        },
+        "rm": {
+            "type": "float",
+            "name": "最小半径"
+        },
+        "rx": {
+            "type": "float",
+            "name": "最大垂直旋转角度"
+        },
+        "rxm": {
+            "type": "float",
+            "name": "最小垂直旋转角度"
+        },
+        "ry": {
+            "type": "float",
+            "name": "最大水平旋转角度"
+        },
+        "rym": {
+            "type": "float",
+            "name": "最小水平旋转角度"
+        },
+        "m": {
+            "type": "enum",
+            "name": "游戏模式",
+            "list": "gamemode",
+            "hasInverted": true
+        },
+        "c": {
+            "type": "int",
+            "name": "数量"
+        },
+        "l": {
+            "type": "int",
+            "name": "最大经验等级"
+        },
+        "lm": {
+            "type": "int",
+            "name": "最小经验等级"
+        },
+        "name": {
+            "type": "string",
+            "name": "名称",
+            "hasInverted": true
+        },
+        "hasitem": {
+            "name": "拥有物品",
+            "type": "string"
+        },
+        "scores": {
+            "type": "string",
+            "name": "记分板分数"
+        },
+        "family": {
+            "type": "string",
+            "name": "实体类型",
+            "suggestion": "entity_family",
+            "hasInverted": true
+        },
+        "type": {
+            "type": "string",
+            "name": "实体种类",
+            "suggestion": "entity",
+            "hasInverted": true
+        }
+    }
+}

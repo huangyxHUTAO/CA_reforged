@@ -2,7 +2,7 @@
 
 ## 架构概述
 
-`cabuildtools/` 是一套基于 Node.js 的构建系统，用于编译命令助手项目。
+`ca/cabuildtools/` 是一套基于 Node.js 的构建系统，用于编译命令助手项目。
 
 ## 核心组件
 

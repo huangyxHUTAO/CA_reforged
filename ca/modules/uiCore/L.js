@@ -8,6 +8,9 @@ MapScript.loadModule("L", (function self(defaultContext) {
 	function LCC(str) {
 		return str.slice(0, 1).toLowerCase() + str.slice(1);
 	}
+	// LHolder / LValue 都是普通对象（不是构造函数），用 Object.create 当原型。
+	// 不能用 instanceof：Rhino 1.7 静默返回 false，1.9 按 ES6 规范抛 TypeError。
+	// 判定改用 isPrototypeOf。
 	var LHolder = {
 		get : function(name) {
 			return name in this.data ? this.data[name] : this.parent ? this.parent.get(name) : undefined;
@@ -51,7 +54,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 		fill : function(obj, modelContext) {
 			var i, r;
 			if (!this.isAbstract(obj)) return obj;
-			if (obj instanceof LValue) return obj.get(modelContext);
+			if (LValue.isPrototypeOf(obj)) return obj.get(modelContext);
 			if (obj instanceof Array) {
 				r = obj.slice();
 				for (i = 0; i < obj.length; i++) {
@@ -69,7 +72,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 		},
 		isAbstract : function isAbstract(obj) {
 			var i;
-			if (obj instanceof LValue) return true;
+			if (LValue.isPrototypeOf(obj)) return true;
 			if (obj instanceof Object) {
 				for (i in obj) {
 					if (isAbstract(obj[i])) return true;
@@ -171,7 +174,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 	function attach(view, json, modelContext, rootView) {
 		var parentJson, i, e, lp;
 		parentJson = view.tag;
-		view.tag = createHolder(json, parentJson instanceof LHolder ? parentJson : null);
+		view.tag = createHolder(json, LHolder.isPrototypeOf(parentJson) ? parentJson : null);
 		listener.trigger("beforeAttach", view, view.tag);
 		attachProperties(view, json, modelContext);
 		if (rootView) {
@@ -184,7 +187,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 					if (modelContext) {
 						lp = calculateLayoutParams(view, e, null);
 						e = fromJSON(e, view.getContext(), modelContext);
-					} else if (e.tag instanceof LHolder) {
+					} else if (LHolder.isPrototypeOf(e.tag)) {
 						lp = calculateLayoutParams(view, e.tag.flatten(), e.layoutParams);
 					} else {
 						lp = e.layoutParams;
@@ -196,7 +199,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 				if (modelContext) {
 					lp = calculateLayoutParams(view, e, null);
 					e = fromJSON(e, view.getContext(), modelContext);
-				} else if (e.tag instanceof LHolder) {
+				} else if (LHolder.isPrototypeOf(e.tag)) {
 					lp = calculateLayoutParams(view, e.tag.flatten(), e.layoutParams);
 				} else {
 					lp = e.layoutParams;
@@ -247,7 +250,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 		return r || 0;
 	}
 	function fromJSON(json, context, modelContext, rootView) {
-		if (json instanceof LValue) {
+		if (LValue.isPrototypeOf(json)) {
 			json = json.get(modelContext);
 		}
 		var clazz = json._class, view;
@@ -265,7 +268,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 			this.valueData = {};
 			this.srcJson = this.viewToJson(baseView);
 			this.jsons.forEach(function(e) {
-				var k = self.analyseJson(e);
+				var k = self.analyzeJson(e);
 				if (k) self.valueData[e._holderId] = k;
 			});
 		},
@@ -285,7 +288,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 			vholder = holder._lHolder;
 			for (i in this.valueData) {
 				filledJson = LValue.fill(this.valueData[i], modelContext);
-				filledHolder = createHolder(filledJson, vholder[i].tag instanceof LHolder ? vholder[i].tag : holder._lRoot == vholder[i] ? holder._lTag : createHolder(this.jsons[i], null));
+				filledHolder = createHolder(filledJson, LHolder.isPrototypeOf(vholder[i].tag) ? vholder[i].tag : holder._lRoot == vholder[i] ? holder._lTag : createHolder(this.jsons[i], null));
 				listener.trigger("beforeAttach", vholder[i], filledHolder);
 				attachProperties(vholder[i], filledJson);
 				filledJson = filledHolder.flatten();
@@ -305,9 +308,9 @@ MapScript.loadModule("L", (function self(defaultContext) {
 			return r;
 		},
 		viewToJson : function(view) {
-			if (view instanceof LValue) return view;
+			if (LValue.isPrototypeOf(view)) return view;
 			var holder = view.tag, self = this;
-			if (!(holder instanceof LHolder)) Log.throwError(new Error(holder + " is not a LHolder"));
+			if (!(LHolder.isPrototypeOf(holder))) Log.throwError(new Error(holder + " is not a LHolder"));
 			var json = holder.flatten(), i;
 			delete json.child;
 			json.children = holder.getChildren().map(function(e) {
@@ -319,7 +322,7 @@ MapScript.loadModule("L", (function self(defaultContext) {
 			this.jsons.push(json);
 			return json;
 		},
-		analyseJson : function(json) {
+		analyzeJson : function(json) {
 			var i, a, r = {}, hasAbstractKey = false;
 			a = Object.keys(json);
 			for (i = 0; i < a.length; i++) {

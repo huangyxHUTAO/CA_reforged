@@ -1,0 +1,10 @@
+{
+	"default": [
+		{
+			"action": "ca.switchIconVisibility"
+		},
+		{
+			"action": "ca.exit"
+		}
+	]
+}

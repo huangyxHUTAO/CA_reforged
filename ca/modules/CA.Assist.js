@@ -1,15 +1,6 @@
 ({
 	active : false,
-	iconFont: null,
 	show : function self() {G.ui(function() {try {
-		// if (!self.iconFont) {
-		// 	try {
-		// 		var assetManager = ctx.getAssets();
-		// 		self.iconFont = G.Typeface.createFromAsset(assetManager, "fonts/Icon-font.ttf");
-		// 	} catch (e) {
-		// 		self.iconFont = G.Typeface.MONOSPACE || G.Typeface.DEFAULT;
-		// 	}
-		// }
 		if (!self.head) {
 			self.init = function() {
 				CA.Assist.command = null;
@@ -62,13 +53,11 @@
 				}, optional);
 			}
 			self.head = new G.TextView(ctx);
-			// self.head.setTypeface(self.iconFont); // 字体
 			self.head.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
 			self.head.setPadding(20 * G.dp, 10 * G.dp, 20 * G.dp, 10 * G.dp);
-			// self.head.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
+			self.head.setTypeface(G.Typeface.MONOSPACE || G.Typeface.DEFAULT);
 			self.head.setLineSpacing(10, 1);
 			Common.applyStyle(self.head, "textview_default", 2);
-			// self.head.setTypeface(self.iconFont);
 			self.list = new G.ListView(ctx);
 			self.list.setOnItemClickListener(new G.AdapterView.OnItemClickListener({onItemClick : function(parent, view, pos, id) {try {
 				var e;
@@ -115,13 +104,11 @@
 		vl.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2, 1.0));
 		vl.getLayoutParams().gravity = G.Gravity.CENTER;
 		name = new G.TextView(ctx);
-		// name.setTypeface(self.iconFont); 	//字体
 		name.setText(String(p.name) + (p.optional || p.canIgnore || p.chainOptional ? " (可选)" : ""));
 		name.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 		Common.applyStyle(name, "textview_default", 3);
 		vl.addView(name);
 		desp = new G.TextView(ctx);
-		// desp.setTypeface(self.iconFont); //字体
 		desp.setText(p.description ? String(p.description) : CA.Assist.getParamType(p));
 		desp.setSingleLine(true);
 		desp.setEllipsize(G.TextUtils.TruncateAt.END);
@@ -130,7 +117,6 @@
 		vl.addView(desp);
 		hl.addView(vl);
 		e._text = new G.TextView(ctx);
-		// e._text.setTypeface(self.iconFont); //字体
 		e._text.setText("点击以编辑");
 		e._text.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 		e._text.setMaxEms(10);
@@ -191,6 +177,7 @@
 			case "relative":
 			case "custom":
 			case "command":
+			case "subcommand":
 			case "rawjson":
 			case "text":
 			default:
@@ -343,8 +330,10 @@
 			listener.onTextChanged = function(s) {
 				var s = String(s);
 				if (s) {
+					// 过滤在 Java 里一次算完，JS 侧只剩取下标；没有 jar 时走等价 JS 实现
+					var keep = Accel.filter(Object.keys(suggestion), s);
 					adpt.setFilter(function(e, i) {
-						return e.indexOf(s) >= 0;
+						return keep[i];
 					});
 				} else {
 					adpt.clearFilter();
@@ -353,7 +342,6 @@
 			if (listener.getText) listener.onTextChanged(listener.getText(true));
 		}
 		exit = new G.TextView(ctx);
-		// exit.setTypeface(self.iconFont); //字体
 		exit.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 		exit.setText("确定");
 		exit.setGravity(G.Gravity.CENTER);
@@ -467,7 +455,6 @@
 		layout = new G.TableLayout(ctx);
 		layout.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 0);
 		title = new G.TextView(ctx);
-		// title.setTypeface(self.iconFont); //字体
 		title.setText("编辑“" + e.param.name + "”");
 		title.setLayoutParams(new G.TableLayout.LayoutParams(-1, -2));
 		title.setPadding(0, 0, 0, 10 * G.dp);
@@ -482,7 +469,6 @@
 			row.setLayoutParams(new G.TableLayout.LayoutParams(-1, -2));
 			row.setGravity(G.Gravity.CENTER);
 			label = new G.TextView(ctx);
-			// label.setTypeface(self.iconFont); //字体
 			label.setText(posp[i]);
 			label.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 			label.setLayoutParams(new G.TableRow.LayoutParams(-1, -2));
@@ -518,7 +504,6 @@
 		layout.addView(screla);
 		if (onReset) {
 			reset = new G.TextView(ctx);
-			// reset.setTypeface(self.iconFont); //字体
 			reset.setLayoutParams(new G.TableLayout.LayoutParams(-1, -2));
 			reset.setText("重置参数");
 			reset.setGravity(G.Gravity.CENTER);
@@ -531,7 +516,6 @@
 			layout.addView(reset);
 		}
 		exit = new G.TextView(ctx);
-		// exit.setTypeface(self.iconFont); //字体
 		exit.setLayoutParams(new G.TableLayout.LayoutParams(-1, -2));
 		exit.setText("确定");
 		exit.setGravity(G.Gravity.CENTER);
@@ -561,11 +545,13 @@
 				"@p" : "选择距离最近的玩家",
 				"@r" : "选择随机玩家",
 				"@e" : "选择所有实体",
-				"@s" : "选择命令执行者",
-				'@n' : "选择最近的实体"
+				"@s" : "选择命令执行者"
 			}
 			self.editLabel = function(e, callback) {
-				var a = Object.keys(self.selectors), t = e.param.target;
+				var a = [], t = e.param.target;
+				if (t == "entity" || t == "player") a.push("@a", "@p", "@r");
+				if (t == "entity" || t == "nonplayer") a.push("@e");
+				if (t != "nonselector") a.push("@s");
 				a = a.map(function(e) {
 					return {
 						text : e,
@@ -650,12 +636,6 @@
 				var view = new G.LinearLayout(ctx),
 					text = new G.TextView(ctx),
 					del = new G.TextView(ctx);
-
-				// // 设置字体
-				// view.setTypeface(self.iconFont);
-				// text.setTypeface(self.iconFont);
-				// del.setTypeface(self.iconFont);
-
 				view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
 				view.setOrientation(G.LinearLayout.HORIZONTAL);
 				view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
@@ -665,7 +645,6 @@
 				text.setEllipsize(G.TextUtils.TruncateAt.END);
 				text.setPadding(10 * G.dp, 10 * G.dp, 0, 10 * G.dp);
 				Common.applyStyle(text, "textview_default", 2);
-				// text.setTypeface(self.iconFont);
 				view.addView(text);
 				del.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 				del.setText("×");
@@ -683,7 +662,6 @@
 		layout.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 0);
 		Common.applyStyle(layout, "message_bg");
 		title = new G.TextView(ctx);
-		// title.setTypeface(self.iconFont); // 设置字体
 		title.setText("编辑“" + e.param.name + "”");
 		title.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 		title.setPadding(0, 0, 0, 10 * G.dp);
@@ -712,7 +690,6 @@
 		}
 		layout.addView(label);
 		add = new G.TextView(ctx);
-		// add.setTypeface(self.iconFont); // 设置字体
 		add.setText("+ 添加选择器参数");
 		add.setSingleLine(true);
 		add.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
@@ -731,7 +708,6 @@
 		layout.addView(list);
 		if (onReset) {
 			reset = new G.TextView(ctx);
-			// reset.setTypeface(self.iconFont); // 设置字体
 			reset.setLayoutParams(new G.TableLayout.LayoutParams(-1, -2));
 			reset.setText("重置参数");
 			reset.setGravity(G.Gravity.CENTER);
@@ -744,7 +720,6 @@
 			layout.addView(reset);
 		}
 		exit = new G.TextView(ctx);
-		// exit.setTypeface(self.iconFont); // 设置字体
 		exit.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 		exit.setText("确定");
 		exit.setGravity(G.Gravity.CENTER);
@@ -764,11 +739,9 @@
 	} catch(e) {erp(e)}})},
 	smallVMaker : function(holder) {
 		var view = holder.view = new G.TextView(ctx);
-		// view.setTypeface(self.iconFont);
 		view.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
 		view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
 		Common.applyStyle(view, "textview_default", 2);
-		// view.setTypeface(self.iconFont);
 		return view;
 	},
 	smallVBinder : function(holder, s) {
@@ -813,6 +786,9 @@
 
 			case "command":
 			return "命令";
+
+			case "subcommand":
+			return "子命令";
 
 			case "text":
 			default:
@@ -938,16 +914,15 @@
 					case "nbt":
 					case "json":
 					return e.jsonData;
-					break;
 					case "int":
 					case "uint":
 					case "float":
 					return Number(e.text);
-					break;
 					case "plain":
 					case "enum":
 					case "custom":
 					case "command":
+					case "subcommand":
 					case "rawjson":
 					case "text":
 					default:
@@ -958,12 +933,6 @@
 				var view = new G.LinearLayout(ctx),
 					text = holder.text = new G.TextView(ctx),
 					del = new G.TextView(ctx);
-
-				// //设置字体
-				// view.setTypeface(self.iconFont);
-				// text.setTypeface(self.iconFont);
-				// del.setTypeface(self.iconFont);
-
 				view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
 				view.setOrientation(G.LinearLayout.HORIZONTAL);
 				view.setLayoutParams(new G.AbsListView.LayoutParams(-1, -2));
@@ -972,7 +941,6 @@
 				text.setEllipsize(G.TextUtils.TruncateAt.END);
 				text.setPadding(10 * G.dp, 10 * G.dp, 0, 10 * G.dp);
 				Common.applyStyle(text, "textview_default", 2);
-				// text.setTypeface(self.iconFont);
 				view.addView(text);
 				del.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 				del.setText("×");
@@ -993,14 +961,12 @@
 		layout.setPadding(15 * G.dp, 15 * G.dp, 15 * G.dp, 0);
 		Common.applyStyle(layout, "message_bg");
 		title = new G.TextView(ctx);
-		// title.setTypeface(self.iconFont); // 设置字体
 		title.setText("编辑“" + e.param.name + "”");
 		title.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 		title.setPadding(0, 0, 0, 10 * G.dp);
 		Common.applyStyle(title, "textview_default", 4);
 		layout.addView(title);
 		add = new G.TextView(ctx);
-		// add.setTypeface(self.iconFont); // 设置字体
 		add.setText("+ 添加组件");
 		add.setSingleLine(true);
 		add.setPadding(10 * G.dp, 10 * G.dp, 10 * G.dp, 10 * G.dp);
@@ -1019,7 +985,6 @@
 		layout.addView(list);
 		if (onReset) {
 			reset = new G.TextView(ctx);
-			// reset.setTypeface(self.iconFont); // 设置字体
 			reset.setLayoutParams(new G.TableLayout.LayoutParams(-1, -2));
 			reset.setText("重置参数");
 			reset.setGravity(G.Gravity.CENTER);
@@ -1032,7 +997,6 @@
 			layout.addView(reset);
 		}
 		exit = new G.TextView(ctx);
-		// exit.setTypeface(self.iconFont); // 设置字体
 		exit.setLayoutParams(new G.LinearLayout.LayoutParams(-1, -2));
 		exit.setText("确定");
 		exit.setGravity(G.Gravity.CENTER);

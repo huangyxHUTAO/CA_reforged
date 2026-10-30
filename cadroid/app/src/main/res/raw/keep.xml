@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  资源压缩（shrinkResources）的保留清单。
+
+  drawable/icon 只被 JS 脚本按名字引用：
+      com.xero.ca.R.drawable.icon
+  静态分析看不到这种引用，不写在这里会被裁掉，
+  运行时表现为“关于命令助手”页面的图标消失。
+
+  注意：脚本里引用的其它资源都是 android.R.*（系统资源），不受影响。
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/icon" />

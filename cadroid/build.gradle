@@ -1,16 +1,20 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
+    // AGP 9 的内置 Kotlin 版本绑在 AGP 自身（9.4.1 → Kotlin 2.2.10），
+    // 没有可配置项，只能强制覆盖编译器版本。失败就删掉这段。
+    configurations.classpath {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.21'
+            force 'org.jetbrains.kotlin:kotlin-compiler-embeddable:2.4.21'
+        }
+    }
+
 
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:9.4.1'
     }
 }
 
@@ -21,6 +25,7 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register('clean', Delete) {
+    // Gradle 9 起 Project.buildDir 弃用，改用 layout.buildDirectory（Provider）
+    delete rootProject.layout.buildDirectory
 }

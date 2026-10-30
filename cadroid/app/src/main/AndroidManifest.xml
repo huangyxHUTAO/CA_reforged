@@ -2,15 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- targetSdk 34 起：前台服务必须声明类型，并申请对应类型权限 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
@@ -23,12 +29,14 @@
 
     <application
         android:name=".XApplication"
+        android:allowBackup="false"
+        android:supportsRtl="true"
         android:icon="@mipmap/icon_small"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="n">
+        tools:replace="android:allowBackup" >
+        <profileable android:shell="true" />
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -49,7 +57,7 @@
             android:excludeFromRecents="true" />
         <activity
             android:name=".AddLibraryActivity"
-            android:label="@string/addlib_name"
+            android:label="@string/addle_name"
             android:theme="@style/AppTheme.Translucent"
             android:exported="true">
             <intent-filter>
@@ -67,7 +75,7 @@
         </activity>
         <activity
             android:name=".EditCommandActivity"
-            android:label="@string/editcmd_name"
+            android:label="@string/edited_name"
             android:theme="@style/AppTheme.Translucent"
             android:exported="true">
             <intent-filter>
@@ -91,12 +99,12 @@
             android:excludeFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout" />
         <activity android:name=".ReturnDataActivity"
-            android:taskAffinity="com.huangyx.ca.ReturnDataTask"
+            android:taskAffinity="${applicationId}.ReturnDataTask"
             android:autoRemoveFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme.Translucent" />
         <activity android:name=".ForegroundTaskActivity"
-            android:taskAffinity="com.huangyx.ca.ForegroundTask"
+            android:taskAffinity="${applicationId}.ForegroundTask"
             android:autoRemoveFromRecents="true"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme.Translucent" />
@@ -104,32 +112,60 @@
             android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|screenLayout" />
 
-        <service android:name=".ScriptService" />
+        <!-- 优量汇的下载服务：SDK 自己声明的是 android:multiprocess="true"，
+             效果是"在调用它的进程里运行"= 我们的主进程。它做网络下载，
+             一旦慢就阻塞主线程，实测触发过 ANR：
+               Reason: executing service com.xero.ca/com.qq.e.comm.DownloadService
+             把它固定到独立进程后，即使它卡住也不影响主界面。 -->
+        <service
+            android:name="com.qq.e.comm.DownloadService"
+            android:process=":gdt"
+            android:multiprocess="false"
+            tools:node="merge"
+            tools:replace="android:multiprocess" />
+
+        <service android:name=".ScriptService"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="script_runtime" />
+        </service>
         <service
             android:name=".AccessibilitySvc"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
             <meta-data
-                android:name="android.accessibilityservice"
+                android:name="android.accessibility-service"
                 android:resource="@xml/accessible_service_config" />
         </service>
+        <!-- GameBridge 由运行在游戏进程里的适配器（其他 App）通过 bindService 绑定，
+             必须 exported=true；原先的 android:permission="TODO" 是个占位符，
+             没有任何应用能持有该权限，会让适配器完全连不上 -->
+        <!-- 注意：不要再加 android:permission。IDE 对 ExportedService 警告的
+             "添加权限" 快速修复会插入 permission="TODO"，那样适配器绑不上。
+             这里用 tools:ignore 压掉 lint，而不是加权限。 -->
         <service android:name=".GameBridgeService"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
-                <action android:name="com.huangyx.ca.GameBridge" />
+                <action android:name="com.xero.ca.GameBridge" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
         <service android:name=".ScriptActionService" />
+        <!-- TileService 是 API 24 才有的，但 minSdk 是 21：
+             低版本系统不会去实例化这个组件（没有快捷设置磁贴），
+             类本身也标了 @RequiresApi(24)，所以声明在这里是安全的 -->
         <service
             android:name=".ScriptTileService"
             android:label="@string/app_name"
             android:icon="@drawable/tile_icon"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-            android:exported="false">
+            android:exported="false"
+            tools:targetApi="24">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
@@ -144,8 +180,8 @@
         </receiver>
 		
 		<provider
-            android:name="com.huangyx.ca.UnsafeFileProvider"
-            android:authorities="com.huangyx.ca.UnsafeFileProvider"
+            android:name="com.xero.ca.UnsafeFileProvider"
+            android:authorities="${applicationId}.UnsafeFileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
         </provider>

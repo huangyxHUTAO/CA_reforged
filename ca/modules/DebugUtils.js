@@ -1,5 +1,5 @@
 MapScript.loadModule("DebugUtils", {
-	showDebugDialog : function self(iface) {G.ui(function() {try {
+	showDebugDialog : function self(interface) {G.ui(function() {try {
 		var lastInterface;
 		if (!self.main) {
 			self.LINE_LIMIT = 200;
@@ -139,10 +139,7 @@ MapScript.loadModule("DebugUtils", {
 					_fs.println(_t);
 					_fs.close();
 					try {
-						AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_SEND)
-							.setType("text/plain")
-							.putExtra(android.content.Intent.EXTRA_STREAM, AndroidBridge.fileToUri(_file))
-							.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION | android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION | android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+						AndroidBridge.sendFile(_file);
 					} catch(e) {
 						Common.toast("文件已生成于" + _file.getAbsolutePath());
 					}
@@ -247,7 +244,7 @@ MapScript.loadModule("DebugUtils", {
 			PWM.registerResetFlag(self, "main");
 		}
 		lastInterface = self.interface;
-		self.interface = iface || self.defaultInterface;
+		self.interface = interface || self.defaultInterface;
 		self.interface.setPrinter(self.print.bind(self));
 		if (self.interface != lastInterface) {
 			self.cls();

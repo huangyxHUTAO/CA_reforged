@@ -1,0 +1,585 @@
+{
+	"$schema": "https://ca.projectxero.top/clib/schema_v1.json",
+	"name": "补充命令库",
+	"author": "CA制作组",
+	"description": "该命令库是默认命令库的补充，包括了与核心玩法无关的命令。",
+	"uuid": "590cdcb5-3cdf-42fa-902c-b578779335ab",
+	"version": [
+		1,
+		21,
+		0,
+		21
+	],
+	"require": [
+		{
+			"uuid": "acf728c5-dd5d-4a38-b43d-7c4f18149fbd",
+			"min": [
+				1,
+				21,
+				0,
+				21
+			]
+		}
+	],
+	"minSupportVer": "0.15.90.0",
+	"minCAVersion": "2023-11-15",
+	"commands": {},
+	"enums": {
+		"gametest_rotation": {
+			"0": "[默认]不旋转",
+			"1": "旋转90°",
+			"2": "旋转180°",
+			"3": "旋转270°"
+		}
+	},
+	"selectors": {},
+	"help": {},
+	"versionPack": {
+		"0.16.0": {
+			"commands": {
+				"connect": {
+					"alias": "wsserver"
+				},
+				"deop": {
+					"description": "撤销玩家的管理员身份",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/deop"
+				},
+				"list": {
+					"description": "列出服务器上在线的玩家",
+					"noparams": {},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/list"
+				},
+				"op": {
+					"description": "给予一位玩家管理员身份",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/op"
+				},
+				"wsserver": {
+					"description": "尝试连接到指定的WebSocket服务器上",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "text",
+									"name": "服务器URL"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/wsserver"
+				}
+			},
+			"minSupportVer": "0.15.90.0"
+		},
+		"transferserver": {
+			"commands": {
+				"transferserver": {
+					"description": "将玩家转送至另一服务器",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "string",
+									"name": "服务器地址"
+								},
+								{
+									"type": "uint",
+									"name": "端口号"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/transferserver"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.0.3.0",
+					"exclusiveMax": "1.2.0.2"
+				}
+			]
+		},
+		"1.1": {
+			"commands": {
+				"setmaxplayers": {
+					"description": "设置可加入多人联机游戏的玩家数量上限",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "uint",
+									"name": "数量上限"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/setmaxplayers"
+				}
+			},
+			"minSupportVer": "1.1.0.55"
+		},
+		"mixer": {
+			"commands": {
+				"mixer": {
+					"description": "Mixer交互性控制[需安装Mixer]",
+					"patterns": {
+						"start": {
+							"description": "启动Mixer交互会话",
+							"params": [
+								{
+									"type": "plain",
+									"name": "start",
+									"prompt": "启动Mixer交互会话"
+								},
+								{
+									"type": "uint",
+									"name": "版本ID"
+								},
+								{
+									"type": "string",
+									"name": "分享码",
+									"optional": true
+								}
+							]
+						},
+						"stop": {
+							"description": "停止Mixer交互会话",
+							"params": [
+								{
+									"type": "plain",
+									"name": "stop",
+									"prompt": "停止Mixer交互会话"
+								}
+							]
+						},
+						"scene": {
+							"description": "切换Mixer交互场景",
+							"params": [
+								{
+									"type": "plain",
+									"name": "scene",
+									"prompt": "切换Mixer交互场景"
+								},
+								{
+									"type": "string",
+									"name": "场景名"
+								}
+							]
+						}
+					},
+					"help": "https://blog.mixer.com/minecraft"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.2.5.12",
+					"exclusiveMax": "1.16.210.53"
+				},
+				{
+					"min": "1.16.210.54",
+					"exclusiveMax": "1.16.210.58"
+				}
+			]
+		},
+		"1.10.0.3": {
+			"commands": {
+				"videostream": {
+					"description": "尝试连接到一个WebSocket服务器以发送视频流",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "string",
+									"name": "服务器URL"
+								},
+								{
+									"type": "float",
+									"name": "截屏发送频率"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/videostream"
+				},
+				"videostreamaction": {
+					"description": "执行一个视频流操作",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "enum",
+									"name": "操作名",
+									"list": {
+										"none": "",
+										"close": ""
+									}
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/videostreamaction"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.10.0.3",
+					"exclusiveMax": "1.16.0.57"
+				}
+			]
+		},
+		"1.12.0.2": {
+			"commands": {
+				"videostream": {
+					"patterns": {
+						"withResolution": {
+							"params": [
+								{
+									"type": "string",
+									"name": "服务器URL"
+								},
+								{
+									"type": "float",
+									"name": "截屏发送频率"
+								},
+								{
+									"type": "int",
+									"name": "横向分辨率"
+								},
+								{
+									"type": "int",
+									"name": "纵向分辨率"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.12.0.2",
+					"exclusiveMax": "1.16.0.57"
+				}
+			]
+		},
+		"1.19.40.22": {
+			"commands": {
+				"gametest": {
+					"description": "管理GameTest框架",
+					"patterns": {
+						"clearall": {
+							"description": "清除全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "clearall",
+									"prompt": "清除全部测试"
+								}
+							]
+						},
+						"create": {
+							"description": "创建一个测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "create",
+									"prompt": "创建测试"
+								},
+								{
+									"type": "string",
+									"name": "测试名"
+								},
+								{
+									"type": "uint",
+									"name": "长",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "宽",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "高",
+									"optional": true
+								}
+							]
+						},
+						"pos": {
+							"description": "查看面向方块相对于测试原点的位置",
+							"params": [
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "查看面向方块的相对位置"
+								}
+							]
+						},
+						"run_default": {
+							"description": "运行指定的测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "run",
+									"prompt": "运行测试"
+								},
+								{
+									"type": "string",
+									"name": "测试名"
+								},
+								{
+									"type": "enum",
+									"name": "失败即停止",
+									"list": "bool"
+								},
+								{
+									"type": "uint",
+									"name": "重复次数"
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						},
+						"run_short": {
+							"description": "运行指定的测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "run",
+									"prompt": "运行测试"
+								},
+								{
+									"type": "string",
+									"name": "测试名"
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						},
+						"runset": {
+							"description": "运行指定的测试集合",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runset",
+									"prompt": "运行测试集合"
+								},
+								{
+									"type": "string",
+									"name": "测试集合名",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						},
+						"runthese": {
+							"description": "运行附近的全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runthese",
+									"prompt": "运行附近的全部测试"
+								}
+							]
+						},
+						"runthis": {
+							"description": "运行最近的测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runthese",
+									"prompt": "运行最近的测试"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/gametest"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.40.02",
+					"max": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.22"
+				}
+			]
+		},
+		"1.19.70.21": {
+			"commands": {
+				"script": {
+					"description": "管理GameTest脚本",
+					"patterns": {
+						"debugger_close": {
+							"description": "与调试器断开连接",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger close",
+									"prompt": "与调试器断开连接"
+								}
+							]
+						},
+						"debugger_connect": {
+							"description": "连接调试器",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger connect",
+									"prompt": "连接调试器"
+								},
+								{
+									"type": "string",
+									"name": "服务器地址",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "端口号",
+									"optional": true
+								}
+							]
+						},
+						"debugger_listen": {
+							"description": "监听并等待调试器连接",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger listen",
+									"prompt": "监听并等待调试器连接"
+								},
+								{
+									"type": "uint",
+									"name": "端口号"
+								}
+							]
+						},
+						"profiler_start": {
+							"description": "启动脚本性能分析",
+							"params": [
+								{
+									"type": "plain",
+									"name": "profiler start",
+									"prompt": "启动脚本性能分析"
+								}
+							]
+						},
+						"profiler_stop": {
+							"description": "停止脚本性能分析",
+							"params": [
+								{
+									"type": "plain",
+									"name": "profiler stop",
+									"prompt": "停止脚本性能分析"
+								}
+							]
+						},
+						"watchdog_exportstats": {
+							"description": "导出看门狗计时器统计数据",
+							"params": [
+								{
+									"type": "plain",
+									"name": "watchdog exportstats",
+									"prompt": "导出看门狗计时器统计数据"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/script"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.70.02",
+					"max": "1.19.70.02"
+				},
+				{
+					"min": "1.19.70.21"
+				}
+			]
+		},
+		"1.19.80.22": {
+			"commands": {
+				"gametest": {
+					"patterns": {
+						"runsetuntilfail": {
+							"description": "运行指定的测试集合，直至失败",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runsetuntilfail",
+									"prompt": "运行测试集合，直至失败"
+								},
+								{
+									"type": "string",
+									"name": "测试集合名",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						},
+						"stopall": {
+							"description": "停止全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "stopall",
+									"prompt": "停止全部测试"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.80.02",
+					"max": "1.19.80.02"
+				},
+				{
+					"min": "1.19.80.22"
+				}
+			]
+		}
+	}
+}

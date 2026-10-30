@@ -1,7 +1,27 @@
 {
-  "devDependencies": {
-    "@babel/cli": "^7.28.3",
-    "@babel/core": "^7.28.3",
-    "@babel/preset-env": "^7.28.3"
+  "name": "ca",
+  "version": "1.2.14",
+  "private": true,
+  "workspaces": [
+    "cabuildtools"
+  ],
+  "engines": {
+    "npm": ">=7.0.0"
+  },
+  "scripts": {
+    "build": "node ./cabuildtools/main.js buildRelease",
+    "buildSnapshot": "node ./cabuildtools/main.js buildSnapshot",
+    "postinstall": "node scripts/check-legacy.js",
+    "gradlew": "node ./cabuildtools/gradlew.js",
+    "help": "node ./cabuildtools/main.js help",
+    "pack": "node ./cabuildtools/libtool.js pack",
+    "unpack": "node ./cabuildtools/libtool.js unpack",
+    "libinfo": "node ./cabuildtools/libtool.js info",
+    "caaccel": "node ./caaccel/cli.js build",
+    "caaccel:test": "node ./caaccel/cli.js test",
+    "caaccel:bench": "node ./caaccel/cli.js bench",
+    "test": "node ./cabuildtools/tests/async-transform.test.js && node ./cabuildtools/tests/loader-ast.test.js",
+    "deps": "node ./cabuildtools/deps.js check",
+    "deps:update": "node ./cabuildtools/deps.js update"
   }
 }

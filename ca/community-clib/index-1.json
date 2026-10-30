@@ -1,0 +1,97 @@
+{
+	"pageNo": 1,
+	"sourceId": "eaa81e22-1b06-4429-ba89-86b31b154ed3",
+	"nextPage": null,
+	"content": [
+		{
+			"name": "JSON文本插入",
+			"author": "工程师_多多",
+			"description": "为Tellraw或Titleraw插入JSON文本\n请将本json置于有Tellraw或Titleraw命令的json之下(含默认命令库)\n\n支持的版本:1.9.0.0+",
+			"uuid": "d436a434-61ee-485a-947e-c7a52d8dbca9",
+			"version": [
+				1,
+				1,
+				3
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/d436a434-61ee-485a-947e-c7a52d8dbca9.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/d436a434-61ee-485a-947e-c7a52d8dbca9.json",
+			"sha1": "NAAHxy/sAWSKd5pz2h6nHoVSujg=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "Mooncell",
+			"author": "Tamamo",
+			"description": "该拓展包内置：\n1. 各种网站的转链链接\n2. hasitem选择器(有点小bug,但影响不大)\n3. scores选择器\n4. 槽位描述\n5. tellraw和titleraw的json插入",
+			"uuid": "060315b5-5c10-4e90-af4d-cdce36776e0d",
+			"version": [
+				1,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/060315b5-5c10-4e90-af4d-cdce36776e0d.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/060315b5-5c10-4e90-af4d-cdce36776e0d.json",
+			"sha1": "7VxBpHGEcuTMbDIvi4AlCaNpKQU=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "name 拓展",
+			"author": "工程师_多多",
+			"description": "更新了item_lang文件",
+			"uuid": "a1b2c7de-b1ca-1347-9ab2-9ab56dc12492",
+			"version": [
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/a1b2c7de-b1ca-1347-9ab2-9ab56dc12492.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/a1b2c7de-b1ca-1347-9ab2-9ab56dc12492.json",
+			"sha1": "IJkplHcRFUfDYjXqpefJTH41/QQ=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "tellraw插入json",
+			"author": "bvlv",
+			"description": "插入json,也可以把json复制到titleraw",
+			"uuid": "299168d4-61ee-485a-947e-c7a52d8dbca9",
+			"version": [
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/299168d4-61ee-485a-947e-c7a52d8dbca9.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/299168d4-61ee-485a-947e-c7a52d8dbca9.json",
+			"sha1": "me0EOo368eXRzIhjLNdOEUpmd4Y=",
+			"mtime": 1793195168438
+		},
+		{
+			"name": "tellraw示例",
+			"author": "狙踢",
+			"description": "一个功能",
+			"uuid": "37f13ab9-6e83-4103-8199-faeabba3a3d9",
+			"version": [
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/37f13ab9-6e83-4103-8199-faeabba3a3d9.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/37f13ab9-6e83-4103-8199-faeabba3a3d9.json",
+			"sha1": "Si3UdwVrrymbwpHGXvBgjW8xSMg=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "translate语言文件",
+			"author": "工程师_多多",
+			"description": "为tellraw或titleraw的translate填加可供参考的翻译文件\n请将本json放置于含有tellraw或titleraw的json组件的json之下\n\n支持的版本:1.19.10.05+",
+			"uuid": "5d28d1c7-3d53-46b5-9b0c-dd1f447d3ee7",
+			"version": [
+				1,
+				0,
+				0
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d28d1c7-3d53-46b5-9b0c-dd1f447d3ee7.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d28d1c7-3d53-46b5-9b0c-dd1f447d3ee7.json",
+			"sha1": "+2NOtTaDEnfCwSrp+ZnGliVBWTg=",
+			"mtime": 1793195168438
+		}
+	]
+}

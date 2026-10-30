@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Lint 抑制清单：只压制"确认过是无害噪音"的检查项，其他保持开启。
+
+  分类说明：
+  1. UnusedAttribute  —— 高版本属性在低版本被忽略，属于预期行为
+  2. IconLocation / IconLauncherShape —— 图标是历史设计，暂不重做
+  3. UseKtx / UseCompoundDrawables  —— 需要引入 androidx.core-ktx 或改布局，
+     收益只是代码风格，暂不做
+-->
+<lint>
+    <!-- networkSecurityConfig（API 24+）、profileable shell（API 29+）：
+         低版本系统直接忽略这些属性，不是错误 -->
+    <issue id="UnusedAttribute" severity="ignore" />
+
+    <!-- 位图放在无密度目录（icon.png / tile_icon.png）：
+         这是历史资源，改动会影响各机型显示效果，暂不动 -->
+    <issue id="IconLocation" severity="ignore" />
+    <issue id="IconLauncherShape" severity="ignore" />
+
+    <!-- 提示用 SharedPreferences.edit { } 扩展函数，需要额外引 androidx.core-ktx；
+         当前项目没这个依赖，为了 5 行代码加一个包不划算 -->
+    <issue id="UseKtx" severity="ignore" />
+
+    <!-- layout 里 TextView + 图标可以换成 compound drawable：纯布局微优化 -->
+    <issue id="UseCompoundDrawables" severity="ignore" />
+    <!-- base-config 允许明文流量：优量汇（GDT）广告 SDK 的素材/上报走 http，
+         收紧成按域名放行需要逐个摸清它的域名列表，风险大于收益 -->
+    <issue id="InsecureBaseConfiguration" severity="ignore" />
+
+</lint>

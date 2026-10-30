@@ -1,0 +1,632 @@
+{
+    "name": "execute",
+    "author": "工程师_多多",
+    "description": "将execute替换为1.19.10.05格式\n\n请使用命令助手1.2.14版本打开",
+    "uuid": "d436a555-61ee-485a-947e-c7a52d8dbca9",
+    "version": [
+        1,
+        0,
+        0
+    ],
+    "require": [],
+    "versionPack": {
+        "1.18.10.26": {
+            "selectors": {
+                "hasitem": {
+                    "type": "string",
+                    "name": "拥有的物品"
+                }
+            }
+        },
+        "1.19.10.05_remove_execute": {
+            "commands": {
+                "execute": {
+                    "patterns": {
+                        "default": {},
+                        "detect": {}
+                    }
+                }
+            },
+            "minSupportVer": "1.19.10.05",
+            "mode": "remove",
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "1.19.10.05": {
+            "commands": {
+                "execute": {
+                    "description": "更改命令执行的主体、位置与朝向",
+                    "patterns": {
+                        "run": {
+                            "description": "执行命令",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "run",
+                                    "prompt": "执行命令"
+                                },
+                                {
+                                    "type": "command",
+                                    "name": "命令"
+                                }
+                            ]
+                        },
+                        "as": {
+                            "description": "改变执行主体",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "as",
+                                    "prompt": "改变执行主体"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "as_debug": {
+                            "description": "改变执行主体",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "as",
+                                    "prompt": "改变执行主体"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "目标"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "at": {
+                            "description": "改变执行位置与朝向",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "at",
+                                    "prompt": "改变执行位置与朝向"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "at_debug": {
+                            "description": "改变执行位置与朝向",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "at",
+                                    "prompt": "改变执行位置与朝向"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "目标"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "positioned": {
+                            "description": "改变执行位置",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "positioned",
+                                    "prompt": "改变执行位置"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "positioned_as": {
+                            "description": "改变执行位置",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "positioned",
+                                    "prompt": "改变执行位置"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "as",
+                                    "prompt": "……到目标位置"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "positioned_as_debug": {
+                            "description": "改变执行位置",
+                            "params": [
+                                {
+                                    "type": "plain",
+                                    "name": "positioned",
+                                    "prompt": "改变执行位置"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "as",
+                                    "prompt": "……到目标位置"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "目标"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_block": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块ID",
+                                    "suggestion": "block"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_block_withData": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块ID",
+                                    "suggestion": "block"
+                                },
+                                {
+                                    "type": "int",
+                                    "name": "数据值"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_block_withBlockState": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块ID",
+                                    "suggestion": "block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_blocks": {
+                            "description": "区域内方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "blocks",
+                                    "prompt": "指定区域的方块满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:x",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:y",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "位置:z",
+                                    "suggestion": "pos"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "匹配模式",
+                                    "list": "testforblocks_mode"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_entity": {
+                            "description": "满足条件的实体存在时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "entity",
+                                    "prompt": "实体满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_entity_debug": {
+                            "description": "满足条件的实体存在时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "entity",
+                                    "prompt": "实体满足……"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "目标"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_score_compare": {
+                            "description": "记分项分数满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "score",
+                                    "prompt": "记分项分数满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "前者",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "前者记分项"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "比较方式",
+                                    "list": "scoreboard_compare_operators"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "后者",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "后者记分项"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_score_matches": {
+                            "description": "记分项分数满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "score",
+                                    "prompt": "记分项分数满足……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标",
+                                    "suggestion": "target"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标记分项"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "matches",
+                                    "prompt": "在范围……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "范围"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_score_compare_debug": {
+                            "description": "记分项分数满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "score",
+                                    "prompt": "记分项分数满足……"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "前者"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "前者记分项"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "比较方式",
+                                    "list": "scoreboard_compare_operators"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "后者"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "后者记分项"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        },
+                        "conditional_score_matches_debug": {
+                            "description": "记分项分数满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "score",
+                                    "prompt": "记分项分数满足……"
+                                },
+                                {
+                                    "type": "selector",
+                                    "name": "目标"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "目标记分项"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "matches",
+                                    "prompt": "在范围……"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "范围"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "enums": {
+                "execute_conditional": {
+                    "if": "条件满足……",
+                    "unless": "条件不满足……"
+                }
+            },
+            "minSupportVer": "1.19.10.20",
+            "selectors": {},
+            "help": {}
+        }
+    }
+}

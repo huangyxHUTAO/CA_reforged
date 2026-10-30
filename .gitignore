@@ -14,8 +14,8 @@
 /ca-web/node_modules/
 /ca-web/dist/
 
-# ./cabuildtools 目录
-/cabuildtools/node_modules/
+# ca/cabuildtools 的依赖目录（构建工具现在在 ca/ 子树里）
+/ca/cabuildtools/node_modules/
 
 # ./cadroid 目录 (Android项目)
 /cadroid/.gradle/

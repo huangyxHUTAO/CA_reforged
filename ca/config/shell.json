@@ -1,0 +1,14 @@
+{
+	"shellPath": null,
+	"androidSdk": null,
+	"javaHome": null,
+	"buildToolVersion": "34.0.0",
+	"dexPath": "./app/build/intermediates/dex/release/minifyReleaseWithR8/classes.dex",
+	"releaseSignPath": "./app/signatures/release.signature",
+	"debugSignPath": "./app/signatures/debug.signature",
+	"hotfixPrivateKey": "./app/signatures/privateKey.pem",
+	"keystorePath": "./app/signatures/release.keystore",
+	"keyPasswordPath": "./app/signatures/release.password",
+	"lineagePath": null,
+	"lineageSigners": []
+}

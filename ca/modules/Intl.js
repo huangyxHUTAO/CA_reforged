@@ -109,7 +109,10 @@ MapScript.loadModule("Intl", {
 		if (typeof o == "object") {
 			for (i in o) {
 				oldValue = target[i];
-				if (oldValue instanceof this.Namespace) {
+				// Namespace 是普通对象（不是构造函数），不能用 instanceof：
+				// Rhino 1.7 里非可调用的右操作数会静默返回 false（这段分支其实是死代码），
+				// Rhino 1.9 按 ES6 规范抛 TypeError。用 isPrototypeOf 表达真实意图。
+				if (oldValue && this.Namespace.isPrototypeOf(oldValue)) {
 					this.mixNamespace(o[i], oldValue);
 				} else {
 					target[i] = this.cloneNamespace(o[i]);

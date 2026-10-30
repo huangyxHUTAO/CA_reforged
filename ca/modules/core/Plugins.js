@@ -109,7 +109,11 @@ MapScript.loadModule("Plugins", {
 			require : o.require,
 			update : o.update,
 			menu : o.menu,
-			noCommand : o.noCommand
+			noCommand : o.noCommand,
+			// 安装器标记：这类包执行完就只留列表条目，不重新执行、不参与更新检查
+			installer : o.installer === true,
+			// 安装器用：桌面快捷方式的名字（用于「重新创建快捷方式」）
+			shortcutName : o.shortcutName
 		};
 		if (!CA.settings.moduleSettings) CA.settings.moduleSettings = {};
 		if (!CA.settings.moduleSettings[o.uuid]) CA.settings.moduleSettings[o.uuid] = {};

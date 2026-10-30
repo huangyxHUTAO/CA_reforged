@@ -1,0 +1,13 @@
+@id wsagent
+@name WebSocket命令库
+@author ProjectXero
+@source main.json
+@uuid 17e3d453-acc9-48a2-9806-f516235ceccd
+@version 1.0.0
+@versionCode [1, 0, 0]
+@description
+本命令库包含了只有启用WebSocket服务器并成功连接才能远程执行的命令
+@end description
+@requirement
+请确认您会使用命令助手的WebSocket服务器并能成功连接后再下载
+@end requirement

@@ -3,11 +3,11 @@ name: cabuildtools test
 on:
   push:
     paths:
-      - "cabuildtools/**"
+      - "ca/cabuildtools/**"
       - ".github/workflows/cabuildtools-test.yml"
   pull_request:
     paths:
-      - "cabuildtools/**"
+      - "ca/cabuildtools/**"
       - ".github/workflows/cabuildtools-test.yml"
   workflow_dispatch:
 
@@ -25,10 +25,13 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
-        working-directory: cabuildtools
+        working-directory: ca/cabuildtools
         run: npm install --no-audit --no-fund
 
-      # 两套测试（AST 加载器 / async 转译）都是独立脚本，直接跑即可
+        # ca/cabuildtools（来自 CA 仓库）的 package.json 还是上游的占位 test 脚本，
+        # 这两套测试都是独立 node 脚本，直接跑；等 CA 仓库补上 npm test 后可改回 npm test
       - name: Run tests
-        working-directory: cabuildtools
-        run: npm test
+        working-directory: ca/cabuildtools
+        run: |
+          node tests/async-transform.test.js
+          node tests/loader-ast.test.js

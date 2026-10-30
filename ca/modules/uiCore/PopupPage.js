@@ -69,9 +69,6 @@ MapScript.loadModule("PopupPage", (function() {
 			r.titleView.setText("CA");
 			r.titleView.setPadding(5 * G.dp, 5 * G.dp, 5 * G.dp, 5 * G.dp);
 			r.titleView.setSingleLine(true);
-			// 这里执行时 Common.theme 可能还没加载，applyStyle 会被跳过，
-			// 所以直接给安全色，避免落入 ColorOS 默认颜色链路
-			Common.setTextColor(r.titleView, Common.theme ? Common.theme.textcolor : Common.argbInt(0xff, 0, 0, 0));
 			r.titleView.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2, 1));
 			r.titleView.setOnTouchListener(new G.View.OnTouchListener({onTouch : function touch(v, e) {try {
 				switch (e.getAction()) {
@@ -102,7 +99,6 @@ MapScript.loadModule("PopupPage", (function() {
 			r.resizeView.setPadding(5 * G.dp, 5 * G.dp, 5 * G.dp, 5 * G.dp);
 			r.resizeView.setSingleLine(true);
 			r.resizeView.setGravity(G.Gravity.RIGHT);
-			Common.setTextColor(r.resizeView, Common.theme ? Common.theme.textcolor : Common.argbInt(0xff, 0, 0, 0));
 			r.resizeView.setLayoutParams(new G.LinearLayout.LayoutParams(-2, -2));
 			r.resizeView.setOnTouchListener(new G.View.OnTouchListener({onTouch : function touch(v, e) {try {
 				switch (e.getAction()) {
@@ -163,7 +159,6 @@ MapScript.loadModule("PopupPage", (function() {
 			r.defaultStub.setGravity(G.Gravity.CENTER);
 			r.defaultStub.setPadding(20 * G.dp, 20 * G.dp, 20 * G.dp, 20 * G.dp);
 			r.defaultStub.setText("拖动右上角方块调整大小\n长按右上角方块隐藏顶栏");
-			Common.setTextColor(r.defaultStub, Common.theme ? Common.theme.promptcolor : Common.argbInt(0xff, 0, 0, 0));
 			r.defaultDecorLinear.addView(r.defaultStub);
 			r.defaultWindow.addView(r.defaultDecorLinear);
 			r.floatWindow = r.floatContainer = ScriptInterface.createFrameLayout({
@@ -199,20 +194,19 @@ MapScript.loadModule("PopupPage", (function() {
 			} catch(e) {erp(e)}}}));
 			r.thread = java.lang.Thread.currentThread();
 		} catch(e) {erp(e)}})}
-        // 已移除统计功能相关代码
-        r.checkThread = function() {
-            var th = java.lang.Thread.currentThread();
-            if (r.thread) {
-                if (r.thread != th) {
-                    Log.throwError(new Error("You can only touch page on " + r.thread + " instead of " + th + "."));
-                }
-            } else {
-                if (ctx.getMainLooper() != android.os.Looper.myLooper()) {
-                    Log.throwError(new Error("You can only touch page on mainLooper thread of Context " + ctx + " instead of " + th + "."));
-                }
-         
+		r.analytics = ScriptInterface.getAnalyticsPlatform();
+		r.checkThread = function() {
+			var th = java.lang.Thread.currentThread();
+			if (r.thread) {
+				if (r.thread != th) {
+					Log.throwError(new Error("You can only touch page on " + r.thread + " instead of " + th + "."));
+				}
+			} else {
+				if (ctx.getMainLooper() != android.os.Looper.myLooper()) {
+					Log.throwError(new Error("You can only touch page on mainLooper thread of Context " + ctx + " instead of " + th + "."));
+				}
 			}
-        }
+		}
 		r.updateDefault = function() {
 			if (this.fullscreen || this.locked) {
 				this.headerView.setVisibility(G.View.GONE);
@@ -502,7 +496,8 @@ MapScript.loadModule("PopupPage", (function() {
 			if (this.busy) return void Log.d("pushPage(" + name + "," + page + ") cancelled");
 			if (stack.length) {
 				t = stack[stack.length - 1];
-                if (page.currentContainer != this.defaultContainer || this.visible) {
+				this.analytics.onPageEnd(ctx, t.name);
+				if (page.currentContainer != this.defaultContainer || this.visible) {
 					t.page.trigger("pause");
 					if (this.debugPrint) Log.d(t.page + " paused");
 				}
@@ -512,7 +507,8 @@ MapScript.loadModule("PopupPage", (function() {
 				page : page
 			});
 			page.trigger("enter");
-            if (this.debugPrint) Log.d(t.page + " entered");
+			this.analytics.onPageStart(ctx, name);
+			if (this.debugPrint) Log.d(t.page + " entered");
 			this.trigger("pushPage", name, page);
 		}
 		r.popPage = function(page) {
@@ -524,10 +520,12 @@ MapScript.loadModule("PopupPage", (function() {
 				t = stack[i];
 				stack.splice(i, 1);
 				t.page.trigger("exit");
-                if (this.debugPrint) Log.d(t.page + " exited");
+				this.analytics.onPageEnd(ctx, t.name);
+				if (this.debugPrint) Log.d(t.page + " exited");
 				if (i > 0 && i == stack.length) {
 					t = stack[i - 1];
-                    if (page.currentContainer != this.defaultContainer || this.visible) {
+					this.analytics.onPageStart(ctx, t.name);
+					if (page.currentContainer != this.defaultContainer || this.visible) {
 						t.page.trigger("resume");
 						if (this.debugPrint) Log.d(t.page + " resumed");
 					}
@@ -622,12 +620,14 @@ MapScript.loadModule("PopupPage", (function() {
 				for (i = this.floatStack.length - 1; i >= 0; i--) {
 					e = this.floatStack[i];
 					e.page.trigger("exit");
+					this.analytics.onPageEnd(ctx, e.name);
 					this.hidePage(e.page, true);
 					e.page.showing = false;
 				}
 				for (i = this.defaultStack.length - 1; i >= 0; i--) {
 					e = this.defaultStack[i];
 					e.page.trigger("exit");
+					this.analytics.onPageEnd(ctx, e.name);
 					this.hidePage(e.page, true);
 					e.page.showing = false;
 				}

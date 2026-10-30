@@ -1,0 +1,10 @@
+# 依赖
+node_modules/
+
+# 日志
+*.log
+npm-debug.log*
+
+# 编辑器临时文件
+*.swp
+*~

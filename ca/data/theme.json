@@ -1,0 +1,19 @@
+{
+	"light": {
+		"nameKey": "common.theme.default"
+	},
+	"dark": {
+		"nameKey": "common.theme.dark",
+		"bgcolor": "#202020",
+		"float_bgcolor": "#404040",
+		"message_bgcolor": "#202020",
+		"textcolor": "#FFFFFF",
+		"promptcolor": "#C0C0C0",
+		"highlightcolor": "#FFFF00",
+		"criticalcolor": "#FFB040",
+		"go_bgcolor": "#616161",
+		"go_textcolor": "#FAFAFA",
+		"go_touchbgcolor": "#EEEEEE",
+		"go_touchtextcolor": "#000000"
+	}
+}

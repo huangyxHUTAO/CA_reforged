@@ -12,15 +12,12 @@
 		"settings": "Settings",
 		"webviewUnavailable": "Your device cannot load Android System WebView%n%n%s",
 		"theme": {
-			"light": "Light",
-			"dark": "Night",
-			"pink_theme": "Pink",
-			"blue_theme": "Blue",
-			"purple_theme": "Purple"
+			"default": "Default",
+			"dark": "Night"
 		},
 		"ChangeTheme": {
 			"title": "Choose Theme",
-			"currentTheme": "> %s <",
+			"currentTheme": "%s (current)",
 			"alphaField": "Opacity: %.0f%%",
 			"textsizeField": "Text size: %.0f%%"
 		},
@@ -63,6 +60,8 @@
 			"edit": "Edit",
 			"edit_desc": "Return to edit JSON",
 			"nowhereEditable": "Nowhere is editable",
+			"replace": "Replace",
+			"replace_desc": "Create a new JSON and replace the original",
 			"copy": "Copy",
 			"copy_desc": "Copy JSON value",
 			"copy_success": "JSON value copied",
@@ -107,26 +106,5 @@
 			"rename": "Rename",
 			"insertBefore": "Insert before"
 		}
-	},
-	"jsonLanguageService": {
-		"Expected a JSON object, array or literal.": "Expected a JSON object, array or literal.",
-		"End of file expected.": "End of file expected.",
-		"Value expected": "Value expected",
-		"Trailing comma": "Trailing comma",
-		"Expected comma": "Expected comma",
-		"Expected comma or closing bracket": "Expected comma or closing bracket",
-		"Expected comma or closing brace": "Expected comma or closing brace",
-		"Property keys must be doublequoted": "Property keys must be doublequoted",
-		"Duplicate object key": "Duplicate object key",
-		"Colon expected": "Colon expected",
-		"Property expected": "Property expected",
-		"Invalid number format.": "Invalid number format.",
-		"Invalid unicode sequence in string.": "Invalid unicode sequence in string.",
-		"Invalid escape character in string.": "Invalid escape character in string.",
-		"Unexpected end of number.": "Unexpected end of number.",
-		"Unexpected end of comment.": "Unexpected end of comment.",
-		"Unexpected end of string.": "Unexpected end of string.",
-		"Invalid characters in string. Control characters must be escaped.": "Invalid characters in string. Control characters must be escaped.",
-		"Unable to load schema from '{0}': No content.": "Unable to load schema from '{0}': No content."
 	}
 }

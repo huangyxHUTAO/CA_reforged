@@ -1,0 +1,680 @@
+{
+    "author": "Tiby",
+    "description": "包含实体事件，物品特殊值，titleraw文本\n同时也对部分内容进行了修改。交流群818571348，作者QQ1696993583",
+    "enums": {
+        "block": {
+            "0、4、8、12为四个方向": "告示牌特殊值",
+            "1-7为成熟成程度": "农作物特殊值",
+            "anvil": "铁砧 特殊值:\n0.铁砧（崭新出厂）\n1.轻微损坏的铁砧\n2.损坏的铁砧",
+            "banner": "旗帜 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "bed": "床 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "carpet": "地毯 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "cobblestone_wall": "墙 特殊值:\n0.圆石墙\n1.苔石墙\n2.花岗岩墙\n3.闪长岩墙\n4.安山岩墙\n5.砂岩墙\n6.砖块墙\n7.石砖墙\n8.苔石砖墙\n9.末地石砖墙\n10.地狱砖墙\n11.海晶石墙\n12.红砂岩墙\n13.红色地狱砖墙",
+            "concrete": "混凝土 特殊值:\n0为白色\n1为橙色\n2为品红色\n3为淡蓝色\n4为黄色\n5为黄绿色\n6为粉红色\n7为灰色\n8为淡灰色\n9为青色\n10为紫色\n11为蓝色\n12为褐色\n13为绿色\n14为红色\n15为黑色",
+            "concretepowder": "混凝土粉末 特殊值:\n0为白色\n1为橙色\n2为品红色\n3为淡蓝色\n4为黄色\n5为黄绿色\n6为粉红色\n7为灰色\n8为淡灰色\n9为青色\n10为紫色\n11为蓝色\n12为褐色\n13为绿色\n14为红色\n15为黑色",
+            "coral": "珊瑚 特殊值:\n0.管珊瑚（蓝）\n1.脑纹珊瑚（粉）\n2.气泡珊瑚（紫）\n3.火珊瑚（红）\n4.鹿角珊瑚（黄）",
+            "coral_block": "珊瑚块 特殊值:\n0.管珊瑚块（蓝）\n1.脑纹珊瑚块（粉）\n2.气泡珊瑚块（紫）\n3.火珊瑚块（红）\n4.鹿角珊瑚块（黄）\n5.失活的管珊瑚块\n6.失活的脑纹珊瑚块\n7.失活的气泡珊瑚块\n8.失活的火珊瑚块\n9.失活的鹿纹珊瑚块",
+            "coral_fan": "珊瑚扇 特殊值:\n0.管珊瑚扇（蓝）\n1.脑纹珊瑚扇（粉）\n2.气泡珊瑚扇（紫）\n3.火珊瑚扇（红）\n4.鹿角珊瑚扇（黄）",
+            "dead_coral_fan": "失活的珊瑚扇 特殊值:\n0.失活的管珊瑚扇（蓝）\n1.失活的脑纹珊瑚扇（粉）\n2.失活的气泡珊瑚扇（紫）\n3.失活的火珊瑚扇（红）\n4.失活的鹿角珊瑚扇（黄）",
+            "dirt": "泥土 特殊值:\n0.泥土\n1.砂土",
+            "double_plant": "双层植物（花丛） 特殊值:\n0.向日葵\n1.丁香\n2.双草丛\n3.大型蕨\n4.玫瑰从\n5.牡丹",
+            "double_stone_slab": "双石质台阶 特殊值:\n0.双（平滑）石台阶\n1.双砂岩台阶\n2.石质双木台阶（特性与石头相同）\n3.双圆石台阶\n4.双砖块台阶\n5.双石砖台阶\n6.双石英台阶\n7.双地狱砖台阶\n",
+            "double_stone_slab2": "双石质台阶（红砂岩到红色地狱砖） 特殊值:\n0.双红砂岩台阶\n1.双紫珀块台阶\n2.双海晶石台阶\n3.双海晶石砖台阶\n4.双暗海晶石台阶\n",
+            "double_stone_slab3": "双石质台阶（末地石到磨制花岗岩） 特殊值:\n0.双层末地石砖台阶\n1.双层平滑红砂岩台阶\n2.双层磨制安山岩台阶\n3.双层安山岩台阶\n4.双层闪长岩台阶\n5.双层磨制闪长岩台阶\n6.双层花岗岩台阶\n7.双层磨制花岗岩台阶\n",
+            "double_stone_slab4": "双石质台阶（苔石砖到切制红砂岩） 特殊值:\n0.双层苔石砖台阶\n1.双层平滑石英台阶\n2.双层石台阶\n3.双层切制砂岩台阶\n4.双层切制红砂岩台阶\n",
+            "double_wooden_slab": "双木质台阶 特殊值:\n0.双橡木台阶\n1.双云杉台阶\n2.双桦木台阶\n3.双丛林台阶\n4.双金合欢台阶\n5.双深色橡木台阶\n",
+            "fence": "木栅栏（不包括地狱砖栅栏）特殊值:\n0.橡木栅栏\n1.云杉木栅栏\n2.白桦木栅栏\n3.丛林木栅栏\n4.金合欢木栅栏\n5.深色橡木栅栏",
+            "flower": "花 特殊值:\n0.玫瑰\n1.兰花\n2.绒球葱\n3.茜草花\n4.红色郁金香\n5.橙色郁金香\n6.白色郁金香\n7.粉红色郁金香\n8.滨菊\n9.矢车菊\n10.铃兰",
+            "glass": "玻璃 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "leaves": "树叶（橡树叶到丛林树叶） 特殊值:\n0.橡树树叶\n1.云杉树叶\n2.白桦树叶\n3.丛林树叶",
+            "leaves2": "树叶（金合欢树叶&深色橡树树叶） 特殊值:\n0.金合欢树叶\n1.深色橡树树叶",
+            "light_block": "光明方块 特殊值:\n0~15\n数字越大光照等级越强",
+            "log": "原木 特殊值:\n0.橡木\n1.云杉木\n2.白桦木\n3.丛林木\n4.金合欢木\n5.深色橡木\n8.去皮橡木\n9.去皮云杉木\n10.去皮白桦木\n11.去皮丛林木\n12.去皮金合欢木\n13.去皮深色橡木",
+            "monster_egg": "被虫蚀的方块（即带有蠹虫的石头） 特殊值:\n0.被虫蚀的石头\n1.被虫蚀的圆石\n2.被虫蚀的石砖\n3.被虫蚀的苔石砖\n4.被虫蚀的裂石砖\n5.被虫蚀的錾制石砖",
+            "planks": "木板 特殊值:\n0.橡木木板\n1.云杉木板\n2.白桦木板\n3.丛林木板\n4.金合欢木板\n5.深色橡木木板",
+            "prismarine": "海晶石 特殊值:\n0.海晶石\n1.暗海晶石\n2.海晶石砖",
+            "quartz_block": "石英块 特殊值:\n0.石英块\n1.錾制石英块（纵向）\n2.石英柱（纵向）\n3.平滑石英块\n4.石英块（东西方向）\n5.錾制石英块（东西方向）\n6.石英柱（东西方向）\n7.平滑石英块（东西方向）\n8.石英块（南北方向）\n9.錾制石英块（南北方向）\n10.石英柱（南北方向）\n11.平滑石英块（南北方向）\n12.石英块（全侧面材质）\n13.錾制石英块（全侧面材质）\n14.石英柱（全侧面材质）\n15.平滑石英块（全侧面材质）",
+            "red_sandstone": "（红）砂岩 特殊值:\n0.红砂岩\n1.錾（zàn）制红砂岩\n2.平滑红砂岩",
+            "rotten_flesh": "腐肉",
+            "sand": "沙子 特殊值:\n0.沙子\n1.红沙",
+            "sandstone": "砂岩 特殊值:\n0.砂岩\n1.錾（zàn）制砂岩\n2.平滑砂岩",
+            "sapling": "树苗 特殊值:\n0.橡树树苗\n1.云杉树苗\n2.白桦树苗\n3.丛林树苗\n4.金合欢树苗\n5.深色橡树树苗",
+            "shulker_box": "潜影盒 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "skull": "生物头颅 特殊值:\n0.骷髅头颅\n1.凋零骷髅头颅\n2.僵尸的头\n3.玩家的头\n4.爬行者的头\n5.龙首",
+            "sponge": "海绵 特殊值:\n0.（干）海绵\n1.湿海绵",
+            "stained_glass_pane": "玻璃板 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "stone": "石头 特殊值:\n0.石头\n1.花岗岩\n2.磨制花岗岩\n3.闪长岩\n4.磨制闪长岩\n5.安山岩\n6.磨制安山岩",
+            "stone_slab": "石质台阶 特殊值:\n0.平滑石台阶\n1.砂岩台阶\n2.石质木台阶（特性与石头相同）\n3.圆石台阶\n4.砖块台阶\n5.石砖台阶\n6.石英台阶\n7.地狱砖台阶\n8.上半平滑石台阶\n9.上半砂岩台阶\n10.上半石质木台阶\n11.上半圆石台阶\n12.上半砖块台阶\n13.上半石砖台阶\n14.上半石英台阶\n15.上半地狱砖台阶\n",
+            "stone_slab2": "石质台阶（红砂岩到红色地狱砖） 特殊值:\n0.红砂岩台阶\n1.紫珀块台阶\n2.海晶石台阶\n3.海晶石砖台阶\n4.暗海晶石台阶\n8.上半红砂岩台阶\n9.上半紫珀块台阶\n10.上半海晶石台阶\n11.上半海晶石砖台阶\n12.上半暗海晶石台阶\n",
+            "stone_slab3": "石质台阶（末地石到磨制花岗岩） 特殊值:\n0.末地石砖台阶\n1.平滑红砂岩台阶\n2.磨制安山岩台阶\n3.安山岩台阶\n4.闪长岩台阶\n5.磨制闪长岩台阶\n6.花岗岩台阶\n7.磨制花岗岩台阶\n8.上半末地石砖台阶\n9.上半平滑红砂岩台阶\n10.上半磨制安山岩台阶\n11.上半安山岩台阶\n12.上半闪长岩台阶\n13.上半磨制闪长岩台阶\n14.上半花岗岩台阶\n15.上半磨制花岗岩台阶",
+            "stone_slab4": "石质台阶（苔石砖到切制红砂岩） 特殊值:\n0\t苔石砖台阶\n1.平滑石英台阶\n2.石台阶\n3.切制砂岩台阶\n4.切制红砂岩台阶\n8.上半苔石砖台阶\n9.上半平滑石英台阶\n10.上半石台阶\n11.上半切制砂岩台阶\n12.上半切制红砂岩台阶\n",
+            "stonebrick": "石砖 特殊值:\n0.石砖\n1.苔石砖\n2.裂石砖\n3.錾（zàn）制石砖",
+            "structure_block": "结构方块 特殊值:\n0.结构模型\n1.数据\n2.储存\n3.加载\n4.角落\n5.3D导出",
+            "tallgrass": "草（蕨） 特殊值:\n0.草\n1.蕨",
+            "terracotta": "陶瓦 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "wooden_slab": "木质台阶 特殊值:\n0.橡木台阶\n1.云杉台阶\n2.桦木台阶\n3.丛林台阶\n4.金合欢台阶\n5.深色橡木台阶\n8.上半橡木台阶\n9.上半云杉台阶\n10.上半桦木台阶\n11.上半丛林台阶\n12.上半金合欢台阶\n13.上半深色橡木台阶\n",
+            "wool": "羊毛 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "交流群818571348，及时加群更新": "作者Tiby，QQ号1696993583"
+        },
+        "item": {
+            "acacia_sign": "金合欢木告示牌",
+            "anvil": "铁砧 特殊值:\n0.铁砧（崭新出厂）\n1.轻微损坏的铁砧\n2.损坏的铁砧",
+            "apple": "苹果",
+            "appleenchanted": "附魔金苹果",
+            "armor_stand": "盔甲架",
+            "arrow": "箭 特殊值:\n0.普通\n6.夜视\n8.隐身\n10.跳跃\n13.抗火\n15.迅捷\n18.迟缓\n20.水肺\n22.治疗\n24.伤害\n26.剧毒\n29.再生\n32.力量\n35.虚弱\n37.衰变\n38.神龟\n二级效果利用该效果下特殊值+1即可",
+            "baked_potato": "烤马铃薯",
+            "banner": "旗帜 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "banner_pattern": "旗帜图案 特殊值:\n0.爬行者盾徽\n1.头颅盾徽\n2.花朵盾徽\n3.Mojang微标（LOGO）\n4.砖纹\n5.波纹边",
+            "bed": "床 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "beef": "生牛肉",
+            "beetroot_seeds": "甜菜种子",
+            "beetroot_soup": "甜菜汤",
+            "birch_sign": "桦木告示牌",
+            "blaze_powder": "烈焰粉",
+            "blaze_rod": "烈焰棒",
+            "boat": "船 特殊值:\n0.橡木\n1.云杉木\n2.白桦木\n3.丛林木\n4.金合欢木\n5.深色橡木",
+            "bone": "骨头",
+            "book": "书",
+            "bow": "弓",
+            "bowl": "碗",
+            "bread": "面包",
+            "brick": "红砖",
+            "bucket": "桶 特殊值：\n 0为空桶\n 1为牛奶\n 2为鳕鱼桶\n 3为鲑鱼桶\n 4为热带鱼桶\n 5为河豚桶\n 8为水桶\n 10为岩浆桶",
+            "carpet": "地毯 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "carrot": "胡萝卜",
+            "carrotonastick": "胡萝卜钓竿",
+            "chainmail_boots": "锁链靴子",
+            "chainmail_chestplate": "锁链胸甲",
+            "chainmail_helmet": "锁链头盔",
+            "chainmail_leggings": "锁链护腿",
+            "chest_minecart": "运输矿车",
+            "chicken": "生鸡肉",
+            "chorus_fruit": "紫颂果",
+            "chorus_fruit_popped": "爆裂紫颂果",
+            "clay_ball": "粘土球",
+            "clock": "钟",
+            "clownfish": "小丑鱼",
+            "coal": "煤炭 特殊值:\n0.煤炭\n1.木炭",
+            "cobblestone_wall": "墙 特殊值:\n0.圆石墙\n1.苔石墙\n2.花岗岩墙\n3.闪长岩墙\n4.安山岩墙\n5.砂岩墙\n6.砖块墙\n7.石砖墙\n8.苔石砖墙\n9.末地石砖墙\n10.地狱砖墙\n11.海晶石墙\n12.红砂岩墙\n13.红色地狱砖墙",
+            "command_block_minecart": "命令方块矿车",
+            "comparator": "红石比较器",
+            "compass": "指南针",
+            "concrete": "混凝土 特殊值:\n0为白色\n1为橙色\n2为品红色\n3为淡蓝色\n4为黄色\n5为黄绿色\n6为粉红色\n7为灰色\n8为淡灰色\n9为青色\n10为紫色\n11为蓝色\n12为褐色\n13为绿色\n14为红色\n15为黑色",
+            "concretepowder": "混凝土粉末 特殊值:\n0为白色\n1为橙色\n2为品红色\n3为淡蓝色\n4为黄色\n5为黄绿色\n6为粉红色\n7为灰色\n8为淡灰色\n9为青色\n10为紫色\n11为蓝色\n12为褐色\n13为绿色\n14为红色\n15为黑色",
+            "cooked_beef": "牛排",
+            "cooked_chicken": "熟鸡肉",
+            "cooked_fish": "熟鱼",
+            "cooked_porkchop": "熟猪排",
+            "cooked_rabbit": "熟兔肉",
+            "cooked_salmon": "熟鲑鱼",
+            "cookie": "曲奇",
+            "coral": "珊瑚 特殊值:\n0.管珊瑚（蓝）\n1.脑纹珊瑚（粉）\n2.气泡珊瑚（紫）\n3.火珊瑚（红）\n4.鹿角珊瑚（黄）",
+            "coral_block": "珊瑚块 特殊值:\n0.管珊瑚块（蓝）\n1.脑纹珊瑚块（粉）\n2.气泡珊瑚块（紫）\n3.火珊瑚块（红）\n4.鹿角珊瑚块（黄）\n5.失活的管珊瑚块\n6.失活的脑纹珊瑚块\n7.失活的气泡珊瑚块\n8.失活的火珊瑚块\n9.失活的鹿纹珊瑚块",
+            "coral_fan": "珊瑚扇 特殊值:\n0.管珊瑚扇（蓝）\n1.脑纹珊瑚扇（粉）\n2.气泡珊瑚扇（紫）\n3.火珊瑚扇（红）\n4.鹿角珊瑚扇（黄）",
+            "crossbow": "弩",
+            "darkoak_sign": "深色橡木告示牌",
+            "dead_coral_fan": "失活的珊瑚扇 特殊值:\n0.失活的管珊瑚扇（蓝）\n1.失活的脑纹珊瑚扇（粉）\n2.失活的气泡珊瑚扇（紫）\n3.失活的火珊瑚扇（红）\n4.失活的鹿角珊瑚扇（黄）",
+            "diamond": "钻石",
+            "diamond_axe": "钻石斧",
+            "diamond_boots": "钻石靴子",
+            "diamond_chestplate": "钻石胸甲",
+            "diamond_helmet": "钻石头盔",
+            "diamond_hoe": "钻石锄",
+            "diamond_leggings": "钻石护腿",
+            "diamond_pickaxe": "钻石镐",
+            "diamond_shovel": "钻石锹",
+            "diamond_sword": "钻石剑",
+            "dirt": "泥土 特殊值:\n0.泥土\n1.砂土",
+            "double_plant": "双层植物（花丛） 特殊值:\n0.向日葵\n1.丁香\n2.双草丛\n3.大型蕨\n4.玫瑰从\n5.牡丹",
+            "double_stone_slab": "双石质台阶 特殊值:\n0.双（平滑）石台阶\n1.双砂岩台阶\n2.石质双木台阶（特性与石头相同）\n3.双圆石台阶\n4.双砖块台阶\n5.双石砖台阶\n6.双石英台阶\n7.双地狱砖台阶\n",
+            "double_stone_slab2": "双石质台阶（红砂岩到红色地狱砖） 特殊值:\n0.双红砂岩台阶\n1.双紫珀块台阶\n2.双海晶石台阶\n3.双海晶石砖台阶\n4.双暗海晶石台阶\n",
+            "double_stone_slab3": "双石质台阶（末地石到磨制花岗岩） 特殊值:\n0.双层末地石砖台阶\n1.双层平滑红砂岩台阶\n2.双层磨制安山岩台阶\n3.双层安山岩台阶\n4.双层闪长岩台阶\n5.双层磨制闪长岩台阶\n6.双层花岗岩台阶\n7.双层磨制花岗岩台阶\n",
+            "double_stone_slab4": "双石质台阶（苔石砖到切制红砂岩） 特殊值:\n0.双层苔石砖台阶\n1.双层平滑石英台阶\n2.双层石台阶\n3.双层切制砂岩台阶\n4.双层切制红砂岩台阶\n",
+            "double_wooden_slab": "双木质台阶 特殊值:\n0.双橡木台阶\n1.双云杉台阶\n2.双桦木台阶\n3.双丛林台阶\n4.双金合欢台阶\n5.双深色橡木台阶\n",
+            "dragon_breath": "龙息",
+            "dried_kelp": "干海带",
+            "dye": "染料 特殊值:\n0墨囊\n1红色染料\n2绿色染料\n3可可豆\n4青金石\n5紫色染料\n6青色染料\n7淡灰色染料\n8灰色染料\n9粉红色染料\n10黄绿色染料\n11黄色染料\n12淡蓝色染料\n13品红色染料\n14橙色染料\n15骨粉\n16黑色染料\n17棕色染料\n18蓝色染料\n19白色染料",
+            "egg": "鸡蛋",
+            "elytra": "鞘翅",
+            "emerald": "绿宝石",
+            "emptymap": "空地图（未创建的）特殊值:\n1.空地图\n2.空的定位器地图",
+            "enchanted_book": "附魔书 此物品无特殊值\n仅于Java版NBT控制附魔选项",
+            "end_crystal": "末影水晶",
+            "ender_eye": "末影之眼",
+            "ender_pearl": "末影珍珠",
+            "experience_bottle": "附魔之瓶",
+            "feather": "羽毛",
+            "fence": "木栅栏（不包括地狱砖栅栏）特殊值:\n0.橡木栅栏\n1.云杉木栅栏\n2.白桦木栅栏\n3.丛林木栅栏\n4.金合欢木栅栏\n5.深色橡木栅栏",
+            "fermented_spider_eye": "发酵蛛眼",
+            "fireball": "火焰弹",
+            "fireworks": "烟花火箭 该物品下无特殊值，若需控制颜色请改动此物品下tag标签",
+            "fireworkscharge": "烟火之星 该物品下无特殊值",
+            "fish": "生鱼",
+            "fishing_rod": "钓鱼竿",
+            "flint": "燧石",
+            "flint_and_steel": "打火石",
+            "flower": "花 特殊值:\n0.玫瑰\n1.兰花\n2.绒球葱\n3.茜草花\n4.红色郁金香\n5.橙色郁金香\n6.白色郁金香\n7.粉红色郁金香\n8.滨菊\n9.矢车菊\n10.铃兰",
+            "ghast_tear": "恶魂之泪",
+            "glass": "玻璃 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "glass_bottle": "玻璃瓶",
+            "glowstone_dust": "荧石粉",
+            "gold_ingot": "金锭",
+            "gold_nugget": "金粒",
+            "golden_apple": "金苹果",
+            "golden_axe": "金斧",
+            "golden_boots": "金靴子",
+            "golden_carrot": "金胡萝卜",
+            "golden_chestplate": "金胸甲",
+            "golden_helmet": "金头盔",
+            "golden_hoe": "金锄",
+            "golden_leggings": "金护腿",
+            "golden_pickaxe": "金镐",
+            "golden_shovel": "金锹",
+            "golden_sword": "金剑",
+            "gunpowder": "火药",
+            "heart_of_the_sea": "海洋之心",
+            "honey_bottle": "蜂蜜瓶",
+            "honeycomb": "蜜脾",
+            "hopper_minecart": "漏斗矿车",
+            "horsearmordiamond": "钻石马铠",
+            "horsearmorgold": "金马铠",
+            "horsearmoriron": "铁马铠",
+            "horsearmorleather": "皮革马铠",
+            "iron_axe": "铁斧",
+            "iron_boots": "铁靴子",
+            "iron_chestplate": "铁胸甲",
+            "iron_helmet": "铁头盔",
+            "iron_hoe": "铁锄",
+            "iron_ingot": "铁锭",
+            "iron_leggings": "铁护腿",
+            "iron_nugget": "铁粒",
+            "iron_pickaxe": "铁镐",
+            "iron_shovel": "铁锹",
+            "iron_sword": "铁剑",
+            "jungle_sign": "丛林木告示牌",
+            "lead": "拴绳",
+            "leather": "皮革",
+            "leather_boots": "皮革靴子",
+            "leather_chestplate": "皮革外套",
+            "leather_helmet": "皮革帽子",
+            "leather_leggings": "皮革裤子",
+            "leaves": "树叶（橡树叶到丛林树叶） 特殊值:\n0.橡树树叶\n1.云杉树叶\n2.白桦树叶\n3.丛林树叶",
+            "leaves2": "树叶（金合欢树叶&深色橡树树叶） 特殊值:\n0.金合欢树叶\n1.深色橡树树叶",
+            "light_block": "光明方块 特殊值:\n0~15\n数字越大光照等级越强",
+            "lingering_potion": "滞留药水 特殊值:\n0.水瓶\n1.平凡的药水\n2.平凡的药水延长版\n3.浑浊的药水\n4.粗制的药水\n5.夜视药水\n7.隐身药水\n9.跳跃药水\n12.抗火药水\n14.迅捷药水\n17.迟缓药水\n19.水肺药水\n21.治疗药水\n23.伤害药水\n25.剧毒药水\n28.再生药水\n31.力量药水\n34.虚弱药水\n36.衰变药水\n37.神龟药水\n40.缓降药水\n二级效果利用该效果下特殊值+1即可",
+            "log": "原木 特殊值:\n0.橡木\n1.云杉木\n2.白桦木\n3.丛林木\n4.金合欢木\n5.深色橡木\n8.去皮橡木\n9.去皮云杉木\n10.去皮白桦木\n11.去皮丛林木\n12.去皮金合欢木\n13.去皮深色橡木",
+            "magma_cream": "岩浆膏",
+            "map": "地图（已创建的） 特殊值:\n1.空地图\n2.空的定位器地图",
+            "melon": "西瓜片",
+            "melon_seeds": "西瓜种子",
+            "minecart": "矿车",
+            "monster_egg": "被虫蚀的方块（即带有蠹虫的石头） 特殊值:\n0.被虫蚀的石头\n1.被虫蚀的圆石\n2.被虫蚀的石砖\n3.被虫蚀的苔石砖\n4.被虫蚀的裂石砖\n5.被虫蚀的錾制石砖",
+            "mushroom_stew": "蘑菇煲",
+            "muttoncooked": "熟羊肉",
+            "muttonraw": "生羊肉",
+            "name_tag": "命名牌",
+            "nautilus_shell": "鹦鹉螺",
+            "netherbrick": "地狱砖",
+            "netherstar": "下界之星",
+            "painting": "画",
+            "paper": "纸",
+            "phantom_membrane": "幻翼膜",
+            "planks": "木板 特殊值:\n0.橡木木板\n1.云杉木板\n2.白桦木板\n3.丛林木板\n4.金合欢木板\n5.深色橡木木板",
+            "poisonous_potato": "毒马铃薯",
+            "porkchop": "生猪排",
+            "potato": "马铃薯",
+            "potion": "药水 特殊值:\n0.水瓶\n1.平凡的药水\n2.平凡的药水延长版\n3.浑浊的药水\n4.粗制的药水\n5.夜视药水\n7.隐身药水\n9.跳跃药水\n12.抗火药水\n14.迅捷药水\n17.迟缓药水\n19.水肺药水\n21.治疗药水\n23.伤害药水\n25.剧毒药水\n28.再生药水\n31.力量药水\n34.虚弱药水\n36.衰变药水\n37.神龟药水\n40.缓降药水\n二级效果利用该效果下特殊值+1即可",
+            "prismarine": "海晶石 特殊值:\n0.海晶石\n1.暗海晶石\n2.海晶石砖",
+            "prismarine_crystals": "海晶砂粒",
+            "prismarine_shard": "海晶碎片",
+            "pufferfish": "河豚",
+            "pumpkin_pie": "南瓜派",
+            "pumpkin_seeds": "南瓜种子",
+            "quartz": "下界石英",
+            "quartz_block": "石英块 特殊值:\n0.石英块\n1.錾制石英块（纵向）\n2.石英柱（纵向）\n3.平滑石英块\n4.石英块（东西方向）\n5.錾制石英块（东西方向）\n6.石英柱（东西方向）\n7.平滑石英块（东西方向）\n8.石英块（南北方向）\n9.錾制石英块（南北方向）\n10.石英柱（南北方向）\n11.平滑石英块（南北方向）\n12.石英块（全侧面材质）\n13.錾制石英块（全侧面材质）\n14.石英柱（全侧面材质）\n15.平滑石英块（全侧面材质）",
+            "rabbit": "生兔肉",
+            "rabbit_foot": "兔子脚",
+            "rabbit_hide": "兔子皮",
+            "rabbit_stew": "兔肉煲",
+            "record.pigstep": "猪人唱片",
+            "record_11": "11唱片",
+            "record_13": "13唱片",
+            "record_blocks": "blocks唱片",
+            "record_cat": "cat唱片",
+            "record_chirp": "chirp唱片",
+            "record_far": "far唱片",
+            "record_mall": "mall唱片",
+            "record_mellohi": "mellohi唱片",
+            "record_stal": "stal唱片",
+            "record_strad": "strad唱片",
+            "record_wait": "wait唱片",
+            "record_ward": "ward唱片",
+            "red_sandstone": "（红）砂岩 特殊值:\n0.红砂岩\n1.錾（zàn）制红砂岩\n2.平滑红砂岩",
+            "redstone": "红石粉",
+            "repeater": "红石中继器",
+            "rotten_flesh": "腐肉",
+            "saddle": "鞍",
+            "salmon": "生鲑鱼",
+            "sand": "沙子 特殊值:\n0.沙子\n1.红沙",
+            "sandstone": "砂岩 特殊值:\n0.砂岩\n1.錾（zàn）制砂岩\n2.平滑砂岩",
+            "sapling": "树苗 特殊值:\n0.橡树树苗\n1.云杉树苗\n2.白桦树苗\n3.丛林树苗\n4.金合欢树苗\n5.深色橡树树苗",
+            "shears": "剪刀",
+            "shield": "盾牌",
+            "shulker_box": "潜影盒 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "shulker_shell": "潜影壳",
+            "sign": "告示牌",
+            "skull": "生物头颅 特殊值:\n0.骷髅头颅\n1.凋零骷髅头颅\n2.僵尸的头\n3.玩家的头\n4.爬行者的头\n5.龙首",
+            "slime_ball": "粘液球",
+            "snowball": "雪球",
+            "spawn_egg": "刷怪蛋 \n该物品下特殊值过多，请移步于右侧界面查询\n生物数据值即刷怪蛋数据值，输入相应的数据值即可",
+            "speckled_melon": "闪烁的西瓜",
+            "spider_eye": "蜘蛛眼",
+            "splash_potion": "喷溅药水 特殊值:\n0.水瓶\n1.平凡的药水\n2.平凡的药水延长版\n3.浑浊的药水\n4.粗制的药水\n5.夜视药水\n7.隐身药水\n9.跳跃药水\n12.抗火药水\n14.迅捷药水\n17.迟缓药水\n19.水肺药水\n21.治疗药水\n23.伤害药水\n25.剧毒药水\n28.再生药水\n31.力量药水\n34.虚弱药水\n36.衰变药水\n37.神龟药水\n40.缓降药水\n二级效果利用该效果下特殊值+1即可",
+            "sponge": "海绵 特殊值:\n0.（干）海绵\n1.湿海绵",
+            "spruce_sign": "云杉木告示牌",
+            "stained_glass_pane": "玻璃板 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "stick": "木棍",
+            "stone": "石头 特殊值:\n0.石头\n1.花岗岩\n2.磨制花岗岩\n3.闪长岩\n4.磨制闪长岩\n5.安山岩\n6.磨制安山岩",
+            "stone_axe": "石斧",
+            "stone_hoe": "石锄",
+            "stone_pickaxe": "石镐",
+            "stone_shovel": "石锹",
+            "stone_slab": "石质台阶 特殊值:\n0.平滑石台阶\n1.砂岩台阶\n2.石质木台阶（特性与石头相同）\n3.圆石台阶\n4.砖块台阶\n5.石砖台阶\n6.石英台阶\n7.地狱砖台阶\n8.上半平滑石台阶\n9.上半砂岩台阶\n10.上半石质木台阶\n11.上半圆石台阶\n12.上半砖块台阶\n13.上半石砖台阶\n14.上半石英台阶\n15.上半地狱砖台阶\n",
+            "stone_slab2": "石质台阶（红砂岩到红色地狱砖） 特殊值:\n0.红砂岩台阶\n1.紫珀块台阶\n2.海晶石台阶\n3.海晶石砖台阶\n4.暗海晶石台阶\n8.上半红砂岩台阶\n9.上半紫珀块台阶\n10.上半海晶石台阶\n11.上半海晶石砖台阶\n12.上半暗海晶石台阶\n",
+            "stone_slab3": "石质台阶（末地石到磨制花岗岩） 特殊值:\n0.末地石砖台阶\n1.平滑红砂岩台阶\n2.磨制安山岩台阶\n3.安山岩台阶\n4.闪长岩台阶\n5.磨制闪长岩台阶\n6.花岗岩台阶\n7.磨制花岗岩台阶\n8.上半末地石砖台阶\n9.上半平滑红砂岩台阶\n10.上半磨制安山岩台阶\n11.上半安山岩台阶\n12.上半闪长岩台阶\n13.上半磨制闪长岩台阶\n14.上半花岗岩台阶\n15.上半磨制花岗岩台阶",
+            "stone_slab4": "石质台阶（苔石砖到切制红砂岩） 特殊值:\n0\t苔石砖台阶\n1.平滑石英台阶\n2.石台阶\n3.切制砂岩台阶\n4.切制红砂岩台阶\n8.上半苔石砖台阶\n9.上半平滑石英台阶\n10.上半石台阶\n11.上半切制砂岩台阶\n12.上半切制红砂岩台阶\n",
+            "stone_sword": "石剑",
+            "stonebrick": "石砖 特殊值:\n0.石砖\n1.苔石砖\n2.裂石砖\n3.錾（zàn）制石砖",
+            "string": "线",
+            "structure_block": "结构方块 特殊值:\n0.结构模型\n1.数据\n2.储存\n3.加载\n4.角落\n5.3D导出",
+            "sugar": "糖",
+            "sweet_berries": "甜浆果",
+            "tallgrass": "草（蕨） 特殊值:\n0.草\n1.蕨",
+            "terracotta": "陶瓦 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "tnt_minecart": "TNT矿车",
+            "totem": "不死图腾",
+            "trident": "三叉戟",
+            "turtle_helmet": "海龟壳",
+            "turtle_shell_piece": "鳞甲",
+            "wheat_seeds": "小麦种子",
+            "wooden_axe": "木斧",
+            "wooden_hoe": "木锄",
+            "wooden_pickaxe": "木镐",
+            "wooden_shovel": "木锹",
+            "wooden_slab": "木质台阶 特殊值:\n0.橡木台阶\n1.云杉台阶\n2.桦木台阶\n3.丛林台阶\n4.金合欢台阶\n5.深色橡木台阶\n8.上半橡木台阶\n9.上半云杉台阶\n10.上半桦木台阶\n11.上半丛林台阶\n12.上半金合欢台阶\n13.上半深色橡木台阶\n",
+            "wooden_sword": "木剑",
+            "wool": "羊毛 特殊值:\n0.白色\n1.橙色\n2.品红色\n3.淡蓝色\n4.黄色\n5.黄绿色\n6.粉红色\n7.灰色\n8.淡灰色\n9.青色\n10.紫色\n11.蓝色\n12.棕色\n13.绿色\n14.红色\n15.黑色",
+            "writable_book": "书与笔",
+            "作者Tiby，QQ号1696993583": "交流群818571348，加群及时更新"
+        },
+        "json": {
+            "{\"rawtext\":[{\"score\":{\"name\":\"*\",\"objective\":\"记分项\"}}]}": "显示自己在记分项里的分数",
+            "{\"rawtext\":[{\"selector\":\"目标\"}]}": "打印执行者玩家的名字",
+            "{\"rawtext\":[{\"text\":\"消息\"},{\"text\":\"消息\"}]}": "两种消息的组合",
+            "{\"rawtext\":[{\"text\":\"消息\"}]}": "发送消息"
+        },
+        "stsj": {
+            " minecraft:start_exploding": "开始爆炸的苦力怕",
+            "a": "召唤跑得飞快的僵尸",
+            "abcdefghijklmnopqrstuvqxyz": "TIBY的QQ1696993583",
+            "attacked": "召唤一只攻击的蜜蜂",
+            "collected_nectar ": "采蜜蜜蜂",
+            "from_egg": "召唤一只从鸡蛋里面出来的小鸡",
+            "from_explosion": "召唤一个在爆炸的TNT，区别就是比正常爆炸快一点",
+            "minecraft:ageable_grow_up": "成年僵尸马",
+            "minecraft:ambient_sleep": "召唤一只睡觉环境的狐狸",
+            "minecraft:as_baby": "召唤一个该生物的幼年期",
+            "minecraft:become_angry": "生物变得愤怒（部分中立生物有效）",
+            "minecraft:become_angry ": "愤怒的狼😠",
+            "minecraft:become_brown": "召唤一只被闪电劈过哞菇",
+            "minecraft:become_brown ": "棕色蘑菇牛",
+            "minecraft:become_brown_adult": "召唤一只成年的棕色哞菇",
+            "minecraft:become_calm": "平静的生物（岩浆怪蜘蛛）",
+            "minecraft:become_charged": "召唤一只闪电苦力怕",
+            "minecraft:become_hostile": "敌对的蜘蛛/洞穴",
+            "minecraft:become_neutral": "召唤一只中立的洞穴蜘蛛",
+            "minecraft:become_neutral ": "中立洞穴蜘蛛",
+            "minecraft:become_stunned": "召唤一只正在使用震动魔法的掠夺兽",
+            "minecraft:become_unskilled ": "村民熟练度变低",
+            "minecraft:calm": "平静劫掠者",
+            "minecraft:cat_gifted_owner": "布吉岛",
+            "minecraft:crystal_explode": "召唤一个会爆炸的末影水晶",
+            "minecraft:donkey_saddled": "召唤一只带鞍的驴",
+            "minecraft:entity_spawned": "召唤一只普通的洞穴蜘蛛",
+            "minecraft:entity_transformed": "猪转化的僵尸猪人",
+            "minecraft:explode": "火焰弹凋零头实体爆炸（配合event）",
+            "minecraft:flowerless": "召唤一只无花的哞菇",
+            "minecraft:fox_configure_defending": "召唤一只处于防御的狐狸",
+            "minecraft:fox_configure_docile_day": "召唤一只温顺的狐狸白天",
+            "minecraft:fox_configure_thunderstorm": "召唤一只怕雷雨天的狐狸",
+            "minecraft:from_player": "召唤一只是玩家召唤的铁傀儡(打它不会攻击玩家)",
+            "minecraft:from_village": "召唤一只是村民召唤的铁傀儡(打它会攻击玩家)",
+            "minecraft:has_target": "召唤一只没有目标的溺尸(不会攻击玩家即使是打它也不会)",
+            "minecraft:hive_full ": "蜂巢已满的蜜蜂",
+            "minecraft:horse_saddled": "召唤一只带鞍的马",
+            "minecraft:mad_at_wolf": "召唤一只疯狂的羊驼",
+            "minecraft:melee_mode": "召唤一只近战距离攻击的骷髅射手",
+            "minecraft:navigation_off_land": "召唤一只可以在海上走的海豚",
+            "minecraft:navigation_on_land": "召唤一只可以在大陆上走海豚",
+            "minecraft:on_anger": "愤怒北极熊",
+            "minecraft:on_calm": "生物变得冷静（部分中立生物有效）",
+            "minecraft:on_chest": "召唤一只带箱子的生物（部分有效）",
+            "minecraft:on_chest ": "生物携带箱子（部分生物可用）",
+            "minecraft:on_instant_prime": "召唤一个立即爆炸的TNT矿车",
+            "minecraft:on_leash ": "被栓住的豹猫",
+            "minecraft:on_saddled ": "上鞍的生物（仅部分生物）",
+            "minecraft:on_sheared": "召唤一只被剪过羊毛的羊",
+            "minecraft:on_sheared ": "剪掉南瓜的雪傀儡",
+            "minecraft:on_tame": "驯服的生物（仅限可驯服）",
+            "minecraft:on_tame ": "已被驯服的生物（配合event）",
+            "minecraft:panda_aggressive": "有攻击性的熊猫",
+            "minecraft:pet_slept_with_owner": "召唤一只和主人睡过的猫(会送礼物)",
+            "minecraft:promote_to_patrol_captain": "晋升队长卫道士",
+            "minecraft:resupply_trades": "村民刷新交易（调用event）",
+            "minecraft:scheduled": "召唤一个虚拟流浪商人",
+            "minecraft:set_trap": "召唤陷阱，也就是5只有骷髅的骷髅马",
+            "minecraft:spawn_armorer": "武器商",
+            "minecraft:spawn_as_illager_captain": "召唤一只巡逻队长",
+            "minecraft:spawn_butcher": "屠夫",
+            "minecraft:spawn_cleric": "牧师",
+            "minecraft:spawn_farmer": "农民",
+            "minecraft:spawn_for_raid": "召唤一只突袭中的唤魔者",
+            "minecraft:spawn_for_raid ": "袭击生成的女巫",
+            "minecraft:spawn_for_raid_with_evoker_rider": "召唤一只有唤魔者掠夺兽",
+            "minecraft:spawn_for_raid_with_evoker_rider ": "骑着劫掠兽的唤魔者",
+            "minecraft:spawn_for_raid_with_pillager_rider": "召唤一只有掠夺者掠夺兽",
+            "minecraft:spawn_librarian ": "图书管理员",
+            "minecraft:spawn_midnight_cat": "召唤午夜猫",
+            "minecraft:spawn_with_pillager_captain_rider": "召唤一只有掠夺者队长掠夺兽",
+            "minecraft:spawn_with_pillager_captain_rider ": "骑劫掠兽的劫掠者队长（把captial去掉为普通）",
+            "minecraft:spawn_with_vindicator_captain_rider": "召唤一只有卫道士队长掠夺兽",
+            "minecraft:spawn_with_vindicator_captain_rider ": "骑劫掠兽的卫道士",
+            "minecraft:spawn_with_vindicator_rider": "召唤一只有卫道士掠夺兽",
+            "minecraft:spring_trap": "召唤陷阱里面的骷髅射手",
+            "minecraft:start_celebrating": "召唤一只正在庆祝的唤魔者",
+            "minecraft:start_celebrating ": "开始庆祝卫道士",
+            "minecraft:start_death": "召唤一只开始死亡的末影龙",
+            "minecraft:start_despawn": "消失的流浪奸商💰",
+            "minecraft:start_exploding_forced": "召唤一只用打火石激活正在爆炸的苦力怕",
+            "minecraft:start_johnny": "啥都攻击的卫道士",
+            "minecraft:start_land": "召唤一只着地的末影龙",
+            "minecraft:stop_aggro ": "停止敌对卫道士",
+            "minecraft:switch_to_ranged": "召唤一只远程攻击的溺尸",
+            "minecraft:switch_to_ranged ": "远程攻击的溺尸",
+            "minecraft:synchronized_ranged_mode": "召唤一只可远程可近距离攻击的掠夺者",
+            "minecraft:target_too_close": "距离目标太近的守卫者",
+            "minecraft:trigger_raid": "玩家触发袭击（配合event）",
+            "minecraft:turn_颜色": "有颜色的潜影贝（把颜色替换成英文）",
+            "Tiby交流群": "818571348"
+        }
+    },
+    "idlist": [
+        {
+            "list": "json",
+            "name": "JSON文本[示例]"
+        }
+    ],
+    "json": {
+        "tellraw": {
+            "children": {
+                "rawtext": {
+                    "extends": "text",
+                    "name": "原始文本"
+                }
+            },
+            "name": "文本组件",
+            "type": "object"
+        },
+        "text": {
+            "children": {
+                "children": {
+                    "score": {
+                        "children": {
+                            "name": {
+                                "name": "目标",
+                                "suggestion": "scoreboard_player",
+                                "target": "entity",
+                                "type": "selector"
+                            },
+                            "objective": {
+                                "name": "目标所在记分项的名称"
+                            }
+                        },
+                        "name": "记分板分数",
+                        "type": "object"
+                    },
+                    "selector": {
+                        "name": "输出实体对象",
+                        "target": "entity",
+                        "type": "selector"
+                    },
+                    "text": {
+                        "name": "要发送的文本"
+                    }
+                },
+                "name": "文本",
+                "type": "object"
+            },
+            "type": "array"
+        }
+    },
+    "name": "常用功能合集",
+    "require": [],
+    "uuid": "585364be-02bc-4384-82a1-bf802e743976",
+    "version": [
+        0,
+        0,
+        1
+    ],
+    "VersionPack": {
+        "base": {
+            "commands": {
+                "JSON": {
+                    "description": "JSON文本帮助(非指令)",
+                    "help": "https://minecraft-zh.gamepedia.com/%E5%9F%BA%E5%B2%A9%E7%89%88%E5%8E%9F%E5%A7%8BJSON%E6%96%87%E6%9C%AC%E6%A0%BC%E5%BC%8F",
+                    "noparams": {
+                        "description": "JSON文本帮助[右翻查看←]"
+                    }
+                },
+                "tellraw": {
+                    "help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/tellraw",
+                    "patterns": {
+                        "default": {
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "component": "tellraw",
+                                    "name": "JSON文本",
+                                    "type": "json"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "titleraw": {
+                    "help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/titleraw",
+                    "patterns": {
+                        "actionbar": {
+                            "description": "在活动栏上显示文字",
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "name": "actionbar",
+                                    "prompt": "在活动栏上显示文字",
+                                    "type": "plain"
+                                },
+                                {
+                                    "component": "tellraw",
+                                    "name": "活动栏文字",
+                                    "type": "json"
+                                }
+                            ]
+                        },
+                        "clear": {
+                            "description": "移除标题",
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "name": "clear",
+                                    "prompt": "移除标题",
+                                    "type": "plain"
+                                }
+                            ]
+                        },
+                        "reset": {
+                            "description": "重设标题设置",
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "name": "reset",
+                                    "prompt": "重设标题设置",
+                                    "type": "plain"
+                                }
+                            ]
+                        },
+                        "subtitle": {
+                            "description": "设置副标题",
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "name": "subtitle",
+                                    "prompt": "设置副标题",
+                                    "type": "plain"
+                                },
+                                {
+                                    "component": "tellraw",
+                                    "name": "副标题",
+                                    "type": "json"
+                                }
+                            ]
+                        },
+                        "times": {
+                            "description": "设置标题显示时间",
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "name": "times",
+                                    "prompt": "设置标题显示时间",
+                                    "type": "plain"
+                                },
+                                {
+                                    "name": "淡入时间",
+                                    "type": "int"
+                                },
+                                {
+                                    "name": "停留时间",
+                                    "type": "int"
+                                },
+                                {
+                                    "name": "淡出时间",
+                                    "type": "int"
+                                }
+                            ]
+                        },
+                        "title": {
+                            "description": "显示标题",
+                            "params": [
+                                {
+                                    "name": "目标",
+                                    "target": "player",
+                                    "type": "selector"
+                                },
+                                {
+                                    "name": "title",
+                                    "prompt": "显示标题",
+                                    "type": "plain"
+                                },
+                                {
+                                    "component": "tellraw",
+                                    "name": "标题",
+                                    "type": "json"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "实体事件": {
+            "commands": {
+                "summon": {
+                    "patterns": {
+                        "default": {
+                            "params": [
+                                {
+                                    "name": "实体ID",
+                                    "suggestion": "entity",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "生成位置",
+                                    "optional": true,
+                                    "type": "position"
+                                },
+                                {
+                                    "name": "实体事件",
+                                    "suggestion": "stsj",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "实体名称",
+                                    "optional": true,
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "named": {
+                            "description": "生成一个特定名称的实体",
+                            "params": [
+                                {
+                                    "name": "实体ID",
+                                    "suggestion": "entity",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "named",
+                                    "prompt": "命名",
+                                    "type": "plain"
+                                },
+                                {
+                                    "name": "实体名称",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "生成位置",
+                                    "optional": true,
+                                    "type": "position"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>每日问题</title>
+    <style>
+body {
+    background-color: black;
+}
+h1, div {
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+a:link, a:visited {
+    color: lightblue;
+    text-decoration: underline;
+}
+a:hover, a:active {
+    color: white;
+    text-decoration: underline;
+}
+#about {
+    color: gray;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    animation: body_visible 0.5s ease 1.7s backwards;
+}
+#question_title {
+    white-space: nowrap;
+    text-overflow: clip;
+    animation: title_scale 1s ease-out;
+}
+#question_usage {
+    animation: body_visible 0.5s ease 0.7s backwards;
+}
+#question_body, #question_answer {
+    animation: body_visible 0.5s ease 1.5s backwards;
+    font-family: 'Courier New', Courier, monospace
+}
+#answer_box {
+    background-color: black;
+    color: white;
+    border: 2px gray dotted;
+    width: 75%;
+}
+#question_success {
+    animation: body_visible 0.5s;
+}
+#check_button {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+.toast {
+    animation: toast_opacity 1.5s linear both;
+}
+@keyframes title_scale {
+    from {letter-spacing: 20px}
+    to {letter-spacing: 0px}
+}
+@keyframes body_visible {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+@keyframes toast_opacity {
+    0% {opacity: 0}
+    25% {opacity: 1}
+    75% {opacity: 1}
+    100% {opacity: 0}
+}
+    </style>
+</head>
+<body>
+<h1 id="question_title">每 日 问 题</h1>
+<div id="question_usage"></div>
+<div id="question_body">如果您看到这段文字，说明网页可能无法使用某些页面特性。请您检查您的浏览器设置或者更新您的浏览器。</div>
+<div id="question_answer" style="display: none">
+请填写你的答案 <button id="check_button" onclick="checkAnswer(document.getElementById('answer_box'), true)">验证</button><br />
+<input type="text" id="answer_box" onchange="checkAnswer(this)"></input>
+<div id="question_failure">答案错误</div>
+</div>
+<div id="question_success"></div>
+<div id="about"></div>
+<script>
+/*
+别以为看到这儿就可以作弊了，这里的答案可都是正则表达式
+如果你有能力看懂正则表达式，区区命令又有何难？
+*/
+var Verify = Loader.fromFile("./verify.js");
+function getQueryString() {
+    var url = location.search;
+    var r = {}, i, strs, t;
+    if ((t = url.indexOf("?")) >= 0) {
+        strs = url.slice(t + 1).split("&");
+        for(i in strs) {
+            t = strs[i].indexOf("=");
+            if (t >= 0) {
+                r[strs[i].slice(0, t)] = unescape(strs[i].slice(t + 1));
+            } else {
+            	r[strs[i]] = true;
+            }
+        }
+    }
+    return r;
+}
+var query = getQueryString();
+var date;
+if (query.date) date = Date.parse(query.date);
+if (isNaN(date)) date = Date.now();
+var cur;
+var isSuccessed;
+function reload() { 
+    var body_node = document.getElementById("question_body");
+    var about_node = document.getElementById("about");
+    var answer_node = document.getElementById("question_answer");
+    var usage_node = document.getElementById("question_usage");
+    var input_node = document.getElementById("answer_box");
+    var success_node = document.getElementById("question_success");
+    var failure_node = document.getElementById("question_failure");
+    var setter_node = document.getElementById("day_box");
+    if (self != top) {
+        body_node.innerHTML = "检测到可能存在代码注入";
+        return;
+    }
+    var siteName, hostName;
+    if (location.protocol == "file:") {
+    	siteName = "本地文件系统";
+    } else {
+        hostName = location.hostname.toLowerCase();
+    	if (hostName == "projectxero.gitee.io") {
+            siteName = "码云";
+        } else if (hostName == "xeroalpha.github.io") {
+            siteName = "GitHub";
+        } else if (hostName.endsWith("projectxero.top")) {
+            siteName = "话唠兔的小站";
+        }
+    }
+    if (!siteName) return;
+    Verify.setDate(date);
+    if (query.verify) {
+        cur = Verify.requestVerification();
+    } else {
+	    cur = Verify.requestQuestion();
+    }
+    body_node.innerText = cur.question;
+    usage_node.innerHTML = cur.answerType == "number" ? "请使用一个数字来解答以下问题（允许使用1.203e56这样的科学表示法）" : "请使用一句命令来解答以下问题（如非必要，请不要使用嵌套命令）";
+    about_node.innerHTML = "下次更换问题于" + toChineseDateTime(Verify.getNextUpdateTime()) + "<br />题库:" + Verify.getCount() + "题 | " + Verify.getLastUpdateAt() + "<br /><br />命令助手讨论区 @ ProjectXero<br />本页面由" + siteName + "托管";
+    answer_node.style = "";
+    success_node.style = "display: none";
+    success_node.innerHTML = "";
+    failure_node.style = "opacity: 0";
+    isSuccessed = false;
+    if (window.localStorage && Number(window.localStorage.lastExpired) > Date.now()) {
+        input_node.value = window.localStorage.lastInput;
+        input_node.onchange();
+    }
+    if (isSuccessed) {
+        success_node.style = "animation: body_visible 0.5s ease 1.5s backwards";
+    }
+    if (setter_node) setter_node.value = toSimpleDate(new Date(date - date % 86400000));
+}
+window.onload = function() {
+    reload();
+    onresize();
+    if (query.daycontrol) {
+        dayControl();
+    }
+}
+window.onresize = function() {
+    var about_node = document.getElementById("about");
+    if (window.innerHeight < document.body.offsetHeight + about_node.offsetHeight) {
+        about_node.style.position = "static";
+    } else {
+        about_node.style.position = "fixed";
+    }
+}
+window.offsetDay = function(n) {
+    if (!n || isNaN(n)) n = 0; 
+    date += 86400000 * n;
+    reload();
+}
+window.setDay = function(d) {
+    date = new Date(d).getTime();
+    reload();
+}
+window.dayControl = function() {
+    var control_node = document.getElementById("day_control");
+    if (!control_node) {
+        control_node = document.createElement("div");
+        control_node.id = "day_control";
+        control_node.innerHTML = '<button onclick="offsetDay(-1)">&lt;</button><input id="day_box" onchange="setDay(this.value)" /><button onclick="offsetDay(1)">&gt;</button>';
+        document.body.appendChild(control_node);
+    }
+    reload();
+}
+function toChineseDateTime(date) {
+    return date.getFullYear() + "年" + (date.getMonth() + 1) + "月" + date.getDate() + "日 " + fixZero(date.getHours(), 2) + ":" + fixZero(date.getMinutes(), 2) + ":" + fixZero(date.getSeconds(), 2);
+}
+function toSimpleDate(date) {
+    return date.getFullYear() + "-" + fixZero(date.getMonth() + 1, 2) + "-" + fixZero(date.getDate(), 2);
+}
+function fixZero(s, n) {
+    s = String(s);
+    return n > s.length ? fixZero("0" + s, n) : s;
+}
+function succeed_action(code) {
+    var answer_node = document.getElementById("question_answer");
+    var success_node = document.getElementById("question_success");
+    success_node.innerHTML = "祝贺你！你答对了！<br />代码为：" + fixZero(code, 6) + '<br /><br />如果你希望你的题目出现在题库里，您可以加群<a target="_blank" href="https://jq.qq.com/?_wv=1027&k=46Yl84D">MCBE命令助手讨论区</a>';
+    success_node.style = "";
+    answer_node.style = "display: none";
+    isSuccessed = true;
+}
+function failed_action() {
+    var failure_node = document.getElementById("question_failure");
+    failure_node.className = "";
+    setTimeout(function() {
+        failure_node.className = "toast";
+    }, 100);
+}
+window.checkAnswer = function(answer, fromButton) {
+	var code;
+    if (answer != null) {
+        if (window.localStorage) {
+            window.localStorage.lastInput = answer.value;
+            window.localStorage.lastExpired = Verify.getNextUpdateTime().getTime();
+        }
+        try {
+            code = Verify.checkAnswer(answer.value);
+            if (code) succeed_action(code);
+        } catch(e) {
+            console.log(e);
+        }
+        if (fromButton || answer.value.length) failed_action();
+    }
+}
+</script>
+</body>
+</html>

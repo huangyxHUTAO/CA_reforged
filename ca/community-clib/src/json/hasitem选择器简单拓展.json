@@ -1,0 +1,50 @@
+{
+    "name": "hasitem选择题器拓展(先凑合用)",
+    "author": "吃瓜群猹",
+    "description": "由于命令助手部分原因停更,拓展包只能做成这个样。\n需要注意的是要在完成选择器参数过后再删除多余的符号或添加缺少的符号,如:删除符号“{”前面的逗号和补齐hasitem结束的符号“}”",
+    "uuid": "a1d7b506-0239-43a9-ba66-156a1c6f7b67",
+    "version": [
+        0,
+        0,
+        1
+    ],
+    "require": [],
+    "enums": {
+        "hasitem": {
+            "{": "hasitem开头符号"
+        }
+    },
+    "selectors": {
+        "hasitem": {
+            "type": "enum",
+            "name": "实体是否携带指定物品",
+            "list": "hasitem",
+            "hasInverted": true
+        },
+        "data": {
+            "type": "string",
+            "name": "数据值(hasitem)"
+        },
+        "item": {
+            "type": "string",
+            "name": "物品(hasitem)",
+            "suggestion": "item",
+            "hasInverted": true
+        },
+        "quantity": {
+            "type": "string",
+            "name": "数量(hasitem)",
+            "hasInverted": true
+        },
+        "location": {
+            "type": "enum",
+            "name": "槽位类型(hasitem)",
+            "list": "entity_slot",
+            "hasInverted": true
+        },
+        "slot": {
+            "type": "string",
+            "name": "槽位编号(hasitem)"
+        }
+    }
+}

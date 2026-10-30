@@ -1,0 +1,10 @@
+@id dailyexam
+@name 每日问题
+@author ProjectXero
+@source main.js
+@uuid 9ab8c0af-8749-4758-9e96-c25d340c9ee3
+@version 1.0.1
+@versionCode [1, 0, 1]
+@description
+每日一问题，提升你的命令水平
+@end description
