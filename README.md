@@ -21,7 +21,7 @@
 ### 命令助手构建工具
 - **链接**: [命令助手构建工具](https://github.com/XeroAlpha/cabuildtools)
 - **描述**: 支持自动化构建命令助手、命令助手Android与命令助手拓展包源。
-- **项目对应**：对应本项目的`cabuildtools/`
+- **项目对应**：对应本项目的`ca/cabuildtools/`
 
 ## 致谢与第三方资源
 
@@ -60,8 +60,8 @@
 #### 2.1 全局安装 cabuildtools
 
 ```bash
-# 在项目根目录执行
-npm install -g ./cabuildtools
+# 构建工具在 ca/ 子树里（CA 仓库的 cabuildtools）
+npm install -g ./ca/cabuildtools
 ```
 
 安装完成后，终端中即可使用 `cabuild` 命令：
@@ -159,7 +159,7 @@ ca/build/dist/
 
 | 问题 | 解决思路 |
 |------|----------|
-| cabuild 命令未找到 | 确认 `npm install -g ./cabuildtools` 是否成功，再检查系统 `PATH` |
+| cabuild 命令未找到 | 确认 `npm install -g ./ca/cabuildtools` 是否成功，再检查系统 `PATH` |
 | Node 版本报错 | 使用 `nvm`（推荐）或手动降级到 Node 16 |
 | 构建产物为空 | 删除 `ca/build` 目录后重试 |
 
