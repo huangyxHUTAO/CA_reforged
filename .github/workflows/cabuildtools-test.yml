@@ -1,0 +1,34 @@
+name: cabuildtools test
+
+on:
+  push:
+    paths:
+      - "cabuildtools/**"
+      - ".github/workflows/cabuildtools-test.yml"
+  pull_request:
+    paths:
+      - "cabuildtools/**"
+      - ".github/workflows/cabuildtools-test.yml"
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: loader-ast / async-transform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        working-directory: cabuildtools
+        run: npm install --no-audit --no-fund
+
+      # 两套测试（AST 加载器 / async 转译）都是独立脚本，直接跑即可
+      - name: Run tests
+        working-directory: cabuildtools
+        run: npm test
