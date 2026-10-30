@@ -7,7 +7,7 @@
     "cabuild": "./main.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/async-transform.test.js && node tests/loader-ast.test.js"
   },
   "repository": {
     "type": "git",
