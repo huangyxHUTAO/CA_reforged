@@ -1,0 +1,112 @@
+{
+	"name": "教育版模式命令库",
+	"author": "CA制作组",
+	"description": "本命令库包括了在启用教育版模式后可使用的命令。",
+	"uuid": "f9216c72-76a6-4963-b4c8-7959e5c7487a",
+	"version": [1, 0],
+	"require": ["acf728c5-dd5d-4a38-b43d-7c4f18149fbd"],
+	"minSupportVer": "0.16.0",
+	"targetSupportVer": "1.14.2.51",
+	"commands": {},
+	"enums": {
+		"ability": {
+			"worldbuilder": "世界建造者",
+			"mayfly": "飞行",
+			"mute": "被禁言"
+		}
+	},
+	"selectors": {},
+	"help": {},
+	"versionPack": {
+		"0.16.0": {
+			"commands": {
+				"ability": {
+					"description": "赋予或剥夺玩家的能力",
+					"patterns": {
+						"query": {
+							"description": "查询玩家的能力",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "enum",
+									"name": "能力",
+									"list": "ability"
+								}
+							]
+						},
+						"set": {
+							"description": "设置玩家的能力",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "enum",
+									"name": "能力",
+									"list": "ability"
+								},
+								{
+									"type": "enum",
+									"name": "值",
+									"list": {
+										"true": "赋予能力",
+										"false": "剥夺能力"
+									}
+								}
+							]
+						}
+					},
+					"help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/ability"
+				},
+				"immutableworld": {
+					"description": "查询或设置世界是否可发生变化",
+					"noparams": {
+						"description": "查询世界是否可发生变化"
+					},
+					"patterns": {
+						"set": {
+							"description": "设置世界是否可发生变化",
+							"params": [
+								{
+									"type": "enum",
+									"name": "值",
+									"list": "bool"
+								}
+							]
+						}
+					},
+					"help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/immutableworld"
+				},
+				"wb": {
+					"alias": "worldbuilder"
+				},
+				"worldbuilder": {
+					"description": "查询或设置世界建造者能力",
+					"noparams": {
+						"description": "查询世界建造者能力"
+					},
+					"patterns": {
+						"set": {
+							"description": "设置世界建造者能力",
+							"params": [
+								{
+									"type": "enum",
+									"name": "值",
+									"list": "bool"
+								}
+							]
+						}
+					},
+					"help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/worldbuilder"
+				}
+			},
+			"minSupportVer": "0.15.90.0"
+		}
+	}
+}

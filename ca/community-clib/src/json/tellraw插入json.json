@@ -1,0 +1,86 @@
+{
+    "author": "bvlv",
+    "description": "插入json,也可以把json复制到titleraw",
+    "uuid": "299168d4-61ee-485a-947e-c7a52d8dbca9",
+    "version": [
+        0,
+        0,
+        1
+    ],
+    "require": [],
+    "versionPack": {
+        "base": {
+            "commands": {
+                "tellraw": {
+                    "patterns": {
+                        "new": {
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "json",
+                                    "name": "JSON文本",
+                                    "component": "tellraw"
+                                }
+                            ],
+                            "description": "向指定玩家发送一条JSON消息"
+                        }
+                    },
+                    "help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/tellraw"
+                }
+            }
+        }
+    },
+    "json": {
+        "tellraw": {
+            "type": "object",
+            "name": "文本组件",
+            "children": {
+                "rawtext": {
+                    "name": "原始文本",
+                    "extends": "text",
+                    "translate": "translate"
+                }
+            }
+        },
+        "text": {
+            "type": "array",
+            "children": {
+                "name": "文本",
+                "type": "object",
+                "children": {
+                    "text": {
+                        "name": "要发送的文本"
+                    },
+                    "translate": {
+                        "name": "要发送的文本"
+                    },
+                    "with": {
+                        "name": [
+                            "要覆盖的文本"
+                        ]
+                    },
+                    "selector": {
+                        "name": "玩家选择器"
+                    },
+                    "score": {
+                        "type": "object",
+                        "name": "显示计分板分数",
+                        "children": {
+                            "objective": {
+                                "name": "计分板名字"
+                            },
+                            "name": {
+                                "name": "玩家选择器"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "name": "tellraw插入json"
+}

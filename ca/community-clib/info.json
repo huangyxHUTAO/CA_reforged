@@ -1,0 +1,12 @@
+{
+	"sourceId": "eaa81e22-1b06-4429-ba89-86b31b154ed3",
+	"index": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/index-0.json",
+	"indexPages": 2,
+	"indexLibs": 26,
+	"map": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/map.json",
+	"pubkey": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/verify.key",
+	"lastUpdate": 1793195168442,
+	"name": "森林社区拓展包源",
+	"maintainer": "codesenlin",
+	"details": "社区拓展包合集：ID 表、翻译、命令拓展与部分插件包"
+}

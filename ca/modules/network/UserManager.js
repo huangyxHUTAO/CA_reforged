@@ -235,8 +235,7 @@ MapScript.loadModule("UserManager", {
 	},
 	saveToken : function(result) {
 		this.accessToken = result.accessToken;
-		result.expiredDate = Date.now() + result.expiredIn * 1000;
-		this.accessData = CA.settings.userSettings = result;
+		this.accessData = CA.settings.userSettings = { refreshToken : result.refreshToken };
 		this.updateUserInfo();
 	},
 	clearToken : function() {
@@ -320,7 +319,13 @@ MapScript.loadModule("UserManager", {
 		return this.userInfo ? this.userInfo.status == 999 : false;
 	},
 	isOnline : function() {
-		return MapScript.host == "Android" && ScriptInterface.isOnlineMode();
+		return MapScript.host == "Android" && ScriptInterface.isOnlineMode() && this.userInfo != null;
+	},
+	getOfflineReason : function() {
+		if (MapScript.host != "Android") {
+			return "目前您使用的命令助手的版本不支持在线模式，请更换为APP版本。";
+		}
+		return ScriptInterface.getOfflineReason() || "未提供";
 	},
 	getLevelExp : function(level) {
 		if (level > 0 && level <= 15) {
@@ -350,8 +355,22 @@ MapScript.loadModule("UserManager", {
 		};
 	},
 	expQueue : new java.util.concurrent.ConcurrentLinkedQueue(),
+	reasons : {
+		"checkin" : {
+			name : "签到",
+			exp : 2
+		},
+		"copyCommand" : {
+			name : "复制命令",
+			exp : 1
+		},
+		"createTemplate" : {
+			name : "创建批量生成模板",
+			exp : 2
+		}
+	},
 	enqueueExp : function(reason) {
-		if (this.isOnline()) {
+		if (this.isOnline() && this.expQueue.size() < 20 && reason in this.reasons) {
 			this.expQueue.add(reason);
 		}
 	},
@@ -360,22 +379,24 @@ MapScript.loadModule("UserManager", {
 	},
 	syncExp : function() {
 		var queue = this.expQueue;
-		var e, list = [], result, checkInExp = 0;
-		if (!this.hasExpToSync()) return 0;
+		var e, list = [], result, checkInExp = 0, reasons = {};
+		if (!this.isOnline()) return { offline : true };
 		if (!this.userInfo.checkedIn) {
 			checkInExp = this.checkIn().add;
-			this.userInfo.checkedIn = true;
+			reasons["checkin"] = 1;
 		}
 		e = queue.poll();
 		while (e != null) {
 			list.push(e);
+			reasons[e] = e in reasons ? reasons[e] + 1 : 1;
 			e = queue.poll();
 		}
 		if (list.length == 0) list = ["info"];
 		result = this.addExp(list);
-		this.userInfo.experience = result.experience;
 		result.add += checkInExp;
-		return result.add;
+		result.reasons = reasons;
+		this.updateUserInfo();
+		return result;
 	},
 	processUriAction : function(type, query) {
 		if (type == "login") {
@@ -691,8 +712,7 @@ MapScript.loadModule("UserManager", {
 				dia.setText("正在使用命令助手登录...");
 				try {
 					authToken = realThis.authorize();
-					AndroidBridge.startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(query.redirect + "?token=" + encodeURIComponent(authToken)))
-						.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK));
+					AndroidBridge.viewUri(query.redirect + "?token=" + encodeURIComponent(authToken));
 				} catch(e) {
 					Log.e(e);
 					return Common.toast("使用命令助手登录失败\n" + e);
@@ -835,12 +855,7 @@ MapScript.loadModule("UserManager", {
 				dia.setText("正在同步经验...");
 				try {
 					result = realThis.syncExp();
-					if (result > 0) {
-						Common.toast("同步经验成功\n已增加" + result + "点经验");
-					} else {
-						Common.toast("同步经验成功");
-					}
-					if (callback) callback();
+					realThis.showExpManage(result, callback);
 				} catch(e) {
 					Log.e(e);
 					Common.toast("同步经验失败\n" + e);
@@ -848,6 +863,302 @@ MapScript.loadModule("UserManager", {
 			});
 		}
 	},
+	showExpManage : function(expAdd, callback) { var realThis = this; G.ui(function() {try {
+		var i, reasonInfo, reasonCount, popup, userInfo = realThis.userInfo, viewList = [];
+		var exp = realThis.parseExpLevel(userInfo.experience);
+		var mode = expAdd == null ? "offline" : expAdd.add > 0 ? "add" : expAdd.today_experience >= expAdd.max_today_exp ? "info_full" : "info";
+		var checkedIn = expAdd != null && expAdd.reasons["checkin"] > 0;
+		viewList.push(
+			L.TextView({
+				text : "每日经验",
+				padding : [0, 0, 0, 15 * G.dp],
+				layout : { width : -1, height : -2 },
+				gravity : L.Gravity("center"),
+				style : "textview_default",
+				fontSize : 4
+			})
+		);
+		if (mode == "offline") {
+			viewList.push(
+				L.TextView({
+					text : "当前命令助手运行在离线模式下，签到与经验系统自动被禁用。\n\n技术原因：\n" + realThis.getOfflineReason(),
+					padding : [0, 10 * G.dp, 0, 10 * G.dp],
+					layout : { width : -1, height : -2 },
+					style : "textview_default",
+					fontSize : 1
+				}),
+				L.TextView({
+					text : "了解详情",
+					padding : [0, 15 * G.dp, 0, 15 * G.dp],
+					gravity : L.Gravity("left"),
+					layout : { width : -1, height : -2 },
+					style : "button_highlight",
+					fontSize : 3,
+					onClick : function() {try {
+						AndroidBridge.viewUri("https://ca.projectxero.top/blog/notice/why-show-ads/");
+						popup.exit();
+					} catch(e) {erp(e)}}
+				})
+			);
+		} else {
+			viewList.push(
+				L.LinearLayout({
+					orientation : L.LinearLayout("horizontal"),
+					backgroundColor : Common.theme.textcolor,
+					layout : { width : -1, height : 2 * G.dp },
+					weightSum : expAdd.max_today_exp,
+					child : L.View({
+						backgroundColor : Common.theme.criticalcolor,
+						layout : { width : 0, height : -1, weight : expAdd.today_experience }
+					})
+				}),
+				L.LinearLayout({
+					orientation : L.LinearLayout("horizontal"),
+					layout : { width : -1, height : -2 },
+					padding : [0, 0, 0, 5 * G.dp],
+					children : [
+						L.TextView({
+							text : mode == "add" ? "+" + expAdd.add + (expAdd.today_experience >= expAdd.max_today_exp ? "(到达上限)" : "") : "今日获得",
+							layout : { width : -2, height : -2, weight : 1.0 },
+							style : "textview_default",
+							fontSize : 1
+						}),
+						L.TextView({
+							text : expAdd.today_experience + "/" + expAdd.max_today_exp,
+							layout : { width : -2, height : -2 },
+							style : "textview_default",
+							fontSize : 1
+						})
+					]
+				})
+			);
+			if (mode == "add") {
+				for (i in expAdd.reasons) {
+					reasonCount = expAdd.reasons[i];
+					reasonInfo = realThis.reasons[i];
+					viewList.push(
+						L.LinearLayout({
+							orientation : L.LinearLayout("horizontal"),
+							gravity : L.Gravity("center"),
+							layout : { width : -1, height : -2 },
+							children : [
+								L.TextView({
+									text : reasonInfo.name,
+									padding : [0, 10 * G.dp, 0, 10 * G.dp],
+									gravity : L.Gravity("left"),
+									layout : { width : -2, height : -2 },
+									style : "textview_default",
+									fontSize : 3
+								}),
+								L.TextView({
+									text : "(" + reasonCount + "次)",
+									visibility : L.View(reasonCount > 1 ? "visible" : "gone"),
+									layout : { width : -2, height : -2 },
+									style : "textview_prompt",
+									fontSize : 1
+								}),
+								L.Space({
+									layout : { width : 0, height : -1, weight : 1.0 }
+								}),
+								L.TextView({
+									text : "+" + (reasonCount * reasonInfo.exp),
+									layout : { width : -2, height : -2 },
+									style : "textview_prompt",
+									fontSize : 1
+								})
+							]
+						})
+					);
+				}
+			} else if (mode == "info") {
+				viewList.push(
+					L.TextView({
+						text : "获取途径",
+						padding : [0, 20 * G.dp, 0, 15 * G.dp],
+						layout : { width : -1, height : -2 },
+						gravity : L.Gravity("center"),
+						style : "textview_default",
+						fontSize : 4
+					})
+				);
+				for (i in realThis.reasons) {
+					reasonInfo = realThis.reasons[i];
+					viewList.push(
+						L.LinearLayout({
+							orientation : L.LinearLayout("horizontal"),
+							gravity : L.Gravity("center"),
+							layout : { width : -1, height : -2 },
+							children : [
+								L.TextView({
+									text : reasonInfo.name,
+									padding : [0, 10 * G.dp, 0, 10 * G.dp],
+									gravity : L.Gravity("left"),
+									layout : { width : -2, height : -2 },
+									style : "textview_default",
+									fontSize : 3
+								}),
+								L.Space({
+									layout : { width : 0, height : -1, weight : 1.0 }
+								}),
+								L.TextView({
+									text : "+" + reasonInfo.exp,
+									layout : { width : -2, height : -2 },
+									style : "textview_prompt",
+									fontSize : 1
+								})
+							]
+						})
+					);
+				}
+			} else {
+				viewList.push(
+					L.TextView({
+						text : "本日获取经验\n已到达上限",
+						padding : [0, 20 * G.dp, 0, 15 * G.dp],
+						layout : { width : -1, height : -2 },
+						gravity : L.Gravity("center"),
+						style : "textview_prompt",
+						fontSize : 3
+					})
+				);
+			}
+		}
+		viewList.push(
+			L.Space({
+				layout : { width : -1, height : 0, weight : 1.0 }
+			}),
+			L.TextView({
+				text : "签到",
+				padding : [0, 20 * G.dp, 0, 15 * G.dp],
+				layout : { width : -1, height : -2 },
+				gravity : L.Gravity("center"),
+				style : "textview_default",
+				fontSize : 4
+			}),
+			L.LinearLayout({
+				orientation : L.LinearLayout("horizontal"),
+				gravity : L.Gravity("center"),
+				layout : { width : -1, height : -2 },
+				children : [
+					L.TextView({
+						text : "连续签到",
+						padding : [0, 10 * G.dp, 0, 10 * G.dp],
+						gravity : L.Gravity("left"),
+						layout : { width : -2, height : -2, weight : 1.0 },
+						style : "textview_default",
+						fontSize : 3
+					}),
+					L.TextView({
+						text : userInfo.checkInContinuousDays + "天",
+						layout : { width : -2, height : -2 },
+						style : "textview_default",
+						fontSize : 1
+					}),
+					L.TextView({
+						text : "(+1)",
+						visibility : L.View(checkedIn ? "visible" : "gone"),
+						layout : { width : -2, height : -2 },
+						style : "textview_prompt",
+						fontSize : 1
+					})
+				]
+			}),
+			L.LinearLayout({
+				orientation : L.LinearLayout("horizontal"),
+				gravity : L.Gravity("center"),
+				layout : { width : -1, height : -2 },
+				children : [
+					L.TextView({
+						text : "累计签到",
+						padding : [0, 10 * G.dp, 0, 10 * G.dp],
+						gravity : L.Gravity("left"),
+						layout : { width : -2, height : -2, weight : 1.0 },
+						style : "textview_default",
+						fontSize : 3
+					}),
+					L.TextView({
+						text : userInfo.checkInTotalDays + "天",
+						layout : { width : -2, height : -2 },
+						style : "textview_default",
+						fontSize : 1
+					}),
+					L.TextView({
+						text : "(+1)",
+						visibility : L.View(checkedIn ? "visible" : "gone"),
+						layout : { width : -2, height : -2 },
+						style : "textview_prompt",
+						fontSize : 1
+					}),
+				]
+			}),
+			L.TextView({
+				text : "累计经验",
+				padding : [0, 20 * G.dp, 0, 15 * G.dp],
+				layout : { width : -1, height : -2 },
+				gravity : L.Gravity("center"),
+				style : "textview_default",
+				fontSize : 4
+			}),
+			L.LinearLayout({
+				orientation : L.LinearLayout("horizontal"),
+				backgroundColor : Common.theme.promptcolor,
+				layout : { width : -1, height : 2 * G.dp },
+				weightSum : exp.levelExp,
+				children : [
+					L.View({
+						backgroundColor : Common.theme.highlightcolor,
+						layout : { width : 0, height : -1, weight : exp.rest }
+					}),
+					mode != "offline" ? L.View({
+						backgroundColor : Common.theme.textcolor,
+						layout : { width : 0, height : -1, weight : expAdd.max_today_exp - expAdd.today_experience }
+					}) : L.View({ visibility : L.View("gone") })
+				]
+			}),
+			L.LinearLayout({
+				orientation : L.LinearLayout("horizontal"),
+				layout : { width : -1, height : -2 },
+				padding : [0, 0, 0, 5 * G.dp],
+				children : [
+					L.TextView({
+						text : "Lv. " + exp.level,
+						layout : { width : -2, height : -2, weight : 1.0 },
+						style : "textview_default",
+						fontSize : 1
+					}),
+					L.TextView({
+						text : exp.rest + "/" + exp.levelExp,
+						layout : { width : -2, height : -2 },
+						style : "textview_default",
+						fontSize : 1
+					}),
+				]
+			}),
+			L.TextView({
+				text : "关闭",
+				padding : [10 * G.dp, 20 * G.dp, 10 * G.dp, 20 * G.dp],
+				gravity : L.Gravity("center"),
+				layout : { width : -1, height : -2 },
+				style : "button_critical",
+				fontSize : 3,
+				onClick : function() {try {
+					popup.exit();
+				} catch(e) {erp(e)}}
+			})
+		);
+		popup = PopupPage.showSideBar("usermanager.ExpManage", L.ScrollView({
+			style : "message_bg",
+			fillViewport : true,
+			child : L.LinearLayout({
+				orientation : L.LinearLayout("vertical"),
+				padding : [20 * G.dp, 20 * G.dp, 20 * G.dp, 0],
+				layout : { width : -1, height : -1 },
+				children : viewList
+			})
+		}), "left", 160 * G.dp, 0.2);
+		if (callback) popup.on("exit", callback);
+		popup.enter();
+	} catch(e) {erp(e)}})},
 	getSettingItem : function() {
 		var realThis = this;
 		return {
@@ -859,7 +1170,7 @@ MapScript.loadModule("UserManager", {
 					this.description = userInfo.email;
 				} else {
 					this.name = "未登录";
-					this.description = "点击登录 命令助手 账号（由ProjectXero提供）";
+					this.description = "点击登录命令助手账号";
 				}
 				return "";
 			},
@@ -937,7 +1248,7 @@ MapScript.loadModule("UserManager", {
 							if (realThis.isOnline()) {
 								realThis.showSyncExp(callback);
 							} else {
-								Common.toast("同步经验成功");
+								realThis.showExpManage(null);
 							}
 							popup.exit();
 						} catch(e) {erp(e)}}

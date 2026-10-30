@@ -1,0 +1,42 @@
+{
+    "name": "原神地图拓展",
+    "author": "乱杖先生",
+    "description": "该拓展包内置Projectxero构建的提瓦特大地图，标点与原神官方地图同步",
+    "uuid": "acd62444-dd5d-4a38-bd3d-7c4f18149fbd",
+    "version": [
+        1,
+        0,
+        0
+    ],
+    "require": [],
+    "commands": {},
+    "versionPack": {
+        "base": {
+            "minSupportVer": "1.2",
+            "enums": {
+                "item": "block"
+            },
+            "commands": {},
+            "selectors": {},
+            "help": {}
+        },
+        "idtable": {
+            "mode": "overwrite",
+            "maxSupportVer": "1.1.*",
+            "enums": {
+                "item": {},
+                "block": {},
+                "entity": {}
+            }
+        },
+        "0.16.0": {
+            "commands": {
+                "原神地图": {
+                    "description": "左滑进入原神提瓦特大地图",
+                    "help": "http://ysmap.projectxero.top"
+                }
+            },
+            "minSupportVer": "1.11.0.3"
+        }
+    }
+}

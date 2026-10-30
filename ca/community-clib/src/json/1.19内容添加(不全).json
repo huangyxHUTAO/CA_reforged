@@ -1,0 +1,123 @@
+{
+    "name": "1.19新内容添加(不全)",
+    "author": "MQZC ZBCK",
+    "description": "基岩版的，对应版本号是拓展包版本\n最后面是添加的内容数",
+    "uuid": "a6786c57-fe65-412f-8ea0-11bd6ccc08dd",
+    "version": [
+        1,
+        19,
+        0,
+        28
+    ],
+    "require": [],
+    "enums": {
+        "add_item": {
+            "mangrove_door": "红树木门",
+            "mangrove_stairs": "红树木楼梯",
+            "mangrove_fence_gate": "红树木栅栏门",
+            "mangrove_fence": "红树木栅栏",
+            "mangrove_planks": "红树木木坂",
+            "recovery_compass": "追溯指南针",
+            "reinforced_beepslate": "强化深板岩",
+            "echo_shard": "回响碎片",
+            "tadpole_bucket": "蝌蚪桶",
+            "ochre_froglight": "赭色青蛙灯",
+            "verdant_froglight": "碧绿青蛙灯",
+            "pearlescent_froglight": "珠光青蛙灯",
+            "mangrove_leaves": "红树树叶",
+            "mangrove_wood": "条形红树木",
+            "muddy_Mangrove_roots": "泥拧的红树根",
+            "mangrove_roots": "红树根",
+            "mangrove_log": "红树木",
+            "mangrove_propagule": "红树胎生苗",
+            "frogspawn": "青蛙卵",
+            "mud": "泥",
+            "tabpole_spawn_egg": "生成 蝌蚪",
+            "oak_boats_chest": "橡木箱子船",
+            "birch_boats_chest": "桦木箱子船",
+            "spruce_boats_chest": "云杉木箱子船",
+            "dark_oak_boats_chest": "深色橡木箱子船",
+            "jungle_chest_boat": "丛林木箱子船",
+            "mangrove_chest_boat": "红树木箱子船",
+            "acacia_chest_boat": "合金欢木箱子船",
+            "sculk": "幽秘体方块",
+            "sculk_catalyst": "幽秘催生体",
+            "sculk_shrieker": "潜声尖啸器",
+            "sculk_sensor": "潜声传感器",
+            "sculk_vein": "幽秘脉络",
+            "warden_spawn_egg": "生成 监守者",
+            "allay_spawn_egg": "生成 轻灵",
+            "frog_spawn_egg": "生成 青蛙",
+            "mangrove_trapdoor": "红树木活板门",
+            "mangrove_slab": "红树木半砖",
+            "packed_mud": "填充泥浆",
+            "mud_barrier": "泥砖",
+            "mud_barrier_slab": "泥砖半砖",
+            "mud_barrier_stairs": "泥砖楼梯",
+            "mud_barrier_wall": "泥砖围墙",
+            "mangrove_boat": "红树木船",
+            "mangrove_sign": "红树木告示牌",
+            "spritted_mangrove_log": "剥皮红树木",
+            "spritted_mangrove_wood": "剥皮条形红树木",
+            "music_disc_5": "五号唱片(与11 13差不多)",
+            "disc_fragment_5": "五号唱片碎片",
+            "music_disc_otherside": "otherside"
+        },
+        "add_entity": {
+            "allay": "轻灵",
+            "warden": "监守者",
+            "frog": "青蛙",
+            "tadpole": "蝌蚪"
+        },
+        "add_gamerule_bool": {
+            "还没找出来，但是知道有这个规则": "是否会生成监守者"
+        },
+        "add_gamemode_commands": {
+            "6": "旁观"
+        },
+        "add_block": {
+            "mangrove_door": "红树木门",
+            "mangrove_stairs": "红树木楼梯",
+            "mangrove_fence_gate": "红树木栅栏门",
+            "mangrove_fence": "红树木栅栏",
+            "mangrove_planks": "红树木木坂",
+            "reinforced_beepslate": "强化深板岩",
+            "ochre_froglight": "赭色青蛙灯",
+            "verdant_froglight": "碧绿青蛙灯",
+            "pearlescent_froglight": "珠光青蛙灯",
+            "mangrove_leaves": "红树树叶",
+            "mangrove_wood": "条形红树木",
+            "mangrove_roots": "红树根",
+            "mangrove_log": "红树木",
+            "mangrove_propagule": "红树胎生苗",
+            "frogspawn": "青蛙卵",
+            "mud": "泥",
+            "sculk": "幽秘体方块",
+            "sculk_catalyst": "幽秘催生体",
+            "sculk_shrieker": "潜声尖啸器",
+            "sculk_sensor": "潜声传感器",
+            "sculk_vein": "幽秘脉络",
+            "mangrove_trapdoor": "红树木活板门",
+            "mangrove_slab": "红树木半砖",
+            "packed_mud": "填充泥浆",
+            "mud_barrier": "泥砖",
+            "mud_barrier_slab": "泥砖半砖",
+            "mud_barrier_stairs": "泥砖楼梯",
+            "mud_barrier_wall": "泥砖围墙",
+            "spritted_mangrove_wood": "剥皮条形红树木",
+            "spritted_mangrove_log": "剥皮红树木",
+            "muddy_mangrove_roots": "泥拧的红树根",
+            "mangrove_sign": "红树木告示牌"
+        }
+    },
+    "versionPack": {
+        "base": {
+            "enums": {
+                "item": "add_item",
+                "gamemode": "add_gamemode_commands",
+                "block": "add_block",
+                "entity": "add_entity"
+            }
+        }
+    }
+}

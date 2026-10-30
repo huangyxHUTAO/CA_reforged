@@ -1,0 +1,1221 @@
+{
+    "$schema": "https://ca.projectxero.top/clib/schema_v1.string",
+    "name": "更多翻译-BlockState Enum",
+    "author": "工程师_多多",
+    "description": "*测试中版本，非实际效果\n*将本拓展包置于底层食用\n*请将生成的{}改为[]后使用\n*目前仅支持铁砧、紫水晶簇、竹子的补全\n\n支持的版本:1.16.210.05+\n最低CA版本:2022-10-01\n更新日期:2023年4月16日",
+    "uuid": "5d2347a1-331a-1512-a71-ac57db54ac62",
+    "version": [
+        0,
+        0,
+        0,
+        1
+    ],
+    "require": [],
+    "minSupportVer": "1.16.210.05",
+    "minCAVersion": "2022-10-01",
+    "enums": {
+        "anvil_blockstate": {
+            "[\"damage\":\"\"]": "方块损坏程度\n\"broken\": \"完全破损的铁砧（无法使用，且使用普通纹理）\",\n\"undamaged\": \"完好的铁砧\",\n\"very_damaged\": \"严重受损的铁砧\",\n\"slightly_damaged\": \"轻微受损的铁砧\"",
+            "[\"direction\":]": "方块朝向的方向\n\"0\": \"朝向西方\",\n\"1\": \"朝向北方\",\n\"2\": \"朝向东方\",\n\"3\": \"朝向南方\"",
+            "[\"damage\":\"\",\"direction\":]": "方块损坏程度和方块朝向的方向\n\"damage\": {\n    \"broken\": \"完全破损的铁砧（无法使用，且使用普通纹理）\",\n    \"undamaged\": \"完好的铁砧\",\n    \"very_damaged\": \"严重受损的铁砧\",\n    \"slightly_damaged\": \"轻微受损的铁砧\"\n},\n\"direction\": {\n    \"0\": \"朝向西方\",\n    \"1\": \"朝向北方\",\n    \"2\": \"朝向东方\",\n    \"3\": \"朝向南方\"\n},"
+        },
+        "anvil_block": {
+            "anvil": "铁砧"
+        },
+        "amethyst_block": {
+            "amethyst_cluster": "紫水晶簇",
+            "large_amethyst_bud": "大型水晶芽",
+            "medium_amethyst_bud": "中型水晶芽",
+            "small_amethyst_bud": "小型水晶芽"
+        },
+        "amethyst_blockstate": {
+            "[\"direction\":]": "方块朝向的方向\n\"0\": \"\",\n\"1\": \"\",\n\"2\": \"\",\n\"3\": \"\",\n\"4\": \"\",\n\"5\": \"\""
+        },
+        "bamboo_block": {
+            "bamboo": "竹子"
+        },
+        "bamboo_blockstate": {
+            "[\"bamboo_leaf_size\":\"\"]": "竹叶的大小\n\"no_leaves\": \"没有叶子\",\n\"small_leaves\": \"有小叶子\",\n\"large_leaves\": \"有大叶子\"",
+            "[\"bamboo_stalk_thickness\":\"\"]": "竹子的粗细\n\"thin\": \"细的\",\n\"thick\": \"粗的\"",
+            "[\"age_bit\":]": "竹子的生长状态\n使用布尔值，无引号的true或false",
+            "[\"bamboo_leaf_size\":\"\",\"bamboo_stalk_thickness\":\"\"]": "竹叶的大小和竹子的粗细",
+            "[\"bamboo_leaf_size\":\"\",\"bamboo_stalk_thickness\":\"\",\"age_bit\":]": "竹叶的大小、竹子的粗细和竹子的生长状态"
+        },
+        "bamboo_sapling_block": {
+            "bamboo_sapling": "竹笋"
+        },
+        "bamboo_sapling_sapling_type": {},
+        "blockstate_facing_four": {
+            "2": "朝北",
+            "3": "朝南",
+            "4": "朝西",
+            "5": "朝东"
+        },
+        "blockstate_facing_six": {
+            "0": "朝上",
+            "1": "朝下",
+            "2": "朝北",
+            "3": "朝南",
+            "4": "朝西",
+            "5": "朝东"
+        }
+    },
+    "json": {
+        "only_facing_four": {
+            "type": "array",
+            "name": "方块状态",
+            "children": {
+                "facing_direction": {
+                    "type": "int",
+                    "name": "方块朝向的方向",
+                    "suggestion": "blockstate_facing_four"
+                }
+            }
+        },
+        "only_facing_six": {
+            "type": "object",
+            "name": "方块状态",
+            "children": {
+                "facing_direction": {
+                    "type": "int",
+                    "name": "方块朝向的方向",
+                    "suggestion": "blockstate_facing_six"
+                }
+            }
+        }
+    },
+    "versionPack": {
+        "anvil_blockstate_1": {
+            "commands": {
+                "clone": {
+                    "patterns": {
+                        "filtered_withBlockStates_anvil_blockstate": {
+                            "description": "将起点与终点指定的长方体区域内的方块结构过滤并复制到目标点",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "起点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "终点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "目标点"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "filtered",
+                                    "prompt": "仅复制方块ID符合方块名定义的方块"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "复制模式",
+                                    "list": {
+                                        "force": "强制复制：即使指定区域与目标区域有重叠也执行复制",
+                                        "move": "仅移动：复制方块的同时将被复制的方块替换为空气",
+                                        "normal": "[默认]不执行force与move"
+                                    }
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "anvil_blockstate"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "fill": {
+                    "patterns": {
+                        "default_withBlockStates_anvil_blockstate": {
+                            "description": "按指定模式在点A与点B指定的长方体区域填充方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "anvil_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏所有：摧毁填充区域内原有的方块，并用指定方块替换填充区域内所有方块。",
+                                        "hollow": "空心长方体：用指定方块替换填充区域外层的方块，内部方块被替换为空气。",
+                                        "keep": "仅替换空气：仅用指定方块替换填充区域内的空气方块。",
+                                        "outline": "仅替换外层：仅用指定方块替换填充区域外层的方块，内部方块保持原样。",
+                                        "replace": "[默认]替换所有：用指定方块替换填充区域内所有方块或另一指定方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        "replace_withBlockStates_anvil_blockstate": {
+                            "description": "替换在点A与点B指定的长方体区域的指定方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "anvil_blockstate"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "replace",
+                                    "prompt": "[默认]替换所有：用指定方块替换填充区域内所有方块或指定方块。"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "被替换方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "suggestion": "anvil_blockstate",
+                                    "name": "被替换方块状态",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "enums": {},
+            "supportVer": [
+                {
+                    "min": "1.16.210.05",
+                    "max": "1.16.210.05"
+                },
+                {
+                    "min": "1.16.210.53"
+                }
+            ],
+            "selectors": {},
+            "help": {}
+        },
+        "anvil_blockstate_testforblock": {
+            "commands": {
+                "testforblock": {
+                    "patterns": {
+                        "default_withBlockStates_anvil_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "anvil_blockstate",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.18.0.02",
+                    "max": "1.18.0.02"
+                },
+                {
+                    "min": "1.18.0.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "anvil_blockstate_setblock": {
+            "commands": {
+                "setblock": {
+                    "patterns": {
+                        "default_withBlockStates_anvil_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "anvil_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏：摧毁原方块，并用指定方块替换原方块。",
+                                        "keep": "仅替换空气：仅当原方块为空气时才用指定方块替换原方块。",
+                                        "replace": "[默认]替换：用指定方块替换原方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    },
+                    "help": "https://wiki.biligame.com/mc/%E5%91%BD%E4%BB%A4/setblock"
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.40.02",
+                    "max": "1.19.40.02"
+                },
+                {
+                    "min": "1.19.40.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "anvil_blockstate_execute": {
+            "commands": {
+                "execute": {
+                    "patterns": {
+                        "conditional_block_withBlockStates_anvil_blockstate": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "anvil_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "anvil_blockstate"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.10.02",
+                    "max": "1.19.10.03"
+                },
+                {
+                    "min": "1.19.10.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "amethyst_blockstate_1": {
+            "commands": {
+                "clone": {
+                    "patterns": {
+                        "filtered_withBlockStates_amethyst_blockstate": {
+                            "description": "将起点与终点指定的长方体区域内的方块结构过滤并复制到目标点",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "起点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "终点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "目标点"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "filtered",
+                                    "prompt": "仅复制方块ID符合方块名定义的方块"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "复制模式",
+                                    "list": {
+                                        "force": "强制复制：即使指定区域与目标区域有重叠也执行复制",
+                                        "move": "仅移动：复制方块的同时将被复制的方块替换为空气",
+                                        "normal": "[默认]不执行force与move"
+                                    }
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "amethyst_blockstate"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "fill": {
+                    "patterns": {
+                        "default_withBlockStates_amethyst_blockstate": {
+                            "description": "按指定模式在点A与点B指定的长方体区域填充方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "amethyst_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏所有：摧毁填充区域内原有的方块，并用指定方块替换填充区域内所有方块。",
+                                        "hollow": "空心长方体：用指定方块替换填充区域外层的方块，内部方块被替换为空气。",
+                                        "keep": "仅替换空气：仅用指定方块替换填充区域内的空气方块。",
+                                        "outline": "仅替换外层：仅用指定方块替换填充区域外层的方块，内部方块保持原样。",
+                                        "replace": "[默认]替换所有：用指定方块替换填充区域内所有方块或另一指定方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        "replace_withBlockStates_amethyst_blockstate": {
+                            "description": "替换在点A与点B指定的长方体区域的指定方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "amethyst_blockstate"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "replace",
+                                    "prompt": "[默认]替换所有：用指定方块替换填充区域内所有方块或指定方块。"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "被替换方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "suggestion": "amethyst_blockstate",
+                                    "name": "被替换方块状态",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "enums": {},
+            "supportVer": [
+                {
+                    "min": "1.16.210.05",
+                    "max": "1.16.210.05"
+                },
+                {
+                    "min": "1.16.210.53"
+                }
+            ],
+            "selectors": {},
+            "help": {}
+        },
+        "amethyst_blockstate_testforblock": {
+            "commands": {
+                "testforblock": {
+                    "patterns": {
+                        "default_withBlockStates_amethyst_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "amethyst_blockstate",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.18.0.02",
+                    "max": "1.18.0.02"
+                },
+                {
+                    "min": "1.18.0.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "amethyst_blockstate_setblock": {
+            "commands": {
+                "setblock": {
+                    "patterns": {
+                        "default_withBlockStates_amethyst_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "amethyst_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏：摧毁原方块，并用指定方块替换原方块。",
+                                        "keep": "仅替换空气：仅当原方块为空气时才用指定方块替换原方块。",
+                                        "replace": "[默认]替换：用指定方块替换原方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    },
+                    "help": "https://wiki.biligame.com/mc/%E5%91%BD%E4%BB%A4/setblock"
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.40.02",
+                    "max": "1.19.40.02"
+                },
+                {
+                    "min": "1.19.40.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "amethyst_blockstate_execute": {
+            "commands": {
+                "execute": {
+                    "patterns": {
+                        "conditional_block_withBlockStates_amethyst_blockstate": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "amethyst_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "amethyst_blockstate"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.10.02",
+                    "max": "1.19.10.03"
+                },
+                {
+                    "min": "1.19.10.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_blockstate_1": {
+            "commands": {
+                "clone": {
+                    "patterns": {
+                        "filtered_withBlockStates_bamboo_blockstate": {
+                            "description": "将起点与终点指定的长方体区域内的方块结构过滤并复制到目标点",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "起点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "终点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "目标点"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "filtered",
+                                    "prompt": "仅复制方块ID符合方块名定义的方块"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "复制模式",
+                                    "list": {
+                                        "force": "强制复制：即使指定区域与目标区域有重叠也执行复制",
+                                        "move": "仅移动：复制方块的同时将被复制的方块替换为空气",
+                                        "normal": "[默认]不执行force与move"
+                                    }
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_blockstate"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "fill": {
+                    "patterns": {
+                        "default_withBlockStates_bamboo_blockstate": {
+                            "description": "按指定模式在点A与点B指定的长方体区域填充方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏所有：摧毁填充区域内原有的方块，并用指定方块替换填充区域内所有方块。",
+                                        "hollow": "空心长方体：用指定方块替换填充区域外层的方块，内部方块被替换为空气。",
+                                        "keep": "仅替换空气：仅用指定方块替换填充区域内的空气方块。",
+                                        "outline": "仅替换外层：仅用指定方块替换填充区域外层的方块，内部方块保持原样。",
+                                        "replace": "[默认]替换所有：用指定方块替换填充区域内所有方块或另一指定方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        "replace_withBlockStates_bamboo_blockstate": {
+                            "description": "替换在点A与点B指定的长方体区域的指定方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_blockstate"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "replace",
+                                    "prompt": "[默认]替换所有：用指定方块替换填充区域内所有方块或指定方块。"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "被替换方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "suggestion": "bamboo_blockstate",
+                                    "name": "被替换方块状态",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "enums": {},
+            "supportVer": [
+                {
+                    "min": "1.16.210.05",
+                    "max": "1.16.210.05"
+                },
+                {
+                    "min": "1.16.210.53"
+                }
+            ],
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_blockstate_testforblock": {
+            "commands": {
+                "testforblock": {
+                    "patterns": {
+                        "default_withBlockStates_bamboo_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_blockstate",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.18.0.02",
+                    "max": "1.18.0.02"
+                },
+                {
+                    "min": "1.18.0.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_blockstate_setblock": {
+            "commands": {
+                "setblock": {
+                    "patterns": {
+                        "default_withBlockStates_bamboo_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏：摧毁原方块，并用指定方块替换原方块。",
+                                        "keep": "仅替换空气：仅当原方块为空气时才用指定方块替换原方块。",
+                                        "replace": "[默认]替换：用指定方块替换原方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    },
+                    "help": "https://wiki.biligame.com/mc/%E5%91%BD%E4%BB%A4/setblock"
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.40.02",
+                    "max": "1.19.40.02"
+                },
+                {
+                    "min": "1.19.40.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_blockstate_execute": {
+            "commands": {
+                "execute": {
+                    "patterns": {
+                        "conditional_block_withBlockStates_bamboo_blockstate": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_blockstate"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.10.02",
+                    "max": "1.19.10.03"
+                },
+                {
+                    "min": "1.19.10.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_sapling_blockstate_1": {
+            "commands": {
+                "clone": {
+                    "patterns": {
+                        "filtered_withBlockStates_bamboo_sapling_blockstate": {
+                            "description": "将起点与终点指定的长方体区域内的方块结构过滤并复制到目标点",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "起点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "终点"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "目标点"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "filtered",
+                                    "prompt": "仅复制方块ID符合方块名定义的方块"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "复制模式",
+                                    "list": {
+                                        "force": "强制复制：即使指定区域与目标区域有重叠也执行复制",
+                                        "move": "仅移动：复制方块的同时将被复制的方块替换为空气",
+                                        "normal": "[默认]不执行force与move"
+                                    }
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_sapling_blockstate"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "fill": {
+                    "patterns": {
+                        "default_withBlockStates_bamboo_sapling_blockstate": {
+                            "description": "按指定模式在点A与点B指定的长方体区域填充方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_sapling_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏所有：摧毁填充区域内原有的方块，并用指定方块替换填充区域内所有方块。",
+                                        "hollow": "空心长方体：用指定方块替换填充区域外层的方块，内部方块被替换为空气。",
+                                        "keep": "仅替换空气：仅用指定方块替换填充区域内的空气方块。",
+                                        "outline": "仅替换外层：仅用指定方块替换填充区域外层的方块，内部方块保持原样。",
+                                        "replace": "[默认]替换所有：用指定方块替换填充区域内所有方块或另一指定方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        "replace_withBlockStates_bamboo_sapling_blockstate": {
+                            "description": "替换在点A与点B指定的长方体区域的指定方块",
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "点A"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "点B"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_sapling_blockstate"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "replace",
+                                    "prompt": "[默认]替换所有：用指定方块替换填充区域内所有方块或指定方块。"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "被替换方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "suggestion": "bamboo_sapling_blockstate",
+                                    "name": "被替换方块状态",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "enums": {},
+            "supportVer": [
+                {
+                    "min": "1.16.210.05",
+                    "max": "1.16.210.05"
+                },
+                {
+                    "min": "1.16.210.53"
+                }
+            ],
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_sapling_blockstate_testforblock": {
+            "commands": {
+                "testforblock": {
+                    "patterns": {
+                        "default_withBlockStates_bamboo_sapling_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_sapling_blockstate",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.18.0.02",
+                    "max": "1.18.0.02"
+                },
+                {
+                    "min": "1.18.0.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_sapling_blockstate_setblock": {
+            "commands": {
+                "setblock": {
+                    "patterns": {
+                        "default_withBlockStates_bamboo_sapling_blockstate": {
+                            "params": [
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_sapling_blockstate",
+                                    "optional": true
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "旧方块处理方式",
+                                    "list": {
+                                        "destroy": "破坏：摧毁原方块，并用指定方块替换原方块。",
+                                        "keep": "仅替换空气：仅当原方块为空气时才用指定方块替换原方块。",
+                                        "replace": "[默认]替换：用指定方块替换原方块。"
+                                    },
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    },
+                    "help": "https://wiki.biligame.com/mc/%E5%91%BD%E4%BB%A4/setblock"
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.40.02",
+                    "max": "1.19.40.02"
+                },
+                {
+                    "min": "1.19.40.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        },
+        "bamboo_sapling_blockstate_execute": {
+            "commands": {
+                "execute": {
+                    "patterns": {
+                        "conditional_block_withBlockStates_bamboo_sapling_blockstate": {
+                            "description": "指定方块满足条件时执行",
+                            "params": [
+                                {
+                                    "type": "enum",
+                                    "name": "条件执行",
+                                    "list": "execute_conditional"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "block",
+                                    "prompt": "指定方块满足……"
+                                },
+                                {
+                                    "type": "position",
+                                    "name": "坐标"
+                                },
+                                {
+                                    "type": "enum",
+                                    "name": "方块ID",
+                                    "list": "bamboo_sapling_block"
+                                },
+                                {
+                                    "type": "string",
+                                    "name": "方块状态",
+                                    "suggestion": "bamboo_sapling_blockstate"
+                                },
+                                {
+                                    "type": "subcommand",
+                                    "name": "子命令",
+                                    "mainCommand": "execute"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "supportVer": [
+                {
+                    "min": "1.19.10.02",
+                    "max": "1.19.10.03"
+                },
+                {
+                    "min": "1.19.10.20"
+                }
+            ],
+            "enums": {},
+            "selectors": {},
+            "help": {}
+        }
+    }
+}

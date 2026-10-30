@@ -22,30 +22,42 @@ MapScript.loadModule("JSONEdit", {
 		if (!self.menu) {
 			self.intl = Intl.getNamespace("jsonEdit.main");
 			self.saveMenu = [{
-				text : self.intl.edit,
-				description : self.intl.edit_desc,
-				onclick : function(v, tag) {
-					if (!JSONEdit.show(tag.par)) {
-						Common.toast(self.intl.nowhereEditable);
-						return true;
-					}
+				text: self.intl.edit,
+				description: self.intl.edit_desc,
+				hidden(tag) {
+					return tag.data === null;
+				},
+				onclick(v, tag) {
+					tag.editCallback();
 				}
 			}, {
-				text : self.intl.copy,
-				description : self.intl.copy_desc,
-				onclick : function(v, tag) {
+				text: self.intl.replace,
+				description: self.intl.replace_desc,
+				hidden(tag) {
+					return tag.data !== null;
+				},
+				onclick(v, tag) {
+					JSONEdit.create((data) => {
+						tag.replaceCallback(data);
+					});
+				}
+			}, {
+				text: self.intl.copy,
+				description: self.intl.copy_desc,
+				onclick(v, tag) {
 					Common.setClipboardText(JSON.stringify(tag.data, null, "\t"));
 					Common.toast(self.intl.copy_success);
+					return true;
 				}
 			}, {
-				text : self.intl.save,
-				description : self.intl.save_desc,
-				hidden : function(tag) {
-					return !tag.path;
+				text: self.intl.save,
+				description: self.intl.save_desc,
+				hidden(tag) {
+					return !tag.uri;
 				},
-				onclick : function(v, tag) {
+				onclick(v, tag) {
 					try {
-						MapScript.saveJSON(tag.path, tag.data);
+						ExternalStorage.writeFileContent(tag.uri, JSON.stringify(tag.data));
 						Common.toast(self.intl.save_success);
 					} catch(e) {
 						Common.toast(self.intl.resolve("save_failed", e));
@@ -53,15 +65,17 @@ MapScript.loadModule("JSONEdit", {
 					return true;
 				}
 			}, {
-				text : self.intl.saveAs,
-				description : self.intl.saveAs_desc,
-				onclick : function(v, tag) {
-					Common.showFileDialog({
-						type : 1,
-						callback : function(f) {
+				text: self.intl.saveAs,
+				description: self.intl.saveAs_desc,
+				onclick(v, tag) {
+					ExternalStorage.showSaveActions({
+						mimeType: "application/json",
+						hint: "untitled.json",
+						callback(uri) {
 							try {
-								MapScript.saveJSON(tag.path = f.result.getAbsolutePath(), tag.data);
-								Common.toast(self.intl.saveAs_success);
+								ExternalStorage.writeFileContent(uri, JSON.stringify(tag.data));
+								tag.uri = uri;
+								Common.toast(self.intl.save_success);
 							} catch(e) {
 								Common.toast(self.intl.resolve("save_failed", e));
 							}
@@ -70,46 +84,29 @@ MapScript.loadModule("JSONEdit", {
 					return true;
 				}
 			}, {
-				text : Common.intl.close,
-				onclick : function(v, tag) {}
+				text: Common.intl.close,
+				onclick(v, tag) {}
 			}];
-			self.menu = [{
-				text : self.intl.new,
-				description : self.intl.new_desc,
-				onclick : function() {
-					JSONEdit.create(function cb(o) {
-						Common.showOperateDialog(self.saveMenu, {
-							data : o,
-							path : null,
-							par : {
-								source : o,
-								update : function() {
-									cb(this.source);
-								}
-							}
-						});
+			self.openMenu = [{
+				text: self.intl.new,
+				description: self.intl.new_desc,
+				onclick(v, tag) {
+					JSONEdit.create((data) => {
+						tag.saveCallback(null, data);
 					});
 				}
 			}, {
-				text : self.intl.open,
-				description : self.intl.open_desc,
-				onclick : function() {
-					Common.showFileDialog({
-						type : 0,
-						callback : function(f) {
-							var o;
+				text: self.intl.open,
+				description: self.intl.open_desc,
+				onclick(v, tag) {
+					ExternalStorage.showOpenActions({
+						mimeType: "application/json",
+						callback(uri) {
+							let data;
 							try {
-								o = {
-									data : MapScript.readJSON(f.result.getAbsolutePath(), null),
-									path : f.result.getAbsolutePath()
-								}
-								if (!JSONEdit.show(o.par = {
-									source : o.data,
-									update : function() {
-										o.data = this.source;
-										Common.showOperateDialog(self.saveMenu, o);
-									}
-								})) Common.showOperateDialog(self.saveMenu, o);
+								data = JSON.parse(ExternalStorage.readFileContent(uri, "UTF-8"));
+								ExternalStorage.tryTakeUriPermission(uri);
+								tag.openCallback(uri, data, false);
 							} catch(e) {
 								Common.toast(JSONEdit.intl.resolve("invaildJSON", e));
 							}
@@ -118,10 +115,34 @@ MapScript.loadModule("JSONEdit", {
 				}
 			}, {
 				text : Common.intl.close,
-				onclick : function(v, tag) {}
+				onclick(v, tag) {}
 			}];
 		}
-		Common.showOperateDialog(self.menu);
+		Common.showOperateDialog(self.openMenu, {
+			openCallback(uri, data, needEditablePrompt) {
+				const self = this;
+				Log.d("open")
+				if (!JSONEdit.show({
+					source: data,
+					update() {
+						Log.d("update")
+						self.saveCallback(uri, data);
+					}
+				})) {
+					if (needEditablePrompt) {
+						Common.toast(self.intl.nowhereEditable);
+					}
+					self.saveCallback(uri, data);
+				}
+			},
+			saveCallback(uri, data) {
+				Common.showOperateDialog(self.saveMenu, {
+					uri, data,
+					editCallback: () => this.openCallback(uri, data, true),
+					replaceCallback: (data) => this.openCallback(uri, data),
+				});
+			}
+		});
 	},
 	show : function(o) {
 		var i, name, data;
@@ -438,16 +459,21 @@ MapScript.loadModule("JSONEdit", {
 				holder.e = e;
 			}
 			self.getDesp = function(obj, propertyName) {
-				var e;
+				var e, result;
 				try {
-					e = obj[propertyName];
-					if (Array.isArray(e)) {
-						return e.length ? JSONEdit.intl.resolve("arrayDesc", e[0], e.length) : JSONEdit.intl.emptyArrayDesc;
-					} else if (e instanceof Object && typeof e !== "function" && !(e instanceof java.lang.CharSequence)) {
-						return JSONEdit.intl.resolve("objectDesc", self.itemAccessor.getCount(e));
-					} else if (e === null) {
-						return JSONEdit.intl.nullDesc;
-					} else return String(e);
+					new java.lang.Runnable(function() {
+						e = obj[propertyName];
+						if (Array.isArray(e)) {
+							result = e.length ? JSONEdit.intl.resolve("arrayDesc", e[0], e.length) : JSONEdit.intl.emptyArrayDesc;
+						} else if (e instanceof Object && typeof e !== "function" && !(e instanceof java.lang.CharSequence)) {
+							result = JSONEdit.intl.resolve("objectDesc", self.itemAccessor.getCount(e));
+						} else if (e === null) {
+							result = JSONEdit.intl.nullDesc;
+						} else {
+							result = String(e);
+						}
+					}).run();
+					return result;
 				} catch(er) {
 					Log.e(er);
 					return String(er);

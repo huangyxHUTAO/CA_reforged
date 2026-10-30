@@ -1,0 +1,32 @@
+{
+	"sourceId": "eaa81e22-1b06-4429-ba89-86b31b154ed3",
+	"baseUrl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/",
+	"privateKey": "/home/forest/StudioProjects/cadroid/app/signatures/privateKey.pem",
+	"maintainer": "codesenlin",
+	"details": "社区拓展包合集：ID 表、翻译、命令拓展与部分插件包",
+	"curation": {
+		"excludeNameRegex": [
+			"的副本"
+		],
+		"lineages": [
+			{
+				"id": "Hiland / 1.18 系列",
+				"match": "^(Hiland拓展包|1\\.18拓展包)"
+			},
+			{
+				"id": "execute 格式替换",
+				"match": "execute"
+			},
+			{
+				"id": "JSON 文本插入",
+				"match": "json文本插入"
+			}
+		],
+		"renames": {
+			"a1d7b506-0239-43a9-ba66-156a1c6f7b67": "hasitem 选择题器拓展",
+			"a1b2c7de-b1ca-1347-9ab2-9ab56dc12492": "name 拓展"
+		}
+	},
+	"outputDir": ".",
+	"name": "森林社区拓展包源"
+}

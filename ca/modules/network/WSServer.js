@@ -300,9 +300,9 @@ MapScript.loadModule("WSServer", {
 					WSServer.sendCommand("closewebsocket");
 				} else if (_s.toLowerCase().startsWith("subscribe ")) {
 					name = _s.slice(10);
-					WSServer.subscribeEvent(name, self.eventReceiver[name] = function(body) {
+					WSServer.subscribeEvent(name, self.eventReceiver[name] = function(body, message) {
 						G.ui(function() {try {
-							var t = body.eventName;
+							var t = body.eventName || message.eventName;
 							delete body.eventName;
 							self.print(Log.debug(t, body, 0).join("\n"), new G.ForegroundColorSpan(Common.theme.promptcolor));
 							self.ready(null);

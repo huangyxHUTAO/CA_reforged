@@ -1,0 +1,2862 @@
+{
+	"$schema": "https://ca.projectxero.top/clib/schema_v1.json",
+	"name": "实验性玩法命令库",
+	"author": "CA制作组",
+	"description": "该命令库包含了需要打开实验性玩法才能出现的命令，并且内置了实验性玩法专属ID表。",
+	"uuid": "9c190ced-8a85-4f65-a231-30d3349ab960",
+	"version": [
+		1,
+		21,
+		0,
+		21
+	],
+	"require": [
+		{
+			"uuid": "acf728c5-dd5d-4a38-b43d-7c4f18149fbd",
+			"min": [
+				1,
+				21,
+				0,
+				21
+			]
+		},
+		{
+			"uuid": "590cdcb5-3cdf-42fa-902c-b578779335ab",
+			"min": [
+				1,
+				21,
+				0,
+				21
+			]
+		}
+	],
+	"minSupportVer": "1.2.13.8",
+	"minCAVersion": "2023-07-23",
+	"commands": {},
+	"enums": {
+		"block": {
+			"chiseled_copper": "雕纹铜块",
+			"chiseled_tuff": "雕纹凝灰岩",
+			"chiseled_tuff_bricks": "雕纹凝灰岩砖",
+			"copper_bulb": "铜灯",
+			"copper_door": "铜门",
+			"copper_grate": "铜格栅",
+			"copper_trapdoor": "铜活板门",
+			"crafter": "合成器",
+			"exposed_chiseled_copper": "斑驳的雕纹铜块",
+			"exposed_copper_bulb": "斑驳的铜灯",
+			"exposed_copper_door": "斑驳的铜门",
+			"exposed_copper_grate": "斑驳的铜格栅",
+			"exposed_copper_trapdoor": "斑驳的铜活板门",
+			"heavy_core": "沉重核心",
+			"oxidized_chiseled_copper": "氧化的雕纹铜块",
+			"oxidized_copper_bulb": "氧化的铜灯",
+			"oxidized_copper_door": "氧化的铜门",
+			"oxidized_copper_grate": "氧化的铜格栅",
+			"oxidized_copper_trapdoor": "氧化的铜活板门",
+			"polished_tuff": "磨制凝灰岩",
+			"polished_tuff_double_slab": "双层磨制凝灰岩台阶",
+			"polished_tuff_slab": "磨制凝灰岩台阶",
+			"polished_tuff_stairs": "磨制凝灰岩楼梯",
+			"polished_tuff_wall": "磨制凝灰岩墙",
+			"trial_spawner": "试炼刷怪笼",
+			"tuff_brick_double_slab": "双层凝灰岩砖台阶",
+			"tuff_brick_slab": "凝灰岩砖台阶",
+			"tuff_brick_stairs": "凝灰岩砖楼梯",
+			"tuff_brick_wall": "凝灰岩砖墙",
+			"tuff_bricks": "凝灰岩砖",
+			"tuff_double_slab": "双层凝灰岩台阶",
+			"tuff_slab": "凝灰岩台阶",
+			"tuff_stairs": "凝灰岩楼梯",
+			"tuff_wall": "凝灰岩墙",
+			"vault": "宝库",
+			"waxed_chiseled_copper": "涂蜡的雕纹铜块",
+			"waxed_copper_bulb": "涂蜡的铜灯",
+			"waxed_copper_door": "涂蜡的铜门",
+			"waxed_copper_grate": "涂蜡的铜格栅",
+			"waxed_copper_trapdoor": "涂蜡的铜活板门",
+			"waxed_exposed_chiseled_copper": "涂蜡的斑驳雕纹铜块",
+			"waxed_exposed_copper_bulb": "涂蜡的斑驳铜灯",
+			"waxed_exposed_copper_door": "涂蜡的斑驳铜门",
+			"waxed_exposed_copper_grate": "涂蜡的斑驳铜格栅",
+			"waxed_exposed_copper_trapdoor": "涂蜡的斑驳铜活板门",
+			"waxed_oxidized_chiseled_copper": "涂蜡的氧化雕纹铜块",
+			"waxed_oxidized_copper_bulb": "涂蜡的氧化铜灯",
+			"waxed_oxidized_copper_door": "涂蜡的氧化铜门",
+			"waxed_oxidized_copper_grate": "涂蜡的氧化铜格栅",
+			"waxed_oxidized_copper_trapdoor": "涂蜡的氧化铜活板门",
+			"waxed_weathered_chiseled_copper": "涂蜡的锈蚀雕纹铜块",
+			"waxed_weathered_copper_bulb": "涂蜡的锈蚀铜灯",
+			"waxed_weathered_copper_door": "涂蜡的锈蚀铜门",
+			"waxed_weathered_copper_grate": "涂蜡的锈蚀铜格栅",
+			"waxed_weathered_copper_trapdoor": "涂蜡的锈蚀铜活板门",
+			"weathered_chiseled_copper": "锈蚀的雕纹铜块",
+			"weathered_copper_bulb": "锈蚀的铜灯",
+			"weathered_copper_door": "锈蚀的铜门",
+			"weathered_copper_grate": "锈蚀的铜格栅",
+			"weathered_copper_trapdoor": "锈蚀的铜活板门"
+		},
+		"item": {
+			"bogged_spawn_egg": "沼骸刷怪蛋",
+			"bolt_armor_trim_smithing_template": "镶铆盔甲纹饰锻造模板",
+			"breeze_rod": "旋风棒",
+			"breeze_spawn_egg": "旋风人刷怪蛋",
+			"chiseled_copper": "雕纹铜块",
+			"chiseled_tuff": "雕纹凝灰岩",
+			"chiseled_tuff_bricks": "雕纹凝灰岩砖",
+			"copper_bulb": "铜灯",
+			"copper_door": "铜门",
+			"copper_grate": "铜格栅",
+			"copper_trapdoor": "铜活板门",
+			"crafter": "合成器",
+			"exposed_chiseled_copper": "斑驳的雕纹铜块",
+			"exposed_copper_bulb": "斑驳的铜灯",
+			"exposed_copper_door": "斑驳的铜门",
+			"exposed_copper_grate": "斑驳的铜格栅",
+			"exposed_copper_trapdoor": "斑驳的铜活板门",
+			"flow_armor_trim_smithing_template": "涡流盔甲纹饰锻造模板",
+			"flow_banner_pattern": "涡流旗帜图案",
+			"flow_pottery_sherd": "涡流纹样陶片",
+			"guster_banner_pattern": "旋风旗帜图案",
+			"guster_pottery_sherd": "旋风纹样陶片",
+			"heavy_core": "沉重核心",
+			"mace": "重锤",
+			"ominous_bottle": "不祥之瓶",
+			"ominous_trial_key": "不祥试炼钥匙",
+			"oxidized_chiseled_copper": "氧化的雕纹铜块",
+			"oxidized_copper_bulb": "氧化的铜灯",
+			"oxidized_copper_door": "氧化的铜门",
+			"oxidized_copper_grate": "氧化的铜格栅",
+			"oxidized_copper_trapdoor": "氧化的铜活板门",
+			"polished_tuff": "磨制凝灰岩",
+			"polished_tuff_slab": "磨制凝灰岩台阶",
+			"polished_tuff_stairs": "磨制凝灰岩楼梯",
+			"polished_tuff_wall": "磨制凝灰岩墙",
+			"scrape_pottery_sherd": "刮削纹样陶片",
+			"trial_key": "试炼钥匙",
+			"trial_spawner": "试炼刷怪笼",
+			"tuff_brick_slab": "凝灰岩砖台阶",
+			"tuff_brick_stairs": "凝灰岩砖楼梯",
+			"tuff_brick_wall": "凝灰岩砖墙",
+			"tuff_bricks": "凝灰岩砖",
+			"tuff_slab": "凝灰岩台阶",
+			"tuff_stairs": "凝灰岩楼梯",
+			"tuff_wall": "凝灰岩墙",
+			"vault": "宝库",
+			"waxed_chiseled_copper": "涂蜡的雕纹铜块",
+			"waxed_copper_bulb": "涂蜡的铜灯",
+			"waxed_copper_door": "涂蜡的铜门",
+			"waxed_copper_grate": "涂蜡的铜格栅",
+			"waxed_copper_trapdoor": "涂蜡的铜活板门",
+			"waxed_exposed_chiseled_copper": "涂蜡的斑驳雕纹铜块",
+			"waxed_exposed_copper_bulb": "涂蜡的斑驳铜灯",
+			"waxed_exposed_copper_door": "涂蜡的斑驳铜门",
+			"waxed_exposed_copper_grate": "涂蜡的斑驳铜格栅",
+			"waxed_exposed_copper_trapdoor": "涂蜡的斑驳铜活板门",
+			"waxed_oxidized_chiseled_copper": "涂蜡的氧化雕纹铜块",
+			"waxed_oxidized_copper_bulb": "涂蜡的氧化铜灯",
+			"waxed_oxidized_copper_door": "涂蜡的氧化铜门",
+			"waxed_oxidized_copper_grate": "涂蜡的氧化铜格栅",
+			"waxed_oxidized_copper_trapdoor": "涂蜡的氧化铜活板门",
+			"waxed_weathered_chiseled_copper": "涂蜡的锈蚀雕纹铜块",
+			"waxed_weathered_copper_bulb": "涂蜡的锈蚀铜灯",
+			"waxed_weathered_copper_door": "涂蜡的锈蚀铜门",
+			"waxed_weathered_copper_grate": "涂蜡的锈蚀铜格栅",
+			"waxed_weathered_copper_trapdoor": "涂蜡的锈蚀铜活板门",
+			"weathered_chiseled_copper": "锈蚀的雕纹铜块",
+			"weathered_copper_bulb": "锈蚀的铜灯",
+			"weathered_copper_door": "锈蚀的铜门",
+			"weathered_copper_grate": "锈蚀的铜格栅",
+			"weathered_copper_trapdoor": "锈蚀的铜活板门",
+			"wind_charge": "风弹"
+		},
+		"entity": {
+			"bogged": "沼骸",
+			"breeze": "旋风人",
+			"breeze_wind_charge_projectile": "风弹",
+			"minecraft:bogged": "沼骸",
+			"minecraft:breeze": "旋风人",
+			"minecraft:breeze_wind_charge_projectile": "风弹",
+			"minecraft:ominous_item_spawner": "不祥之物生成器",
+			"minecraft:wind_charge_projectile": "风弹",
+			"ominous_item_spawner": "不祥之物生成器",
+			"wind_charge_projectile": "风弹"
+		},
+		"effect": {
+			"infested": "寄生",
+			"oozing": "渗浆",
+			"raid_omen": "袭击之兆",
+			"trial_omen": "试炼之兆",
+			"weaving": "盘丝",
+			"wind_charged": "蓄风"
+		},
+		"structure": {
+			"trial_chambers": "试炼密室"
+		},
+		"entity_event": {
+			"be_sheared": "",
+			"minecraft:clear_add_raid_omen": "",
+			"minecraft:gain_raid_omen": "",
+			"minecraft:start_playing_idle_ground_sound": "",
+			"minecraft:stop_playing_idle_ground_sound": ""
+		},
+		"entity_family": {
+			"bogged": "沼骸",
+			"breeze": "旋风人",
+			"wind_charge": "风弹",
+			"wind_charge_projectile": "风弹"
+		},
+		"animation": {
+			"animation.breeze.idle": "",
+			"animation.breeze.idle_ground_particles": "",
+			"animation.breeze.idle_ground_sound": "",
+			"animation.breeze.jump": "",
+			"animation.breeze.shoot": "",
+			"animation.breeze.slide": "",
+			"animation.breeze.slide_ground_particles": "",
+			"animation.breeze.whirl_sound": "",
+			"animation.wind_charge.rotate": ""
+		},
+		"animation_controller": {
+			"controller.animation.breeze.ground_particles": "",
+			"controller.animation.breeze.idle": "",
+			"controller.animation.breeze.idle_ground_sound": "",
+			"controller.animation.breeze.jump": "",
+			"controller.animation.breeze.look_at": "",
+			"controller.animation.breeze.move": "",
+			"controller.animation.breeze.shoot": ""
+		},
+		"particle_emitter": {
+			"minecraft:breeze_ground_particle": "",
+			"minecraft:breeze_wind_explosion_emitter": "",
+			"minecraft:ominous_spawning_particle": "",
+			"minecraft:small_flame_particle": "",
+			"minecraft:small_soul_fire_flame": "",
+			"minecraft:smash_ground_particle": "",
+			"minecraft:smash_ground_particle_center": "",
+			"minecraft:trial_spawner_detection": "",
+			"minecraft:trial_spawner_detection_ominous": "",
+			"minecraft:vault_connection_particle": "",
+			"minecraft:white_smoke_particle": "",
+			"minecraft:wind_explosion_emitter": ""
+		},
+		"sound": {
+			"apply_effect.bad_omen": "",
+			"apply_effect.raid_omen": "",
+			"apply_effect.trial_omen": "",
+			"block.copper_bulb.turn_off": "",
+			"block.copper_bulb.turn_on": "",
+			"break.copper_bulb": "",
+			"break.copper_grate": "",
+			"break.heavy_core": "",
+			"break.web": "",
+			"breeze_wind_charge.burst": "",
+			"close_door.copper": "",
+			"crafter.craft": "",
+			"crafter.disable_slot": "",
+			"crafter.fail": "",
+			"fall.copper_bulb": "",
+			"hit.copper_bulb": "",
+			"mace.heavy_smash_ground": "",
+			"mace.smash_air": "",
+			"mace.smash_ground": "",
+			"mob.bogged.ambient": "",
+			"mob.bogged.death": "",
+			"mob.bogged.hurt": "",
+			"mob.bogged.step": "",
+			"mob.breeze.charge": "",
+			"mob.breeze.death": "",
+			"mob.breeze.deflect": "",
+			"mob.breeze.hurt": "",
+			"mob.breeze.idle_air": "",
+			"mob.breeze.idle_ground": "",
+			"mob.breeze.inhale": "",
+			"mob.breeze.jump": "",
+			"mob.breeze.land": "",
+			"mob.breeze.shoot": "",
+			"mob.breeze.slide": "",
+			"mob.breeze.whirl": "",
+			"ominous_bottle.end_use": "",
+			"ominous_item_spawner.about_to_spawn_item": "",
+			"ominous_item_spawner.spawn_item": "",
+			"ominous_item_spawner.spawn_item_begin": "",
+			"open_door.copper": "",
+			"open_trapdoor.copper": "",
+			"place.copper_bulb": "",
+			"place.tuff_bricks": "",
+			"step.copper_bulb": "",
+			"step.copper_grate": "",
+			"step.heavy_core": "",
+			"step.tuff_bricks": "",
+			"step.web": "",
+			"trial_spawner.ambient": "",
+			"trial_spawner.ambient_ominous": "",
+			"trial_spawner.break": "",
+			"trial_spawner.charge_activate": "",
+			"trial_spawner.close_shutter": "",
+			"trial_spawner.detect_player": "",
+			"trial_spawner.eject_item": "",
+			"trial_spawner.hit": "",
+			"trial_spawner.open_shutter": "",
+			"trial_spawner.place": "",
+			"trial_spawner.spawn_mob": "",
+			"trial_spawner.step": "",
+			"vault.activate": "",
+			"vault.ambient": "",
+			"vault.break": "",
+			"vault.close_shutter": "",
+			"vault.deactivate": "",
+			"vault.eject_item": "",
+			"vault.hit": "",
+			"vault.insert_item": "",
+			"vault.insert_item_fail": "",
+			"vault.open_shutter": "",
+			"vault.place": "",
+			"vault.step": "",
+			"wind_charge.burst": ""
+		},
+		"loot_table": {
+			"chests/trial_chambers/corridor": "",
+			"chests/trial_chambers/entrance": "",
+			"chests/trial_chambers/intersection": "",
+			"chests/trial_chambers/intersection_barrel": "",
+			"chests/trial_chambers/reward": "",
+			"chests/trial_chambers/reward_common": "",
+			"chests/trial_chambers/reward_common_ominous": "",
+			"chests/trial_chambers/reward_ominous": "",
+			"chests/trial_chambers/reward_rare": "",
+			"chests/trial_chambers/reward_rare_ominous": "",
+			"chests/trial_chambers/reward_unique": "",
+			"chests/trial_chambers/reward_unique_ominous": "",
+			"chests/trial_chambers/supply": "",
+			"dispensers/trial_chambers/chamber": "",
+			"dispensers/trial_chambers/corridor": "",
+			"dispensers/trial_chambers/water": "",
+			"entities/bogged": "",
+			"entities/bogged_shear": "",
+			"entities/breeze": "",
+			"entities/pillager_captain": "",
+			"equipment/trial_chamber": "",
+			"equipment/trial_chamber_chainmail": "",
+			"equipment/trial_chamber_diamond": "",
+			"equipment/trial_chamber_iron": "",
+			"pots/trial_chambers/corridor": "",
+			"spawners/ominous/trial_chamber/consumables": "",
+			"spawners/ominous/trial_chamber/key": "",
+			"spawners/trial_chamber/consumables": "",
+			"spawners/trial_chamber/items_to_drop_when_ominous": "",
+			"spawners/trial_chamber/key": ""
+		},
+		"loot_table_wrapped": {
+			"\"chests/trial_chambers/corridor\"": "",
+			"\"chests/trial_chambers/entrance\"": "",
+			"\"chests/trial_chambers/intersection\"": "",
+			"\"chests/trial_chambers/intersection_barrel\"": "",
+			"\"chests/trial_chambers/reward\"": "",
+			"\"chests/trial_chambers/reward_common\"": "",
+			"\"chests/trial_chambers/reward_common_ominous\"": "",
+			"\"chests/trial_chambers/reward_ominous\"": "",
+			"\"chests/trial_chambers/reward_rare\"": "",
+			"\"chests/trial_chambers/reward_rare_ominous\"": "",
+			"\"chests/trial_chambers/reward_unique\"": "",
+			"\"chests/trial_chambers/reward_unique_ominous\"": "",
+			"\"chests/trial_chambers/supply\"": "",
+			"\"dispensers/trial_chambers/chamber\"": "",
+			"\"dispensers/trial_chambers/corridor\"": "",
+			"\"dispensers/trial_chambers/water\"": "",
+			"\"entities/bogged\"": "",
+			"\"entities/bogged_shear\"": "",
+			"\"entities/breeze\"": "",
+			"\"entities/pillager_captain\"": "",
+			"\"equipment/trial_chamber\"": "",
+			"\"equipment/trial_chamber_chainmail\"": "",
+			"\"equipment/trial_chamber_diamond\"": "",
+			"\"equipment/trial_chamber_iron\"": "",
+			"\"pots/trial_chambers/corridor\"": "",
+			"\"spawners/ominous/trial_chamber/consumables\"": "",
+			"\"spawners/ominous/trial_chamber/key\"": "",
+			"\"spawners/trial_chamber/consumables\"": "",
+			"\"spawners/trial_chamber/items_to_drop_when_ominous\"": "",
+			"\"spawners/trial_chamber/key\"": ""
+		},
+		"recipe": {
+			"minecraft:bolt_armor_trim_smithing_template_duplicate": "<工作台>镶铆盔甲纹饰锻造模板+钻石*7+铜块->镶铆盔甲纹饰锻造模板*2",
+			"minecraft:bolt_armor_trim_smithing_template_duplicate_waxed": "<工作台>镶铆盔甲纹饰锻造模板+钻石*7+涂蜡的铜块->镶铆盔甲纹饰锻造模板*2",
+			"minecraft:chiseled_tuff": "<工作台>凝灰岩台阶*2->雕纹凝灰岩",
+			"minecraft:chiseled_tuff_bricks": "<工作台>凝灰岩砖台阶*2->雕纹凝灰岩砖",
+			"minecraft:copper_bulb": "<工作台>红石粉+铜块*3+烈焰棒->铜灯*4",
+			"minecraft:copper_door": "<工作台>铜块*6->铜门*3",
+			"minecraft:copper_grate": "<工作台>铜块*4->铜格栅*4",
+			"minecraft:copper_trapdoor": "<工作台>铜块*6->铜活板门*2",
+			"minecraft:crafter": "<工作台>红石粉*2+铁锭*5+投掷器+工作台->合成器",
+			"minecraft:crafting_table_chiseled_copper": "<工作台>切制铜台阶*2->雕纹铜块",
+			"minecraft:crafting_table_waxed_chiseled_copper": "<工作台>雕纹铜块+蜜脾~>涂蜡的雕纹铜块",
+			"minecraft:crafting_table_waxed_copper_door": "<工作台>涂蜡的铜块*6->涂蜡的铜门*3",
+			"minecraft:crafting_table_waxed_copper_trapdoor": "<工作台>涂蜡的铜块*6->涂蜡的铜活板门*2",
+			"minecraft:crafting_table_waxed_exposed_copper_door": "<工作台>涂蜡的斑驳铜块*6->涂蜡的斑驳铜门*3",
+			"minecraft:crafting_table_waxed_exposed_copper_trapdoor": "<工作台>涂蜡的斑驳铜块*6->涂蜡的斑驳铜活板门*2",
+			"minecraft:crafting_table_waxed_oxidized_copper_door": "<工作台>涂蜡的氧化铜块*6->涂蜡的氧化铜门*3",
+			"minecraft:crafting_table_waxed_oxidized_copper_trapdoor": "<工作台>涂蜡的氧化铜块*6->涂蜡的氧化铜活板门*2",
+			"minecraft:crafting_table_waxed_weathered_copper_door": "<工作台>涂蜡的锈蚀铜块*6->涂蜡的锈蚀铜门*3",
+			"minecraft:crafting_table_waxed_weathered_copper_trapdoor": "<工作台>涂蜡的锈蚀铜块*6->涂蜡的锈蚀铜活板门*2",
+			"minecraft:exposed_copper_bulb": "<工作台>红石粉+斑驳的铜块*3+烈焰棒->斑驳的铜灯*4",
+			"minecraft:exposed_copper_door": "<工作台>斑驳的铜块*6->斑驳的铜门*3",
+			"minecraft:exposed_copper_grate": "<工作台>斑驳的铜块*4->斑驳的铜格栅*4",
+			"minecraft:exposed_copper_trapdoor": "<工作台>斑驳的铜块*6->斑驳的铜活板门*2",
+			"minecraft:flow_armor_trim_smithing_template_duplicate": "<工作台>涡流盔甲纹饰锻造模板+钻石*7+旋风棒->涡流盔甲纹饰锻造模板*2",
+			"minecraft:mace": "<工作台>旋风棒+沉重核心->重锤",
+			"minecraft:oxidized_copper_bulb": "<工作台>红石粉+氧化的铜块*3+烈焰棒->氧化的铜灯*4",
+			"minecraft:oxidized_copper_door": "<工作台>氧化的铜块*6->氧化的铜门*3",
+			"minecraft:oxidized_copper_grate": "<工作台>氧化的铜块*4->氧化的铜格栅*4",
+			"minecraft:oxidized_copper_trapdoor": "<工作台>氧化的铜块*6->氧化的铜活板门*2",
+			"minecraft:polished_tuff": "<工作台>凝灰岩*4->磨制凝灰岩*4",
+			"minecraft:polished_tuff_slab": "<工作台>磨制凝灰岩*3->磨制凝灰岩台阶*6",
+			"minecraft:polished_tuff_stairs": "<工作台>磨制凝灰岩*6->磨制凝灰岩楼梯*4",
+			"minecraft:polished_tuff_wall": "<工作台>磨制凝灰岩*6->磨制凝灰岩墙*6",
+			"minecraft:stonecutter_copper_block_to_chiseled_copper": "<切石机>铜块~>雕纹铜块*4",
+			"minecraft:stonecutter_copper_block_to_copper_grate": "<切石机>铜块~>铜格栅*4",
+			"minecraft:stonecutter_cut_copper_to_chiseled_copper": "<切石机>切制铜块~>雕纹铜块",
+			"minecraft:stonecutter_exposed_copper_to_exposed_chiseled_copper": "<切石机>斑驳的铜块~>斑驳的雕纹铜块*4",
+			"minecraft:stonecutter_exposed_copper_to_exposed_copper_grate": "<切石机>斑驳的铜块~>斑驳的铜格栅*4",
+			"minecraft:stonecutter_exposed_cut_copper_to_exposed_chiseled_copper": "<切石机>斑驳的切制铜块~>斑驳的雕纹铜块",
+			"minecraft:stonecutter_oxidized_copper_to_oxidized_chiseled_copper": "<切石机>氧化的铜块~>氧化的雕纹铜块*4",
+			"minecraft:stonecutter_oxidized_copper_to_oxidized_copper_grate": "<切石机>氧化的铜块~>氧化的铜格栅*4",
+			"minecraft:stonecutter_oxidized_cut_copper_to_oxidized_chiseled_copper": "<切石机>氧化的切制铜块~>氧化的雕纹铜块",
+			"minecraft:stonecutter_tuff_to_chiseled_tuff": "<切石机>凝灰岩~>雕纹凝灰岩",
+			"minecraft:stonecutter_tuff_to_chiseled_tuff_bricks": "<切石机>凝灰岩~>雕纹凝灰岩砖",
+			"minecraft:stonecutter_tuff_to_polished_tuff": "<切石机>凝灰岩~>磨制凝灰岩",
+			"minecraft:stonecutter_tuff_to_polished_tuff_slab": "<切石机>凝灰岩~>磨制凝灰岩台阶*2",
+			"minecraft:stonecutter_tuff_to_polished_tuff_stairs": "<切石机>凝灰岩~>磨制凝灰岩楼梯",
+			"minecraft:stonecutter_tuff_to_polished_tuff_wall": "<切石机>凝灰岩~>磨制凝灰岩墙",
+			"minecraft:stonecutter_tuff_to_tuff_brick_slab": "<切石机>凝灰岩~>凝灰岩砖台阶*2",
+			"minecraft:stonecutter_tuff_to_tuff_brick_stairs": "<切石机>凝灰岩~>凝灰岩砖楼梯",
+			"minecraft:stonecutter_tuff_to_tuff_brick_wall": "<切石机>凝灰岩~>凝灰岩砖墙",
+			"minecraft:stonecutter_tuff_to_tuff_bricks": "<切石机>凝灰岩~>凝灰岩砖",
+			"minecraft:stonecutter_tuff_to_tuff_slab": "<切石机>凝灰岩~>凝灰岩台阶*2",
+			"minecraft:stonecutter_tuff_to_tuff_stairs": "<切石机>凝灰岩~>凝灰岩楼梯",
+			"minecraft:stonecutter_tuff_to_tuff_wall": "<切石机>凝灰岩~>凝灰岩墙",
+			"minecraft:stonecutter_waxed_copper_to_waxed_chiseled_copper": "<切石机>涂蜡的铜块~>涂蜡的雕纹铜块*4",
+			"minecraft:stonecutter_waxed_copper_to_waxed_copper_grate": "<切石机>涂蜡的铜块~>涂蜡的铜格栅*4",
+			"minecraft:stonecutter_waxed_cut_copper_to_waxed_chiseled_copper": "<切石机>涂蜡的切制铜块~>涂蜡的雕纹铜块",
+			"minecraft:stonecutter_waxed_exposed_copper_to_waxed_exposed_chiseled_copper": "<切石机>涂蜡的斑驳铜块~>涂蜡的斑驳雕纹铜块*4",
+			"minecraft:stonecutter_waxed_exposed_copper_to_waxed_exposed_copper_grate": "<切石机>涂蜡的斑驳铜块~>涂蜡的斑驳铜格栅*4",
+			"minecraft:stonecutter_waxed_exposed_cut_copper_to_waxed_exposed_chiseled_copper": "<切石机>涂蜡的斑驳切制铜块~>涂蜡的斑驳雕纹铜块",
+			"minecraft:stonecutter_waxed_oxidized_copper_to_waxed_oxidized_chiseled_copper": "<切石机>涂蜡的氧化铜块~>涂蜡的氧化雕纹铜块*4",
+			"minecraft:stonecutter_waxed_oxidized_copper_to_waxed_oxidized_copper_grate": "<切石机>涂蜡的氧化铜块~>涂蜡的氧化铜格栅*4",
+			"minecraft:stonecutter_waxed_oxidized_cut_copper_to_waxed_oxidized_chiseled_copper": "<切石机>涂蜡的氧化切制铜块~>涂蜡的氧化雕纹铜块",
+			"minecraft:stonecutter_waxed_weathered_copper_to_waxed_weathered_chiseled_copper": "<切石机>涂蜡的锈蚀铜块~>涂蜡的锈蚀雕纹铜块*4",
+			"minecraft:stonecutter_waxed_weathered_copper_to_waxed_weathered_copper_grate": "<切石机>涂蜡的锈蚀铜块~>涂蜡的锈蚀铜格栅*4",
+			"minecraft:stonecutter_waxed_weathered_cut_copper_to_waxed_weathered_chiseled_copper": "<切石机>涂蜡的锈蚀切制铜块~>涂蜡的锈蚀雕纹铜块",
+			"minecraft:stonecutter_weathered_copper_to_weathered_chiseled_copper": "<切石机>锈蚀的铜块~>锈蚀的雕纹铜块*4",
+			"minecraft:stonecutter_weathered_copper_to_weathered_copper_grate": "<切石机>锈蚀的铜块~>锈蚀的铜格栅*4",
+			"minecraft:stonecutter_weathered_cut_copper_to_weathered_chiseled_copper": "<切石机>锈蚀的切制铜块~>锈蚀的雕纹铜块",
+			"minecraft:tuff_brick_slab": "<工作台>凝灰岩砖*3->凝灰岩砖台阶*6",
+			"minecraft:tuff_brick_stairs": "<工作台>凝灰岩砖*6->凝灰岩砖楼梯*4",
+			"minecraft:tuff_brick_wall": "<工作台>凝灰岩砖*6->凝灰岩砖墙*6",
+			"minecraft:tuff_bricks": "<工作台>磨制凝灰岩*4->凝灰岩砖*4",
+			"minecraft:tuff_slab": "<工作台>凝灰岩*3->凝灰岩台阶*6",
+			"minecraft:tuff_stairs": "<工作台>凝灰岩*6->凝灰岩楼梯*4",
+			"minecraft:tuff_wall": "<工作台>凝灰岩*6->凝灰岩墙*6",
+			"minecraft:waxed_copper_bulb": "<工作台>红石粉+涂蜡的铜块*3+烈焰棒->涂蜡的铜灯*4",
+			"minecraft:waxed_exposed_copper_bulb": "<工作台>红石粉+涂蜡的斑驳铜块*3+烈焰棒->涂蜡的斑驳铜灯*4",
+			"minecraft:waxed_oxidized_copper_bulb": "<工作台>红石粉+涂蜡的氧化铜块*3+烈焰棒->涂蜡的氧化铜灯*4",
+			"minecraft:waxed_weathered_copper_bulb": "<工作台>红石粉+涂蜡的锈蚀铜块*3+烈焰棒->涂蜡的锈蚀铜灯*4",
+			"minecraft:waxing_copper_bulb": "<工作台>铜灯+蜜脾~>涂蜡的铜灯",
+			"minecraft:waxing_copper_door": "<工作台>铜门+蜜脾~>涂蜡的铜门",
+			"minecraft:waxing_copper_grate": "<工作台>铜格栅+蜜脾~>涂蜡的铜格栅",
+			"minecraft:waxing_copper_trapdoor": "<工作台>铜活板门+蜜脾~>涂蜡的铜活板门",
+			"minecraft:waxing_exposed_copper_bulb": "<工作台>斑驳的铜灯+蜜脾~>涂蜡的斑驳铜灯",
+			"minecraft:waxing_exposed_copper_door": "<工作台>斑驳的铜门+蜜脾~>涂蜡的斑驳铜门",
+			"minecraft:waxing_exposed_copper_grate": "<工作台>斑驳的铜格栅+蜜脾~>涂蜡的斑驳铜格栅",
+			"minecraft:waxing_exposed_copper_trapdoor": "<工作台>斑驳的铜活板门+蜜脾~>涂蜡的斑驳铜活板门",
+			"minecraft:waxing_oxidized_copper_bulb": "<工作台>氧化的铜灯+蜜脾~>涂蜡的氧化铜灯",
+			"minecraft:waxing_oxidized_copper_door": "<工作台>氧化的铜门+蜜脾~>涂蜡的氧化铜门",
+			"minecraft:waxing_oxidized_copper_grate": "<工作台>氧化的铜格栅+蜜脾~>涂蜡的氧化铜格栅",
+			"minecraft:waxing_oxidized_copper_trapdoor": "<工作台>氧化的铜活板门+蜜脾~>涂蜡的氧化铜活板门",
+			"minecraft:waxing_weathered_copper_bulb": "<工作台>锈蚀的铜灯+蜜脾~>涂蜡的锈蚀铜灯",
+			"minecraft:waxing_weathered_copper_door": "<工作台>锈蚀的铜门+蜜脾~>涂蜡的锈蚀铜门",
+			"minecraft:waxing_weathered_copper_grate": "<工作台>锈蚀的铜格栅+蜜脾~>涂蜡的锈蚀铜格栅",
+			"minecraft:waxing_weathered_copper_trapdoor": "<工作台>锈蚀的铜活板门+蜜脾~>涂蜡的锈蚀铜活板门",
+			"minecraft:weathered_copper_bulb": "<工作台>红石粉+锈蚀的铜块*3+烈焰棒->锈蚀的铜灯*4",
+			"minecraft:weathered_copper_door": "<工作台>锈蚀的铜块*6->锈蚀的铜门*3",
+			"minecraft:weathered_copper_grate": "<工作台>锈蚀的铜块*4->锈蚀的铜格栅*4",
+			"minecraft:weathered_copper_trapdoor": "<工作台>锈蚀的铜块*6->锈蚀的铜活板门*2",
+			"minecraft:wind_charge": "<工作台>旋风棒~>风弹*4",
+			"weapon_arrow_recipe_43": "",
+			"weapon_arrow_recipe_44": "",
+			"weapon_arrow_recipe_45": "",
+			"weapon_arrow_recipe_46": ""
+		},
+		"summonable_entity": {
+			"bogged": "沼骸",
+			"breeze": "旋风人",
+			"minecraft:bogged": "沼骸",
+			"minecraft:breeze": "旋风人"
+		},
+		"loot_tool": {
+			"minecraft:bogged_spawn_egg": "沼骸刷怪蛋",
+			"minecraft:bolt_armor_trim_smithing_template": "镶铆盔甲纹饰锻造模板",
+			"minecraft:breeze_rod": "旋风棒",
+			"minecraft:breeze_spawn_egg": "旋风人刷怪蛋",
+			"minecraft:chiseled_copper": "雕纹铜块",
+			"minecraft:chiseled_tuff": "雕纹凝灰岩",
+			"minecraft:chiseled_tuff_bricks": "雕纹凝灰岩砖",
+			"minecraft:copper_bulb": "铜灯",
+			"minecraft:copper_door": "铜门",
+			"minecraft:copper_grate": "铜格栅",
+			"minecraft:copper_trapdoor": "铜活板门",
+			"minecraft:crafter": "合成器",
+			"minecraft:exposed_chiseled_copper": "斑驳的雕纹铜块",
+			"minecraft:exposed_copper_bulb": "斑驳的铜灯",
+			"minecraft:exposed_copper_door": "斑驳的铜门",
+			"minecraft:exposed_copper_grate": "斑驳的铜格栅",
+			"minecraft:exposed_copper_trapdoor": "斑驳的铜活板门",
+			"minecraft:flow_armor_trim_smithing_template": "涡流盔甲纹饰锻造模板",
+			"minecraft:flow_banner_pattern": "涡流旗帜图案",
+			"minecraft:flow_pottery_sherd": "涡流纹样陶片",
+			"minecraft:guster_banner_pattern": "旋风旗帜图案",
+			"minecraft:guster_pottery_sherd": "旋风纹样陶片",
+			"minecraft:heavy_core": "沉重核心",
+			"minecraft:mace": "重锤",
+			"minecraft:ominous_bottle": "不祥之瓶",
+			"minecraft:ominous_trial_key": "不祥试炼钥匙",
+			"minecraft:oxidized_chiseled_copper": "氧化的雕纹铜块",
+			"minecraft:oxidized_copper_bulb": "氧化的铜灯",
+			"minecraft:oxidized_copper_door": "氧化的铜门",
+			"minecraft:oxidized_copper_grate": "氧化的铜格栅",
+			"minecraft:oxidized_copper_trapdoor": "氧化的铜活板门",
+			"minecraft:polished_tuff": "磨制凝灰岩",
+			"minecraft:polished_tuff_slab": "磨制凝灰岩台阶",
+			"minecraft:polished_tuff_stairs": "磨制凝灰岩楼梯",
+			"minecraft:polished_tuff_wall": "磨制凝灰岩墙",
+			"minecraft:scrape_pottery_sherd": "刮削纹样陶片",
+			"minecraft:trial_key": "试炼钥匙",
+			"minecraft:trial_spawner": "试炼刷怪笼",
+			"minecraft:tuff_brick_slab": "凝灰岩砖台阶",
+			"minecraft:tuff_brick_stairs": "凝灰岩砖楼梯",
+			"minecraft:tuff_brick_wall": "凝灰岩砖墙",
+			"minecraft:tuff_bricks": "凝灰岩砖",
+			"minecraft:tuff_slab": "凝灰岩台阶",
+			"minecraft:tuff_stairs": "凝灰岩楼梯",
+			"minecraft:tuff_wall": "凝灰岩墙",
+			"minecraft:vault": "宝库",
+			"minecraft:waxed_chiseled_copper": "涂蜡的雕纹铜块",
+			"minecraft:waxed_copper_bulb": "涂蜡的铜灯",
+			"minecraft:waxed_copper_door": "涂蜡的铜门",
+			"minecraft:waxed_copper_grate": "涂蜡的铜格栅",
+			"minecraft:waxed_copper_trapdoor": "涂蜡的铜活板门",
+			"minecraft:waxed_exposed_chiseled_copper": "涂蜡的斑驳雕纹铜块",
+			"minecraft:waxed_exposed_copper_bulb": "涂蜡的斑驳铜灯",
+			"minecraft:waxed_exposed_copper_door": "涂蜡的斑驳铜门",
+			"minecraft:waxed_exposed_copper_grate": "涂蜡的斑驳铜格栅",
+			"minecraft:waxed_exposed_copper_trapdoor": "涂蜡的斑驳铜活板门",
+			"minecraft:waxed_oxidized_chiseled_copper": "涂蜡的氧化雕纹铜块",
+			"minecraft:waxed_oxidized_copper_bulb": "涂蜡的氧化铜灯",
+			"minecraft:waxed_oxidized_copper_door": "涂蜡的氧化铜门",
+			"minecraft:waxed_oxidized_copper_grate": "涂蜡的氧化铜格栅",
+			"minecraft:waxed_oxidized_copper_trapdoor": "涂蜡的氧化铜活板门",
+			"minecraft:waxed_weathered_chiseled_copper": "涂蜡的锈蚀雕纹铜块",
+			"minecraft:waxed_weathered_copper_bulb": "涂蜡的锈蚀铜灯",
+			"minecraft:waxed_weathered_copper_door": "涂蜡的锈蚀铜门",
+			"minecraft:waxed_weathered_copper_grate": "涂蜡的锈蚀铜格栅",
+			"minecraft:waxed_weathered_copper_trapdoor": "涂蜡的锈蚀铜活板门",
+			"minecraft:weathered_chiseled_copper": "锈蚀的雕纹铜块",
+			"minecraft:weathered_copper_bulb": "锈蚀的铜灯",
+			"minecraft:weathered_copper_door": "锈蚀的铜门",
+			"minecraft:weathered_copper_grate": "锈蚀的铜格栅",
+			"minecraft:weathered_copper_trapdoor": "锈蚀的铜活板门",
+			"minecraft:wind_charge": "风弹"
+		}
+	},
+	"selectors": {},
+	"help": {},
+	"versionPack": {
+		"1.16.210.60_gametest": {
+			"commands": {
+				"gametest": {
+					"description": "管理GameTest框架",
+					"patterns": {
+						"runthese": {
+							"description": "运行附近的全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runthese",
+									"prompt": "运行附近的全部测试"
+								}
+							]
+						},
+						"run_short": {
+							"description": "运行指定的测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "run",
+									"prompt": "运行测试"
+								},
+								{
+									"type": "string",
+									"name": "测试名"
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						},
+						"runset": {
+							"description": "运行带有标签的全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runall",
+									"prompt": "运行带有标签的全部测试"
+								},
+								{
+									"type": "string",
+									"name": "测试标签",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						},
+						"clearall": {
+							"description": "清除范围内的全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "clearall",
+									"prompt": "清除全部测试"
+								},
+								{
+									"type": "uint",
+									"name": "半径",
+									"optional": true
+								}
+							]
+						},
+						"pos": {
+							"description": "查看面向方块相对于测试原点的位置",
+							"params": [
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "查看面向方块的相对位置"
+								}
+							]
+						},
+						"create": {
+							"description": "创建一个测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "create",
+									"prompt": "创建测试"
+								},
+								{
+									"type": "string",
+									"name": "测试名"
+								},
+								{
+									"type": "uint",
+									"name": "长",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "宽",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "高",
+									"optional": true
+								}
+							]
+						},
+						"runthis": {
+							"description": "运行最近的测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runthese",
+									"prompt": "运行最近的测试"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/gametest"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.16.210.05",
+					"max": "1.16.210.05"
+				},
+				{
+					"min": "1.16.210.60",
+					"exclusiveMax": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.21",
+					"max": "1.19.40.21"
+				}
+			]
+		},
+		"1.16.220.50_gametest": {
+			"commands": {
+				"gametest": {
+					"patterns": {
+						"run_default": {
+							"description": "运行指定的测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "run",
+									"prompt": "运行测试"
+								},
+								{
+									"type": "string",
+									"name": "测试名"
+								},
+								{
+									"type": "enum",
+									"name": "失败即停止",
+									"list": "bool"
+								},
+								{
+									"type": "uint",
+									"name": "重复次数"
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.16.220.02",
+					"max": "1.16.220.02"
+				},
+				{
+					"min": "1.16.220.50",
+					"exclusiveMax": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.21",
+					"max": "1.19.40.21"
+				}
+			]
+		},
+		"1.16.230.50_gametest": {
+			"commands": {
+				"gametest": {
+					"patterns": {
+						"runset": {
+							"description": "运行指定的测试集合",
+							"params": [
+								{
+									"type": "plain",
+									"name": "runall",
+									"prompt": "运行测试集合"
+								},
+								{
+									"type": "string",
+									"name": "测试集合名",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "旋转方向",
+									"suggestion": "gametest_rotation",
+									"optional": true
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.16.230.50",
+					"exclusiveMax": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.21",
+					"max": "1.19.40.21"
+				}
+			]
+		},
+		"1.17.30.23_script": {
+			"commands": {
+				"script": {
+					"description": "管理GameTest脚本",
+					"patterns": {
+						"debugger_close": {
+							"description": "与调试器断开连接",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger close",
+									"prompt": "与调试器断开连接"
+								}
+							]
+						},
+						"debugger_connect": {
+							"description": "连接调试器",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger connect",
+									"prompt": "连接调试器"
+								},
+								{
+									"type": "string",
+									"name": "服务器地址"
+								},
+								{
+									"type": "uint",
+									"name": "端口号"
+								}
+							]
+						},
+						"debugger_listen": {
+							"description": "监听并等待调试器连接",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger listen",
+									"prompt": "监听并等待调试器连接"
+								},
+								{
+									"type": "uint",
+									"name": "端口号"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/script"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.17.30.04",
+					"max": "1.17.30.04"
+				},
+				{
+					"min": "1.17.30.23",
+					"exclusiveMax": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.21",
+					"max": "1.19.40.21"
+				}
+			]
+		},
+		"1.18.20.21_volumearea": {
+			"commands": {
+				"volumearea": {
+					"description": "添加、移除或列出功能域",
+					"patterns": {
+						"add_rect": {
+							"description": "添加长方体功能域",
+							"params": [
+								{
+									"type": "plain",
+									"name": "add",
+									"prompt": "添加长方体功能域"
+								},
+								{
+									"type": "string",
+									"name": "功能域ID"
+								},
+								{
+									"type": "position",
+									"name": "起点"
+								},
+								{
+									"type": "position",
+									"name": "终点"
+								},
+								{
+									"type": "string",
+									"name": "区域名",
+									"optional": true
+								}
+							]
+						},
+						"list": {
+							"description": "列出所有功能域",
+							"params": [
+								{
+									"type": "plain",
+									"name": "list",
+									"prompt": "列出所有功能域"
+								},
+								{
+									"type": "plain",
+									"name": "all-dimensions",
+									"prompt": "列出所有维度的功能域",
+									"optional": true
+								}
+							]
+						},
+						"remove_id": {
+							"description": "移除指定ID的功能域",
+							"params": [
+								{
+									"type": "plain",
+									"name": "remove",
+									"prompt": "移除指定功能域"
+								},
+								{
+									"type": "string",
+									"name": "区域名"
+								}
+							]
+						},
+						"remove_pos": {
+							"description": "移除所有包含指定位置的功能域",
+							"params": [
+								{
+									"type": "plain",
+									"name": "remove",
+									"prompt": "移除指定功能域"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								}
+							]
+						},
+						"remove_all": {
+							"description": "移除所有功能域",
+							"params": [
+								{
+									"type": "plain",
+									"name": "remove_all",
+									"prompt": "移除所有功能域"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/volumearea"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.18.20.21"
+				}
+			]
+		},
+		"1.18.20.27_gametest": {
+			"commands": {
+				"gametest": {
+					"patterns": {
+						"clearall": {
+							"description": "清除全部测试",
+							"params": [
+								{
+									"type": "plain",
+									"name": "clearall",
+									"prompt": "清除全部测试"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.18.20.27",
+					"exclusiveMax": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.21",
+					"max": "1.19.40.21"
+				}
+			]
+		},
+		"1.18.30.04_gamemode6": {
+			"enums": {
+				"gamemode": {
+					"6": ""
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.18.30.04",
+					"max": "1.18.30.04"
+				},
+				{
+					"min": "1.18.30.20",
+					"exclusiveMax": "1.19.30.04"
+				}
+			]
+		},
+		"1.18.31.04_spectator": {
+			"enums": {
+				"gamemode": {
+					"spectator": "旁观模式"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.18.30.04",
+					"max": "1.18.30.04"
+				},
+				{
+					"min": "1.18.30.20",
+					"exclusiveMax": "1.19.50.02"
+				}
+			]
+		},
+		"1.19.0.20_script": {
+			"commands": {
+				"script": {
+					"patterns": {
+						"debugger_connect": {
+							"description": "连接调试器",
+							"params": [
+								{
+									"type": "plain",
+									"name": "debugger connect",
+									"prompt": "连接调试器"
+								},
+								{
+									"type": "string",
+									"name": "服务器地址",
+									"optional": true
+								},
+								{
+									"type": "uint",
+									"name": "端口号",
+									"optional": true
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.0.05",
+					"max": "1.19.0.05"
+				},
+				{
+					"min": "1.19.0.20",
+					"exclusiveMax": "1.19.70.02"
+				},
+				{
+					"min": "1.19.70.20",
+					"max": "1.19.70.20"
+				}
+			]
+		},
+		"1.19.0.30_script": {
+			"commands": {
+				"script": {
+					"patterns": {
+						"profiler_start": {
+							"description": "启动脚本性能分析",
+							"params": [
+								{
+									"type": "plain",
+									"name": "profiler start",
+									"prompt": "启动脚本性能分析"
+								}
+							]
+						},
+						"profiler_stop": {
+							"description": "停止脚本性能分析",
+							"params": [
+								{
+									"type": "plain",
+									"name": "profiler stop",
+									"prompt": "停止脚本性能分析"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.0.05",
+					"max": "1.19.0.05"
+				},
+				{
+					"min": "1.19.0.30",
+					"exclusiveMax": "1.19.70.02"
+				},
+				{
+					"min": "1.19.70.20",
+					"max": "1.19.70.20"
+				}
+			]
+		},
+		"1.19.10.20_remove_execute": {
+			"commands": {
+				"execute": {
+					"patterns": {
+						"default": null,
+						"detect": null
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.10.03",
+					"max": "1.19.10.03"
+				},
+				{
+					"min": "1.19.10.20",
+					"exclusiveMax": "1.19.50.02"
+				},
+				{
+					"min": "1.19.50.20",
+					"exclusiveMax": "1.19.50.23"
+				}
+			],
+			"mode": "remove"
+		},
+		"1.19.10.20_execute": {
+			"commands": {
+				"execute": {
+					"description": "更改命令执行的主体、位置等上下文",
+					"patterns": {
+						"run": {
+							"description": "执行命令",
+							"params": [
+								{
+									"type": "plain",
+									"name": "run",
+									"prompt": "执行命令"
+								},
+								{
+									"type": "command",
+									"name": "命令"
+								}
+							]
+						},
+						"as": {
+							"description": "改变执行主体",
+							"params": [
+								{
+									"type": "plain",
+									"name": "as",
+									"prompt": "改变执行主体"
+								},
+								{
+									"type": "selector",
+									"name": "目标",
+									"target": "entity"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"at": {
+							"description": "改变执行位置与朝向",
+							"params": [
+								{
+									"type": "plain",
+									"name": "at",
+									"prompt": "改变执行位置与朝向"
+								},
+								{
+									"type": "selector",
+									"name": "目标",
+									"target": "entity"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"positioned": {
+							"description": "改变执行位置",
+							"params": [
+								{
+									"type": "plain",
+									"name": "positioned",
+									"prompt": "改变执行位置"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"positioned_as": {
+							"description": "改变执行位置",
+							"params": [
+								{
+									"type": "plain",
+									"name": "positioned",
+									"prompt": "改变执行位置"
+								},
+								{
+									"type": "plain",
+									"name": "as",
+									"prompt": "……到目标位置"
+								},
+								{
+									"type": "selector",
+									"name": "目标",
+									"target": "entity"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_block": {
+							"description": "指定方块满足条件时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "block",
+									"prompt": "指定方块满足……"
+								},
+								{
+									"type": "position",
+									"name": "坐标"
+								},
+								{
+									"type": "string",
+									"name": "方块ID",
+									"suggestion": "block"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_block_withData": {
+							"description": "指定方块满足条件时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "block",
+									"prompt": "指定方块满足……"
+								},
+								{
+									"type": "position",
+									"name": "坐标"
+								},
+								{
+									"type": "string",
+									"name": "方块ID",
+									"suggestion": "block"
+								},
+								{
+									"type": "int",
+									"name": "数据值"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_block_withBlockStates": {
+							"description": "指定方块满足条件时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "block",
+									"prompt": "指定方块满足……"
+								},
+								{
+									"type": "position",
+									"name": "坐标"
+								},
+								{
+									"type": "string",
+									"name": "方块ID",
+									"suggestion": "block"
+								},
+								{
+									"type": "string",
+									"name": "方块状态"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_blocks": {
+							"description": "区域内方块满足条件时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "blocks",
+									"prompt": "指定区域的方块满足……"
+								},
+								{
+									"type": "position",
+									"name": "起点"
+								},
+								{
+									"type": "position",
+									"name": "终点"
+								},
+								{
+									"type": "position",
+									"name": "目标点"
+								},
+								{
+									"type": "enum",
+									"name": "匹配模式",
+									"list": "testforblocks_mode"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_entity": {
+							"description": "满足条件的实体存在时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "entity",
+									"prompt": "实体满足……"
+								},
+								{
+									"type": "selector",
+									"name": "目标实体",
+									"target": "entity"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_score_compare": {
+							"description": "记分项分数满足条件时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "score",
+									"prompt": "记分项分数满足……"
+								},
+								{
+									"type": "selector",
+									"name": "前者",
+									"target": "entity"
+								},
+								{
+									"type": "string",
+									"name": "前者记分项"
+								},
+								{
+									"type": "enum",
+									"name": "比较方式",
+									"list": "scoreboard_compare_operators"
+								},
+								{
+									"type": "selector",
+									"name": "后者",
+									"target": "entity"
+								},
+								{
+									"type": "string",
+									"name": "后者记分项"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"conditional_score_matches": {
+							"description": "记分项分数满足条件时执行",
+							"params": [
+								{
+									"type": "enum",
+									"name": "条件执行",
+									"list": "execute_conditional"
+								},
+								{
+									"type": "plain",
+									"name": "score",
+									"prompt": "记分项分数满足……"
+								},
+								{
+									"type": "selector",
+									"name": "目标",
+									"target": "entity"
+								},
+								{
+									"type": "string",
+									"name": "目标记分项"
+								},
+								{
+									"type": "plain",
+									"name": "matches",
+									"prompt": "在范围……"
+								},
+								{
+									"type": "string",
+									"name": "范围"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.10.03",
+					"max": "1.19.10.03"
+				},
+				{
+					"min": "1.19.10.20",
+					"exclusiveMax": "1.19.50.02"
+				},
+				{
+					"min": "1.19.50.20",
+					"exclusiveMax": "1.19.50.23"
+				}
+			]
+		},
+		"1.19.30.22_script": {
+			"commands": {
+				"script": {
+					"patterns": {
+						"watchdog_exportstats": {
+							"description": "导出看门狗计时器统计数据",
+							"params": [
+								{
+									"type": "plain",
+									"name": "watchdog exportstats",
+									"prompt": "导出看门狗计时器统计数据"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.30.04",
+					"max": "1.19.30.04"
+				},
+				{
+					"min": "1.19.30.22",
+					"exclusiveMax": "1.19.70.02"
+				},
+				{
+					"min": "1.19.70.20",
+					"max": "1.19.70.20"
+				}
+			]
+		},
+		"1.19.40.20_execute": {
+			"commands": {
+				"execute": {
+					"patterns": {
+						"rotated": {
+							"description": "改变执行朝向",
+							"params": [
+								{
+									"type": "plain",
+									"name": "rotated",
+									"prompt": "改变执行朝向"
+								},
+								{
+									"type": "relative",
+									"name": "水平旋转值"
+								},
+								{
+									"type": "relative",
+									"name": "垂直旋转值"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"rotated_as": {
+							"description": "改变执行朝向",
+							"params": [
+								{
+									"type": "plain",
+									"name": "rotated",
+									"prompt": "改变执行朝向"
+								},
+								{
+									"type": "plain",
+									"name": "as",
+									"prompt": "……到目标朝向"
+								},
+								{
+									"type": "selector",
+									"name": "目标",
+									"target": "entity"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.40.02",
+					"max": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.20",
+					"exclusiveMax": "1.19.50.02"
+				},
+				{
+					"min": "1.19.50.20",
+					"exclusiveMax": "1.19.50.23"
+				}
+			]
+		},
+		"1.19.40.21_execute": {
+			"commands": {
+				"execute": {
+					"patterns": {
+						"align": {
+							"description": "将执行坐标向下取整",
+							"params": [
+								{
+									"type": "plain",
+									"name": "align",
+									"prompt": "将执行坐标向下取整"
+								},
+								{
+									"type": "custom",
+									"name": "轴",
+									"vtype": "字母组合",
+									"input": "^[xyz]{0,3}",
+									"finish": "^[xyz]{1,3}"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"facing": {
+							"description": "改变执行朝向为面向指定位置",
+							"params": [
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变执行朝向为面向……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"facing_entity": {
+							"description": "改变执行朝向为面向指定实体",
+							"params": [
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变执行朝向为面向……"
+								},
+								{
+									"type": "plain",
+									"name": "entity",
+									"prompt": "……指定实体"
+								},
+								{
+									"type": "selector",
+									"name": "目标",
+									"target": "entity"
+								},
+								{
+									"type": "enum",
+									"name": "基准点",
+									"list": "execute_anchor"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.40.02",
+					"max": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.21",
+					"exclusiveMax": "1.19.50.02"
+				},
+				{
+					"min": "1.19.50.20",
+					"exclusiveMax": "1.19.50.23"
+				}
+			]
+		},
+		"1.19.40.23_execute": {
+			"commands": {
+				"execute": {
+					"patterns": {
+						"anchored": {
+							"description": "改变执行朝向基准点",
+							"params": [
+								{
+									"type": "plain",
+									"name": "anchored",
+									"prompt": "改变执行朝向基准点"
+								},
+								{
+									"type": "enum",
+									"name": "基准点",
+									"list": "execute_anchor"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						},
+						"in": {
+							"description": "改变执行维度与坐标系",
+							"params": [
+								{
+									"type": "plain",
+									"name": "in",
+									"prompt": "改变执行维度与坐标系"
+								},
+								{
+									"type": "enum",
+									"name": "维度",
+									"list": "execute_dimension"
+								},
+								{
+									"type": "subcommand",
+									"name": "子命令",
+									"mainCommand": "execute"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.40.02",
+					"max": "1.19.40.02"
+				},
+				{
+					"min": "1.19.40.23",
+					"exclusiveMax": "1.19.50.02"
+				},
+				{
+					"min": "1.19.50.20",
+					"exclusiveMax": "1.19.50.23"
+				}
+			]
+		},
+		"1.19.60.22_scriptevent": {
+			"commands": {
+				"scriptevent": {
+					"description": "向脚本API模块广播消息事件",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "string",
+									"name": "消息ID"
+								},
+								{
+									"type": "text",
+									"name": "消息内容"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/scriptevent"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.19.60.03",
+					"max": "1.19.60.03"
+				},
+				{
+					"min": "1.19.60.22",
+					"exclusiveMax": "1.20.20.20"
+				}
+			]
+		},
+		"1.20.0.22_camera": {
+			"commands": {
+				"camera": {
+					"description": "管理玩家的摄像机配置",
+					"patterns": {
+						"clear": {
+							"description": "重置玩家的摄像机",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "clear",
+									"prompt": "重置摄像机"
+								}
+							]
+						},
+						"fade": {
+							"description": "使玩家视角逐渐变为黑色，维持一段时间后逐渐恢复",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "fade",
+									"prompt": "使视角逐渐变为指定颜色，维持一段时间后逐渐恢复"
+								}
+							]
+						},
+						"fade_color": {
+							"description": "使玩家视角逐渐变为指定颜色，维持一段时间后逐渐恢复",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "fade",
+									"prompt": "使视角逐渐变为指定颜色，维持一段时间后逐渐恢复"
+								},
+								{
+									"type": "plain",
+									"name": "color",
+									"prompt": "设置指定颜色为……"
+								},
+								{
+									"type": "float",
+									"name": "红色分量"
+								},
+								{
+									"type": "float",
+									"name": "绿色分量"
+								},
+								{
+									"type": "float",
+									"name": "蓝色分量"
+								}
+							]
+						},
+						"fade_time": {
+							"description": "使玩家视角在指定的时间内逐渐变为黑色，维持指定时间后逐渐恢复",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "fade",
+									"prompt": "使视角逐渐变为指定颜色，维持一段时间后逐渐恢复"
+								},
+								{
+									"type": "plain",
+									"name": "time",
+									"prompt": "设置指定时间为……"
+								},
+								{
+									"type": "float",
+									"name": "淡入时间"
+								},
+								{
+									"type": "float",
+									"name": "维持时间"
+								},
+								{
+									"type": "float",
+									"name": "淡出时间"
+								}
+							]
+						},
+						"fade_time_color": {
+							"description": "使玩家视角在指定的时间内逐渐变为指定颜色，维持指定时间后逐渐恢复",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "fade",
+									"prompt": "使视角逐渐变为指定颜色，维持一段时间后逐渐恢复"
+								},
+								{
+									"type": "plain",
+									"name": "time",
+									"prompt": "设置指定时间为……"
+								},
+								{
+									"type": "float",
+									"name": "淡入时间"
+								},
+								{
+									"type": "float",
+									"name": "维持时间"
+								},
+								{
+									"type": "float",
+									"name": "淡出时间"
+								},
+								{
+									"type": "plain",
+									"name": "color",
+									"prompt": "设置指定颜色为……"
+								},
+								{
+									"type": "float",
+									"name": "红色分量"
+								},
+								{
+									"type": "float",
+									"name": "绿色分量"
+								},
+								{
+									"type": "float",
+									"name": "蓝色分量"
+								}
+							]
+						},
+						"set": {
+							"description": "将玩家的摄像机设置为指定预设",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "default",
+									"prompt": "使用该预设默认的位置与旋转角度",
+									"optional": true
+								}
+							]
+						},
+						"set_ease": {
+							"description": "将玩家的摄像机平滑变换为指定预设",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "default",
+									"prompt": "使用该预设默认的位置与旋转角度",
+									"optional": true
+								}
+							]
+						},
+						"set_ease_pos": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的位置",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								}
+							]
+						},
+						"set_ease_pos_rot": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的位置与旋转角度",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "plain",
+									"name": "rot",
+									"prompt": "设置旋转角度为……"
+								},
+								{
+									"type": "relative",
+									"name": "垂直旋转值"
+								},
+								{
+									"type": "relative",
+									"name": "水平旋转值"
+								}
+							]
+						},
+						"set_ease_rot": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的旋转角度",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "rot",
+									"prompt": "设置旋转角度为……"
+								},
+								{
+									"type": "relative",
+									"name": "垂直旋转值"
+								},
+								{
+									"type": "relative",
+									"name": "水平旋转值"
+								}
+							]
+						},
+						"set_pos": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的位置",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								}
+							]
+						},
+						"set_pos_rot": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的位置与旋转角度",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "plain",
+									"name": "rot",
+									"prompt": "设置旋转角度为……"
+								},
+								{
+									"type": "relative",
+									"name": "垂直旋转值"
+								},
+								{
+									"type": "relative",
+									"name": "水平旋转值"
+								}
+							]
+						},
+						"set_rot": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的旋转角度",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "rot",
+									"prompt": "设置旋转角度为……"
+								},
+								{
+									"type": "relative",
+									"name": "垂直旋转值"
+								},
+								{
+									"type": "relative",
+									"name": "水平旋转值"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/camera"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.20.0.01",
+					"max": "1.20.0.01"
+				},
+				{
+					"min": "1.20.0.22",
+					"exclusiveMax": "1.20.20.22"
+				}
+			]
+		},
+		"1.20.10.20_camera": {
+			"commands": {
+				"camera": {
+					"patterns": {
+						"fade_color": {
+							"description": "使玩家视角逐渐变为指定颜色，维持一段时间后逐渐恢复",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "fade",
+									"prompt": "使视角逐渐变为指定颜色，维持一段时间后逐渐恢复"
+								},
+								{
+									"type": "plain",
+									"name": "color",
+									"prompt": "设置指定颜色为……"
+								},
+								{
+									"type": "uint",
+									"name": "红色分量"
+								},
+								{
+									"type": "uint",
+									"name": "绿色分量"
+								},
+								{
+									"type": "uint",
+									"name": "蓝色分量"
+								}
+							]
+						},
+						"fade_time_color": {
+							"description": "使玩家视角在指定的时间内逐渐变为指定颜色，维持指定时间后逐渐恢复",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "fade",
+									"prompt": "使视角逐渐变为指定颜色，维持一段时间后逐渐恢复"
+								},
+								{
+									"type": "plain",
+									"name": "time",
+									"prompt": "设置指定时间为……"
+								},
+								{
+									"type": "float",
+									"name": "淡入时间"
+								},
+								{
+									"type": "float",
+									"name": "维持时间"
+								},
+								{
+									"type": "float",
+									"name": "淡出时间"
+								},
+								{
+									"type": "plain",
+									"name": "color",
+									"prompt": "设置指定颜色为……"
+								},
+								{
+									"type": "uint",
+									"name": "红色分量"
+								},
+								{
+									"type": "uint",
+									"name": "绿色分量"
+								},
+								{
+									"type": "uint",
+									"name": "蓝色分量"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.20.10.01",
+					"max": "1.20.10.01"
+				},
+				{
+					"min": "1.20.10.20",
+					"exclusiveMax": "1.20.20.22"
+				}
+			]
+		},
+		"1.20.10.21_recipe": {
+			"commands": {
+				"recipe": {
+					"description": "对玩家赋予或收回指定的配方",
+					"patterns": {
+						"give": {
+							"description": "向玩家赋予指定的配方",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "give",
+									"prompt": "赋予配方"
+								},
+								{
+									"type": "string",
+									"name": "配方ID",
+									"suggestion": "recipe"
+								}
+							]
+						},
+						"take": {
+							"description": "从玩家收回指定的配方",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "take",
+									"prompt": "收回配方"
+								},
+								{
+									"type": "string",
+									"name": "配方ID",
+									"suggestion": "recipe"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/recipe"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.20.10.01",
+					"max": "1.20.10.01"
+				},
+				{
+					"min": "1.20.10.21",
+					"exclusiveMax": "1.20.20.20"
+				}
+			]
+		},
+		"1.20.10.23_camera": {
+			"commands": {
+				"camera": {
+					"patterns": {
+						"set_ease_pos_facing_entity": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的位置与旋转角度，使其面向指定实体",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "selector",
+									"name": "面向实体",
+									"target": "entity"
+								}
+							]
+						},
+						"set_ease_pos_facing_position": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的位置与旋转角度，使其面向指定坐标",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "position",
+									"name": "面向位置"
+								}
+							]
+						},
+						"set_ease_facing_entity": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的旋转角度，使其面向指定实体",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "selector",
+									"name": "面向实体",
+									"target": "entity"
+								}
+							]
+						},
+						"set_ease_facing_position": {
+							"description": "将玩家的摄像机平滑变换为指定预设，并覆盖该预设的旋转角度，使其面向指定坐标",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "ease",
+									"prompt": "平滑变换……"
+								},
+								{
+									"type": "float",
+									"name": "变换时间"
+								},
+								{
+									"type": "enum",
+									"name": "缓动类型",
+									"list": "camera_easing"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "position",
+									"name": "面向位置"
+								}
+							]
+						},
+						"set_pos_facing_entity": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的位置与旋转角度，使其面向指定实体",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "selector",
+									"name": "面向实体",
+									"target": "entity"
+								}
+							]
+						},
+						"set_pos_facing_position": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的位置与旋转角度，使其面向指定坐标",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "pos",
+									"prompt": "设置位置为……"
+								},
+								{
+									"type": "position",
+									"name": "位置"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "position",
+									"name": "面向位置"
+								}
+							]
+						},
+						"set_facing_entity": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的旋转角度，使其面向指定实体",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "selector",
+									"name": "面向实体",
+									"target": "entity"
+								}
+							]
+						},
+						"set_facing_position": {
+							"description": "将玩家的摄像机设置为指定预设，并覆盖该预设的位置与旋转角度，使其面向指定坐标",
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "plain",
+									"name": "set",
+									"prompt": "将玩家的摄像机设置为指定预设"
+								},
+								{
+									"type": "enum",
+									"name": "预设",
+									"list": "camera_preset"
+								},
+								{
+									"type": "plain",
+									"name": "facing",
+									"prompt": "改变旋转角度使其面向……"
+								},
+								{
+									"type": "position",
+									"name": "面向位置"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.20.10.01",
+					"max": "1.20.10.01"
+				},
+				{
+					"min": "1.20.10.23",
+					"exclusiveMax": "1.20.20.22"
+				}
+			]
+		},
+		"1.20.20.20_recipe": {
+			"commands": {
+				"recipe": {
+					"patterns": {
+						"give": {
+							"description": "向玩家赋予指定的配方",
+							"params": [
+								{
+									"type": "plain",
+									"name": "give",
+									"prompt": "赋予配方"
+								},
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "string",
+									"name": "配方ID",
+									"suggestion": "recipe"
+								}
+							]
+						},
+						"take": {
+							"description": "从玩家收回指定的配方",
+							"params": [
+								{
+									"type": "plain",
+									"name": "take",
+									"prompt": "收回配方"
+								},
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "string",
+									"name": "配方ID",
+									"suggestion": "recipe"
+								}
+							]
+						}
+					}
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.20.20.20",
+					"exclusiveMin": "1.20.20.21"
+				}
+			]
+		},
+		"1.20.60.04_hud": {
+			"commands": {
+				"hud": {
+					"description": "配置选中玩家的HUD界面元素的可见性",
+					"patterns": {
+						"default": {
+							"params": [
+								{
+									"type": "selector",
+									"name": "玩家",
+									"target": "player"
+								},
+								{
+									"type": "enum",
+									"name": "可见性",
+									"list": "hud_visibility"
+								},
+								{
+									"type": "enum",
+									"name": "界面元素",
+									"list": "hud_element"
+								}
+							]
+						}
+					},
+					"help": "https://zh.minecraft.wiki/w/%E5%91%BD%E4%BB%A4/hud"
+				}
+			},
+			"supportVer": [
+				{
+					"min": "1.20.60.04",
+					"max": "1.20.60.04"
+				},
+				{
+					"min": "1.20.60.23",
+					"exclusiveMax": "1.20.80.23"
+				}
+			]
+		}
+	}
+}

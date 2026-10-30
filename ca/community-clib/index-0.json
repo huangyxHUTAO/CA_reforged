@@ -1,0 +1,311 @@
+{
+	"pageNo": 0,
+	"sourceId": "eaa81e22-1b06-4429-ba89-86b31b154ed3",
+	"nextPage": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/index-1.json",
+	"content": [
+		{
+			"name": "1.19新内容添加(不全)",
+			"author": "MQZC ZBCK",
+			"description": "基岩版的，对应版本号是拓展包版本\n最后面是添加的内容数",
+			"uuid": "a6786c57-fe65-412f-8ea0-11bd6ccc08dd",
+			"version": [
+				1,
+				19,
+				0,
+				28
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/a6786c57-fe65-412f-8ea0-11bd6ccc08dd.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/a6786c57-fe65-412f-8ea0-11bd6ccc08dd.json",
+			"sha1": "gT9e9IZwG6I8llnYPb6UgLgwnuo=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "1.20方块包",
+			"author": "神鹰工作室-魔法师ace",
+			"description": "包含1.20方块的id，以及部分带参方块\n共计88个方块",
+			"uuid": "b2a6496c-b363-46f4-922a-e8081949f331",
+			"version": [
+				0,
+				11,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/b2a6496c-b363-46f4-922a-e8081949f331.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/b2a6496c-b363-46f4-922a-e8081949f331.json",
+			"sha1": "wqll/npD/aFjIMdLvM/RKNqBL2A=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "1.20方块包实体及物品补包",
+			"author": "神鹰工作室-魔法师ace",
+			"description": "1.20方块包中不含非方块物品，本包补全这个缺点",
+			"uuid": "78bb229c-3785-4338-95b0-f3ca98793b13",
+			"version": [
+				0,
+				11,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/78bb229c-3785-4338-95b0-f3ca98793b13.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/78bb229c-3785-4338-95b0-f3ca98793b13.json",
+			"sha1": "90YRvIFNGPbSn3X1zelzpJas3yM=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "常用功能合集",
+			"author": "Tiby",
+			"description": "包含实体事件，物品特殊值，titleraw文本\n同时也对部分内容进行了修改。交流群818571348，作者QQ1696993583",
+			"uuid": "585364be-02bc-4384-82a1-bf802e743976",
+			"version": [
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/585364be-02bc-4384-82a1-bf802e743976.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/585364be-02bc-4384-82a1-bf802e743976.json",
+			"sha1": "uXOc3FQOtTcjA3/ktvSFNaAVK6k=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "地图管理器",
+			"author": "ProjectXero",
+			"description": "支持查看/删除/备份/导出/导入网易版的地图",
+			"uuid": "caf2f8c0-b530-4b92-984a-8608a31ed0e8",
+			"version": [
+				1,
+				0,
+				0
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/caf2f8c0-b530-4b92-984a-8608a31ed0e8.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/caf2f8c0-b530-4b92-984a-8608a31ed0e8.json",
+			"sha1": "iqbSvMbhwDWOYM5rz5WnCNnqMUQ=",
+			"mtime": 1793195168438
+		},
+		{
+			"name": "地狱更新指令拓展",
+			"author": "Jouguzhilu",
+			"description": "加入了1.16新版本的指令，代码。未经允许，禁止篡改并二次发布！",
+			"uuid": "b21f7a7a-1860-6f71-1f9f-cd2afc8077dd",
+			"version": [
+				1,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/b21f7a7a-1860-6f71-1f9f-cd2afc8077dd.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/b21f7a7a-1860-6f71-1f9f-cd2afc8077dd.json",
+			"sha1": "80HO0wMRrdsJsMMGn0RAVTFXp4w=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "更多翻译-BlockState Enum",
+			"author": "工程师_多多",
+			"description": "*测试中版本，非实际效果\n*将本拓展包置于底层食用\n*请将生成的{}改为[]后使用\n*目前仅支持铁砧、紫水晶簇、竹子的补全\n\n支持的版本:1.16.210.05+\n最低CA版本:2022-10-01\n更新日期:2023年4月16日",
+			"uuid": "5d2347a1-331a-1512-a71-ac57db54ac62",
+			"version": [
+				0,
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d2347a1-331a-1512-a71-ac57db54ac62.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d2347a1-331a-1512-a71-ac57db54ac62.json",
+			"sha1": "az1Tb0Wg+rbr39iQwcNyVzKHPZ4=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "更多翻译Pattern型-Block",
+			"author": "工程师_多多",
+			"description": "测试中版本，非实际效果\n将本拓展包置于底层食用\n\n*本拓展包中所有方块数据值皆以玩家自身为基准点，并非以附着的方块等为基准点\n*本包版本号与更多翻译[非官方]同步\n\n支持的版本:1.19.30.21\n依赖的拓展包:默认命令库&实验玩法库\n最低CA版本:2022-10-01",
+			"uuid": "5d2347a1-331a-b512-a71-ac57db54ac62",
+			"version": [
+				0,
+				0,
+				4,
+				0
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d2347a1-331a-b512-a71-ac57db54ac62.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d2347a1-331a-b512-a71-ac57db54ac62.json",
+			"sha1": "8q21bfnJqHTXeJNRFEeWp0iA9fs=",
+			"mtime": 1793195168438
+		},
+		{
+			"name": "更多翻译Pattern型-Item",
+			"author": "工程师_多多",
+			"description": "测试中版本，非实际效果\n将本拓展包置于底层食用\n\n*本包版本号与更多翻译[非官方]同步\n\n支持的版本:1.19.30.21\n依赖的拓展包:默认命令库&实验玩法库\n最低CA版本:2022-10-01",
+			"uuid": "5d1347a1-331a-b512-a7d6-ac57db54ac62",
+			"version": [
+				0,
+				0,
+				4
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d1347a1-331a-b512-a7d6-ac57db54ac62.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/5d1347a1-331a-b512-a7d6-ac57db54ac62.json",
+			"sha1": "bfO0DZD7LAi7KrRr1uNigsq/wXs=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "更多翻译V0.0.7",
+			"author": "CA制作组/歆羽璇",
+			"description": "该版本补充了一些翻译，并且修复了一些字打错的问题",
+			"uuid": "47d28a03-6046-4d08-9edd-cb871e6de0d7",
+			"version": [
+				0,
+				0,
+				7
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/47d28a03-6046-4d08-9edd-cb871e6de0d7.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/47d28a03-6046-4d08-9edd-cb871e6de0d7.json",
+			"sha1": "h5+Lu38H6RLNyncVLQlAdEOqSN4=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "粒子翻译",
+			"author": "朽乱天机（Bilibili)",
+			"description": "粒子翻译（自测）",
+			"uuid": "b435da18-25c5-461d-8361-8c3c6fe5eb57",
+			"version": [
+				1,
+				2,
+				5
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/b435da18-25c5-461d-8361-8c3c6fe5eb57.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/b435da18-25c5-461d-8361-8c3c6fe5eb57.json",
+			"sha1": "4KV6sf/+OVYQXN8jzd+n6ItdLjU=",
+			"mtime": 1793195168438
+		},
+		{
+			"name": "朴素粒子翻译",
+			"author": "乱杖先生|PosiedChoss",
+			"description": "日志:更新了1.16.*和1.17的粒子\n作者QQ:2381088817\n若在使用过程发现错误请联系作者\n翻译部分通过视觉观察总结而翻译\n催更:兔子快更新命令助手",
+			"uuid": "790ed57b-8c84-46a4-96c5-a7b6fc4e7e7b",
+			"version": [
+				1,
+				1,
+				7
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/790ed57b-8c84-46a4-96c5-a7b6fc4e7e7b.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/790ed57b-8c84-46a4-96c5-a7b6fc4e7e7b.json",
+			"sha1": "ZKWiKS875SABU4HAIyw46CORYEk=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "声音翻译拓展",
+			"author": "朽乱天机/乱杖先生",
+			"description": "声音翻译补全拓展包，B站cv6678280",
+			"uuid": "0c8d2c67-51c4-4b86-80cb-e7504d9a7f39",
+			"version": [
+				2,
+				3,
+				3
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/0c8d2c67-51c4-4b86-80cb-e7504d9a7f39.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/0c8d2c67-51c4-4b86-80cb-e7504d9a7f39.json",
+			"sha1": "5EQz7M8Prkej59RDGc9L05uFuns=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "新增命令 by JG",
+			"author": "Jouguzhilu",
+			"description": "对应MC国际版版本：1.19.30",
+			"uuid": "06c93fbf-3e37-4b4d-ad91-8f0f46478d7b",
+			"version": [
+				1,
+				3,
+				4
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/06c93fbf-3e37-4b4d-ad91-8f0f46478d7b.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/06c93fbf-3e37-4b4d-ad91-8f0f46478d7b.json",
+			"sha1": "hdzYcG7eI1QjUClSpurCDX/6P8k=",
+			"mtime": 1793195168442
+		},
+		{
+			"name": "新execute拓展包",
+			"author": "工程师_多多",
+			"description": "将execute替换为1.19.10.20&1.19.40.20格式\n修复execute中subcommand导致的d问题。\n使用execute命令时，如要使用目标选择器参数，请删除空格并输入中括号。 \n请将本json放在默认命令库之下。\n\n请使用命令助手1.2.14版本打开。\n\n支持的版本:1.19.10.20+",
+			"uuid": "d436a565-61ee-485a-947e-c7a52d8dbca9",
+			"version": [
+				1,
+				0,
+				2
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/d436a565-61ee-485a-947e-c7a52d8dbca9.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/d436a565-61ee-485a-947e-c7a52d8dbca9.json",
+			"sha1": "Tr55XC7iK36XTH1kFM5KhThtmQo=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "原神地图拓展",
+			"author": "乱杖先生",
+			"description": "该拓展包内置Projectxero构建的提瓦特大地图，标点与原神官方地图同步",
+			"uuid": "acd62444-dd5d-4a38-bd3d-7c4f18149fbd",
+			"version": [
+				1,
+				0,
+				0
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/acd62444-dd5d-4a38-bd3d-7c4f18149fbd.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/acd62444-dd5d-4a38-bd3d-7c4f18149fbd.json",
+			"sha1": "6l1DhZDG2ERDPLatLqhmi6dRCAY=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "注解命令库",
+			"author": "Tiby",
+			"description": "该命令库主要补充/完善默认命令库，\n适用于Beta-12版本。\n*物品/方块特殊值\n*实体事件\n2022年12月20日",
+			"uuid": "6ffde3c5-39c9-4f60-93ad-91fc9c64fb8a",
+			"version": [
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/6ffde3c5-39c9-4f60-93ad-91fc9c64fb8a.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/6ffde3c5-39c9-4f60-93ad-91fc9c64fb8a.json",
+			"sha1": "+Wx2aorrt1cUSwmdL8kdnK+j3lo=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "hasitem",
+			"author": "工程师_多多",
+			"description": "增加hasitem",
+			"uuid": "acf56625-dd5d-4a38-b43d-7c4f1d239fcd",
+			"version": [
+				1,
+				0,
+				0
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/acf56625-dd5d-4a38-b43d-7c4f1d239fcd.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/acf56625-dd5d-4a38-b43d-7c4f1d239fcd.json",
+			"sha1": "l7rsVEu16a6lZ9knbe2GfC5CByY=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "hasitem 选择题器拓展",
+			"author": "吃瓜群猹",
+			"description": "由于命令助手部分原因停更,拓展包只能做成这个样。\n需要注意的是要在完成选择器参数过后再删除多余的符号或添加缺少的符号,如:删除符号“{”前面的逗号和补齐hasitem结束的符号“}”",
+			"uuid": "a1d7b506-0239-43a9-ba66-156a1c6f7b67",
+			"version": [
+				0,
+				0,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/a1d7b506-0239-43a9-ba66-156a1c6f7b67.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/a1d7b506-0239-43a9-ba66-156a1c6f7b67.json",
+			"sha1": "xXXCJxlI3QD211fNH8seyEuSG+E=",
+			"mtime": 1793195168434
+		},
+		{
+			"name": "Hiland拓展包6.1.10",
+			"author": "CA制作组 Tiby 多多",
+			"description": "该命令库有0.x-1.19.x全部指令；\n请关闭其他拓展包（包括内置）,使用1.2.14命令助手\n*更新gametest，新summon，exe分支\n2022年9月11日",
+			"uuid": "38214256-2ef0-4ffb-a2b8-1361750f2edf",
+			"version": [
+				6,
+				1,
+				10,
+				1
+			],
+			"downloadurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/38214256-2ef0-4ffb-a2b8-1361750f2edf.lib",
+			"updateurl": "https://raw.githubusercontent.com/codesenlin/CA/canary/community-clib/packs/38214256-2ef0-4ffb-a2b8-1361750f2edf.json",
+			"sha1": "pvo0rWQh1k6bthdKJ8AszrIf1s4=",
+			"mtime": 1793195168438
+		}
+	]
+}

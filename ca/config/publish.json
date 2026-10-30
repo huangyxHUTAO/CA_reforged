@@ -1,0 +1,6 @@
+{
+	"method": "local",
+	"destPath": "./build/dist",
+	"remoteRoot": null,
+	"sshConfig": null
+}

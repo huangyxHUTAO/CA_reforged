@@ -1,0 +1,10 @@
+@uuid 7c9d392b-7a1f-4226-a35a-a1137cf64e47
+@outputUrl https://ca.projectxero.top/clib/
+@outputPath ./outputs
+@perPage 10
+@signKey ./signature/source.pem
+@verifyKey ./signature/source.pub
+@maintainer ProjectXero
+@details
+++官方拓展包源++
+@end details

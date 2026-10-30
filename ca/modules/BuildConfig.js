@@ -7,6 +7,6 @@ var BuildConfig = {
 	versionCode: [9],
 	date: "2099-01-01",
 	publishTime: Date.now(),
-	licenceUpdate: "2025/7/25",
+	licenceUpdate: "1970/1/1",
 	description: ""
 };

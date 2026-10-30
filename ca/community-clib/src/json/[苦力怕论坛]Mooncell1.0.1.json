@@ -1,0 +1,452 @@
+{
+    "name": "Mooncell",
+    "author": "Tamamo",
+    "description": "该拓展包内置：\n1. 各种网站的转链链接\n2. hasitem选择器(有点小bug,但影响不大)\n3. scores选择器\n4. 槽位描述\n5. tellraw和titleraw的json插入",
+    "uuid": "060315b5-5c10-4e90-af4d-cdce36776e0d",
+    "version": [
+        1,
+        0,
+        1
+    ],
+    "require": [],
+    "tutorials": [
+        {
+            "name": "作者信息",
+            "description": "by xiaodou",
+            "id": "xd.firstlesson",
+            "type": "tutorial",
+            "intro": [
+                {
+                    "text": "并无教程，只是提供拓展包作者信息",
+                    "bold": true,
+                    "color": "criticalcolor"
+                }
+            ],
+            "segments": [
+                {
+                    "text": [
+                        "作者\n\n",
+                        {
+                            "text": "Xiaodou（Tamamo）",
+                            "bold": true
+                        },
+                        "：于2022-12-10制作"
+                    ],
+                    "stepMode": "manual"
+                },
+                {
+                    "text": [
+                        "\n\n",
+                        "无用教程"
+                    ]
+                }
+            ]
+        }
+    ],
+    "commands": {},
+    "enums": {
+        "hasitem": {
+            "{": "开头符号",
+            "}": "结尾符号"
+        },
+        "entity_slot": {
+            "slot.armor": "马铠",
+            "slot.armor.chest": "胸甲",
+            "slot.armor.feet": "靴子",
+            "slot.armor.head": "头盔",
+            "slot.armor.legs": "腿甲",
+            "slot.chest": "箱子",
+            "slot.enderchest": "末影箱",
+            "slot.equippable": "鞍或马铠\n0:\n  仅马、驴、骡;\n  物品名必须为鞍或空气;\n1:\n  仅马和羊驼;\n  物品名必须属于马铠一类;",
+            "slot.hotbar": "快捷栏",
+            "slot.inventory": "物品栏",
+            "slot.saddle": "鞍",
+            "slot.weapon.mainhand": "主手持有",
+            "slot.weapon.offhand": "副手持有"
+        },
+        "particle_emitter": {
+            "minecraft:arrow_spell_emitter": "药水箭矢末尾粒子",
+            "minecraft:balloon_gas_particle": "末地烛闪光粒子",
+            "minecraft:basic_crit_particle": "攻击暴击粒子",
+            "minecraft:basic_flame_particle": "小型火焰粒子",
+            "minecraft:basic_portal_particle": "末地传送门粒子",
+            "minecraft:basic_smoke_particle": "火把顶端燃烧粒子",
+            "minecraft:bleach": "村民无法进行繁殖时愤怒的粒子",
+            "minecraft:blue_flame_particle": "灵魂火把顶端燃烧粒子",
+            "minecraft:breaking_item_icon": "玩家进食、药水等破碎是产生的粒子",
+            "minecraft:breaking_item_terrain": "方块被玩家破坏、挖掘、铁傀儡行走产生的粒子",
+            "minecraft:bubble_column_down_particle": "水下岩浆块形成的气流粒子",
+            "minecraft:bubble_column_up_particle": "水下灵魂沙产生的气泡粒子",
+            "minecraft:campfire_smoke_particle": "低营火粒子",
+            "minecraft:campfire_tall_smoke_particle": "高营火粒子(在干草块上)",
+            "minecraft:conduit_particle": "激活的潮涌核心产生的粒子",
+            "minecraft:critical_hit_emitter": "玩家暴击、箭被射出、唤魔者尖牙攻击粒子",
+            "minecraft:crop_growth_emitter": "堆肥桶被填充粒子",
+            "minecraft:dolphin_move_particle": "海豚游泳时产生的水花粒子",
+            "minecraft:dragon_breath_lingering": "末影龙的龙息、末影龙火球产生的粒子",
+            "minecraft:electric_spark_particle": "闪电击中铜块产生的粒子",
+            "minecraft:enchanting_table_particle": "附魔台的符文文字粒子",
+            "minecraft:endrod": "末地烛、潜影贝导弹产生的粒子",
+            "minecraft:evoker_spell": "带有状态效果的生物、凋零护甲、区域效果云、药水箭产生的粒子",
+            "minecraft:falling_dust_concrete_powder_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:falling_dust_gravel_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:falling_dust_red_sand_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:falling_dust_sand_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:falling_dust_scaffolding_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:falling_dust_top_snow_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:heart_particle": "爱心粒子",
+            "minecraft:huge_explosion_emitter": "爆炸、末影龙死亡时产生的粒子",
+            "minecraft:ink_emitter": "鱿鱼墨汁",
+            "minecraft:large_explosion": "爆炸、末影龙死亡、哞菇除菇时产生的粒子",
+            "minecraft:lava_drip_particle": "渗过方块滴落得熔岩粒子",
+            "minecraft:lava_particle": "熔岩产生的火花粒子",
+            "minecraft:mob_portal": "末影人紫色粒子",
+            "minecraft:mobflame_emitter": "实体着火燃烧粒子",
+            "minecraft:mobflame_single": "实体着火燃烧粒子",
+            "minecraft:mobspell_emitter": "信标发射",
+            "minecraft:mycelium_dust_particle": "菌丝孢子粒子",
+            "minecraft:nectar_drip_particle": "粘有花粉的密封掉落的花粉",
+            "minecraft:note_particle": "激活音符盒、唱片机产生的音符粒子",
+            "minecraft:rain_splash_particle": "雨滴粒子",
+            "minecraft:sculk_sensor_redstone_particle": "激活的幽匿感测体产生的粒子",
+            "minecraft:snowflake_particle": "玩家在细雪中挪动粒子",
+            "minecraft:soul_particle": "小型灵魂粒子",
+            "minecraft:sparkler_emitter": "烟花尾迹和爆炸、喂食海豚时的粒子",
+            "minecraft:splash_spell_emitter": "药水、附魔之瓶破碎产生的粒子",
+            "minecraft:spore_blossom_ambient_particle": "孢子花周围散发的粒子",
+            "minecraft:spore_blossom_shower_particle": "孢子花掉落的孢子粒子",
+            "minecraft:vibration_signal": "幽匿感测体产生的震动粒子",
+            "minecraft:villager_angry": "村民无法繁殖时愤怒的粒子",
+            "minecraft:villager_happy": "使用骨粉等产生的粒子",
+            "minecraft:water_evaporation_actor_emitter": "着火的生物进入水中熄灭火焰的粒子",
+            "minecraft:water_splash_particle": "渗过方块滴落以及着地的水粒子",
+            "minecraft:water_splash_particle_manual": "水花粒子",
+            "minecraft:water_wake_particle": "钓鱼水花粒子",
+            "minecraft:dragon_breath_trail": "末影龙的龙息、末影龙火球产生的粒子",
+            "minecraft:falling_dust_dragon_egg_particle": "浮空而未下落的沙子、沙砾、混凝土粉末、铁砧和雪产生的粒子",
+            "minecraft:water_drip_particle": "渗过方块的水粒子、湿海绵、下雨时树叶产生的粒子"
+        }
+    },
+    "selectors": {
+        "hasitem": {
+            "type": "enum",
+            "name": "实体指定槽位内是否拥有指定物品",
+            "list": "hasitem",
+            "hasInverted": true
+        },
+        "data": {
+            "type": "string",
+            "name": "数据值(hasitem)\n 可以是物品的耐久、方块的特殊值等等"
+        },
+        "item": {
+            "type": "string",
+            "name": "物品(hasitem)\n 可以是任意的方块和物品",
+            "suggestion": "item",
+            "hasInverted": true
+        },
+        "quantity": {
+            "type": "string",
+            "name": "数量(hasitem)\n  <数值>(拥有的数量=设定数值)\n  <数值..数值>(拥有的数量在设定数值之间)\n  <数值..>(拥有的数量＞设定数值)\n  <..数值>(拥有的数量＜设定数值)",
+            "hasInverted": true
+        },
+        "location": {
+            "type": "enum",
+            "name": "槽位类型(hasitem)\n  slot.armor(马铠)\n  slot.armor.chest(胸甲)\n  slot.armor.feet(靴子)\n  slot.armor.legs(护腿)\n  slot.chest(箱子)\n  slot.enderchest(末影箱)\n  slot.equippable(鞍或马铠)\n   0:\n    仅马、驴、骡;\n    物品名必须为鞍或空气;\n   1:\n    仅马和羊驼;\n    物品名必须属于马铠一类;",
+            "list": "entity_slot",
+            "hasInverted": true
+        },
+        "slot": {
+            "type": "entity_slot",
+            "name": "指定槽位编号(hasitem)\n  0-9 (hotbar-快捷栏)\n  0-27 (inventory-背包)"
+        },
+        "scores": {
+            "type": "string",
+            "list": "scores",
+            "name": "计分板分数(仅一项)\n  <计分板名称>=<数值>(分数=设定数值)\n  <计分板名称>=<数值..数值>(分数在设定数值之间)\n  <计分板名称>=<数值..>(分数＞设定数值)\n  <计分板名称>=<..数值>(分数＜设定数值)"
+        }
+    },
+    "versionPack": {
+        "xiaodou": {
+            "commands": {
+                "Mooncell": {
+                    "description": "左滑进入FGOwiki (非MC)",
+                    "help": "https://fgo.wiki/"
+                },
+                "wiki": {
+                    "description": "左滑查看mc中文wiki",
+                    "help": "https://minecraft-zh.gamepedia.com/"
+                },
+                "id": {
+                    "description": "左滑查看BEID表",
+                    "help": "https://ca.projectxero.top/idlist/"
+                },
+                "mcmod": {
+                    "description": "左滑进入mod百科",
+                    "help": "https://www.mcmod.cn/"
+                },
+                "klpbbs": {
+                    "description": "左滑进入苦力怕论坛",
+                    "help": "https://klpbbs.com/"
+                },
+                "klpbbszz": {
+                    "description": "左滑进入拓展包作者的苦力怕论坛主页",
+                    "help": "https://klpbbs.com/?11327"
+                },
+                "bilibili": {
+                    "description": "左滑进入B站",
+                    "help": "https://www.bilibili.com/"
+                },
+                "bilibilizz": {
+                    "description": "左滑进入拓展包作者的B站主页",
+                    "help": "https://m.bilibili.com/space/539184626"
+                },
+                "mcbbs": {
+                    "description": "左滑进入MCBBS",
+                    "help": "https://www.mcbbs.net/"
+                },
+                "modxz": {
+                    "description": "左滑进入modxz",
+                    "help": "http://www.minecraftxz.com/"
+                },
+                "CA": {
+                    "description": "左滑查看ca群规",
+                    "help": "https://ca.projectxero.top/blog/notice/qqgroup-external-information/"
+                },
+                "chunkbase": {
+                    "description": "左滑进入Chunkbase",
+                    "help": "https://chunkbase.com/"
+                },
+                "mclt": {
+                    "description": "左滑进入mclt史莱姆区块查找网站",
+                    "help": "https://www.mclt.cn/"
+                },
+                "biligamemc": {
+                    "description": "左滑进入Bilibili游戏wiki-MC",
+                    "help": "https://wiki.biligame.com/wiki/Minecraft"
+                },
+                "brigadier": {
+                    "description": "左滑查看MC-brigadier-Github源码",
+                    "help": "https://github.com/Mojang/brigadier/"
+                },
+                "baidu": {
+                    "description": "左滑进入百度搜索引擎",
+                    "help": "https://www.baidu.com"
+                }
+            },
+            "minSupportVer": "1.11.0.3"
+        },
+        "base": {
+            "commands": {
+                "titleraw": {
+                    "description": "标题命令相关",
+                    "patterns": {
+                        "clear": {
+                            "description": "移除标题",
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "clear",
+                                    "prompt": "移除标题"
+                                }
+                            ]
+                        },
+                        "reset": {
+                            "description": "重设标题设置",
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "reset",
+                                    "prompt": "重设标题设置"
+                                }
+                            ]
+                        },
+                        "subtitle_json": {
+                            "description": "设置副标题",
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "subtitle",
+                                    "prompt": "设置副标题"
+                                },
+                                {
+                                    "type": "json",
+                                    "name": "副标题",
+                                    "component": "list_text_json",
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        "title_json": {
+                            "description": "显示标题",
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "title",
+                                    "prompt": "显示标题"
+                                },
+                                {
+                                    "type": "json",
+                                    "name": "标题",
+                                    "component": "list_text_json",
+                                    "optional": true
+                                }
+                            ]
+                        },
+                        "times": {
+                            "description": "设置标题显示时间",
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "times",
+                                    "prompt": "设置标题显示时间"
+                                },
+                                {
+                                    "type": "int",
+                                    "name": "淡入时间"
+                                },
+                                {
+                                    "type": "int",
+                                    "name": "停留时间"
+                                },
+                                {
+                                    "type": "int",
+                                    "name": "淡出时间"
+                                }
+                            ]
+                        },
+                        "actionbar_json": {
+                            "description": "在活动栏上显示文字",
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "plain",
+                                    "name": "actionbar",
+                                    "prompt": "在活动栏上显示文字"
+                                },
+                                {
+                                    "type": "json",
+                                    "name": "活动栏文字",
+                                    "component": "list_text_json",
+                                    "optional": true
+                                }
+                            ]
+                        }
+                    },
+                    "help": "https://wiki.biligame.com/mc/%E5%91%BD%E4%BB%A4/titleraw"
+                },
+                "tellraw": {
+                    "patterns": {
+                        "tellraw_json": {
+                            "params": [
+                                {
+                                    "type": "selector",
+                                    "name": "目标",
+                                    "target": "player"
+                                },
+                                {
+                                    "type": "json",
+                                    "name": "JSON文本",
+                                    "component": "list_text_json",
+                                    "optional": true
+                                }
+                            ],
+                            "description": "向指定玩家发送一条JSON消息"
+                        }
+                    },
+                    "help": "https://minecraft-zh.gamepedia.com/%E5%91%BD%E4%BB%A4/tellraw"
+                }
+            },
+            "minSupportVer": "1.9.0.0"
+        }
+    },
+    "json": {
+        "list_text_json": {
+            "type": "object",
+            "name": "JSON组件",
+            "children": {
+                "rawtext": {
+                    "type": "array",
+                    "name": "要插入的文本",
+                    "children": {
+                        "name": "原始文本(选择完成点确定)",
+                        "type": "object",
+                        "children": {
+                            "text": {
+                                "type": "string",
+                                "name": "要发送的文本"
+                            },
+                            "translate": {
+                                "type": "string",
+                                "name": "要翻译的文本(仅一个)",
+                                "suggestion": "translate"
+                            },
+                            "with": {
+                                "type": "json",
+                                "name": "要跟随的文本(加json)",
+                                "component": "list_text_json",
+                                "optional": true
+                            },
+                            "with ": {
+                                "type": "array",
+                                "name": "要跟随的文本(可选多个)",
+                                "children": {
+                                    "name": "文本",
+                                    "type": "string"
+                                }
+                            },
+                            "selector": {
+                                "type": "selector",
+                                "name": "目标选择器(仅一个)",
+                                "target": "entity"
+                            },
+                            "score": {
+                                "type": "object",
+                                "name": "显示指定计分板分数",
+                                "children": {
+                                    "objective": {
+                                        "name": "计分板名字"
+                                    },
+                                    "name": {
+                                        "type": "selector",
+                                        "name": "目标选择器(仅一个)",
+                                        "target": "entity",
+                                        "suggestion": "scoreboard_player"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
